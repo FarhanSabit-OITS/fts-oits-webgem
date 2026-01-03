@@ -85,7 +85,7 @@ export const About: React.FC = () => {
                   loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent flex items-end p-8">
+                <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 to-transparent flex items-end p-8">
                   <div className="text-white">
                     <p className="text-3xl font-bold">10+</p>
                     <p className="text-sm opacity-80">Years of Excellence</p>
@@ -131,7 +131,7 @@ export const About: React.FC = () => {
                       className={`flex items-center gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-transparent hover:border-blue-100 dark:hover:border-blue-900/50 transition-all duration-500`} 
                       style={{ transitionDelay: isValuesVisible ? `${idx * 100}ms` : '0ms' }}
                     >
-                      <CheckCircle2 className="text-green-500 w-5 h-5 flex-shrink-0" />
+                      <CheckCircle2 className="text-green-500 w-5 h-5 shrink-0" />
                       <span className="font-medium text-slate-800 dark:text-slate-200">{item}</span>
                     </div>
                   ))}
@@ -172,14 +172,14 @@ export const About: React.FC = () => {
                 className={`group relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-1000 ease-out transform ${isTeamVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
                 style={{ transitionDelay: isTeamVisible ? `${index * 150}ms` : '0ms' }}
               >
-                <div className="aspect-[4/5] overflow-hidden bg-slate-200 dark:bg-slate-700">
+                <div className="aspect-4/5 overflow-hidden bg-slate-200 dark:bg-slate-700">
                   <img 
                     src={member.image} 
                     alt={member.name}
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                   <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-lg">

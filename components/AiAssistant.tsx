@@ -1,19 +1,20 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, X, Bot, User, Sparkles } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import { COMPANY_NAME } from '../constants';
 
 interface Message {
+  id: string;
   role: 'user' | 'bot';
   text: string;
 }
 
 export const AiAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'bot', text: `Hello! I'm the ${COMPANY_NAME} AI assistant. How can I help you brainstorm your project today?` }
-  ]);
+const [messages, setMessages] = useState<Message[]>([
+  { id: '1', role: 'bot', text: `Hello! I'm the ${COMPANY_NAME} AI assistant. How can I help you brainstorm your project today?` }
+]);
+
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -27,9 +28,11 @@ export const AiAssistant: React.FC = () => {
   const handleSend = async () => {
     if (!input.trim() || isTyping) return;
 
-    const userMsg = input.trim();
-    setInput('');
-    setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+const userMsg = input.trim();
+const newMessage = { id: Date.now().toString(), role: 'user' as const, text: userMsg };
+setInput('');
+setMessages(prev => [...prev, newMessage]);
+
     setIsTyping(true);
 
     try {
@@ -47,18 +50,19 @@ export const AiAssistant: React.FC = () => {
         },
       });
 
-      const botText = response.text || "I'm sorry, I'm having trouble thinking right now. Please try again or use the contact form below!";
-      setMessages(prev => [...prev, { role: 'bot', text: botText }]);
+const botText = response.text || "I'm sorry, I'm having trouble thinking right now. Please try again or use the contact form below!";
+setMessages(prev => [...prev, { id: Date.now().toString(), role: 'bot' as const, text: botText }]);
+
     } catch (error) {
       console.error('AI Assistant error:', error);
-      setMessages(prev => [...prev, { role: 'bot', text: "Something went wrong. Feel free to contact our human team directly!" }]);
+setMessages(prev => [...prev, { id: Date.now().toString(), role: 'bot' as const, text: "Something went wrong. Feel free to contact our human team directly!" }]);
     } finally {
       setIsTyping(false);
     }
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100]">
+    <div className="fixed bottom-6 right-6 z-100">
       {isOpen ? (
         <div className="w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col animate-in slide-in-from-bottom-4 duration-300">
           {/* Header */}
@@ -80,7 +84,7 @@ export const AiAssistant: React.FC = () => {
           {/* Messages */}
           <div ref={scrollRef} className="h-96 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-slate-950/50">
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+<div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-blue-100 text-blue-600' : 'bg-slate-800 text-white'}`}>
                     {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
@@ -97,7 +101,7 @@ export const AiAssistant: React.FC = () => {
             ))}
             {isTyping && (
               <div className="flex justify-start">
-                 <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
+<div className="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
                     <div className="flex gap-1">
                       <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]"></div>
@@ -145,92 +149,5 @@ export const AiAssistant: React.FC = () => {
         </button>
       )}
     </div>
-import React, { useState } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
-
-export const AiAssistant: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [message, setMessage] = useState('');
-const [messages, setMessages] = useState<{ id: string; text: string; isUser: boolean }[]>([
-  { id: '1', text: "Hello! How can I help you today?", isUser: false }
-]);
-
-
-const handleSendMessage = () => {
-  if (!message.trim()) return;
-  
-  const newMessage = { 
-    id: Date.now().toString(), // Generate a unique ID based on timestamp
-    text: message, 
-    isUser: true 
-  };
-  
-  setMessages([...messages, newMessage]);
-  setMessage('');
-  
-  // Simulate AI response
-  setTimeout(() => {
-    setMessages(prev => [...prev, { 
-      id: (Date.now() + 1).toString(), // Generate a unique ID for the AI response
-      text: "Thanks for your message! This is a demo response.", 
-      isUser: false 
-    }]);
-  }, 1000);
-};
-
-
-  return (
-    <>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors z-50"
-      >
-        {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
-      </button>
-
-      {isOpen && (
-        <div className="fixed bottom-24 right-6 w-80 h-96 bg-white dark:bg-slate-800 rounded-xl shadow-2xl flex flex-col z-50 overflow-hidden">
-          <div className="bg-blue-600 text-white p-4">
-            <h3 className="font-semibold">AI Assistant</h3>
-            <p className="text-sm text-blue-100">Ask me anything about our services</p>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-{messages.map((msg) => (
-  <div
-    key={msg.id}
-    className={`p-3 rounded-lg max-w-[85%] ${
-      msg.isUser
-        ? 'bg-blue-600 text-white ml-auto'
-        : 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100'
-    }`}
-  >
-    {msg.text}
-  </div>
-))}
-
-          </div>
-          
-          <div className="p-4 border-t border-slate-200 dark:border-slate-700">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Type your message..."
-                className="flex-1 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                onClick={handleSendMessage}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <Send size={18} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
   );
 };

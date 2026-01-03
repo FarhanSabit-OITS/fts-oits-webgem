@@ -39,7 +39,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
     <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-800">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          
+
           <div className="space-y-6">
             <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 text-white" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}>
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -56,16 +56,16 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               <SocialLink href="#" icon={Twitter} label="Twitter" />
               <SocialLink href="#" icon={Facebook} label="Facebook" />
             </div>
-            
+
             <div className="pt-2">
-               <button
+<button
                   onClick={toggleTheme}
                   className="flex items-center gap-2 text-sm font-medium hover:text-white transition-colors bg-slate-900 px-3 py-2 rounded-lg border border-slate-800 hover:border-slate-700"
                   aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-               >
+>
                   {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                   <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-               </button>
+</button>
             </div>
           </div>
 
