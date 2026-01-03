@@ -50,22 +50,22 @@ export const Process: React.FC = () => {
           <div className="hidden md:block absolute top-1/2 left-0 w-full h-px bg-slate-200 dark:bg-slate-800 -translate-y-12 z-0"></div>
 
           {PROCESS_STEPS.map((step, index) => (
-            <div
-              key={step.id}
+            <div 
+              key={step.id} 
               className={`relative z-10 flex flex-col items-center text-center transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               <div className="mb-6 relative">
-<div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-xl shadow-blue-500/5 group-hover:scale-110 transition-transform">
+                 <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-xl shadow-blue-500/5 group-hover:scale-110 transition-transform">
                     {iconMap[step.icon]}
-</div>
-<div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-slate-900 dark:bg-blue-600 text-white text-xs font-bold flex items-center justify-center border-2 border-white dark:border-slate-900">
+                 </div>
+                 <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-slate-900 dark:bg-blue-600 text-white text-xs font-bold flex items-center justify-center border-2 border-white dark:border-slate-900">
                     {step.number}
-</div>
+                 </div>
               </div>
-
+              
               <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{step.title}</h4>
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-50">
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-[200px]">
                 {step.description}
               </p>
 
@@ -77,18 +77,18 @@ export const Process: React.FC = () => {
             </div>
           ))}
         </div>
-
+        
         <div className="mt-20 p-8 rounded-3xl bg-blue-600 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/20">
-<div className="max-w-xl">
-<h4 className="text-2xl font-bold mb-2">Ready to start the discovery?</h4>
-<p className="text-blue-100">Schedule a 30-minute consultation with our lead architect to discuss your project requirements.</p>
-</div>
-<button
-onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
-className="px-8 py-4 bg-white text-blue-600 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg shadow-black/10"
->
-Book Consultation
-</button>
+           <div className="max-w-xl">
+             <h4 className="text-2xl font-bold mb-2">Ready to start the discovery?</h4>
+             <p className="text-blue-100">Schedule a 30-minute consultation with our lead architect to discuss your project requirements.</p>
+           </div>
+           <button 
+             onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
+             className="px-8 py-4 bg-white text-blue-600 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg shadow-black/10"
+           >
+             Book Consultation
+           </button>
         </div>
       </div>
     </section>

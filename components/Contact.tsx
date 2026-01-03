@@ -23,7 +23,10 @@ export const Contact: React.FC = () => {
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) observer.observe(sectionRef.current);
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
     return () => observer.disconnect();
   }, []);
 
@@ -92,7 +95,7 @@ export const Contact: React.FC = () => {
 
           <div className={`bg-slate-800/50 p-8 md:p-10 rounded-3xl border border-slate-700 transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
              {status === 'success' ? (
-                <div className="h-full flex flex-col items-center justify-center text-center py-12 animate-in zoom-in-95 duration-500">
+                <div className="h-full flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-500 py-12">
                    <div className="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 mb-6">
                       <CheckCircle2 size={40} />
                    </div>
@@ -112,7 +115,7 @@ export const Contact: React.FC = () => {
                         id="name"
                         aria-invalid={!!errors.name}
                         aria-describedby={errors.name ? "name-error" : undefined}
-                        className={`w-full bg-slate-900 border ${errors.name ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-all`}
+                        className={`w-full bg-slate-900 border ${errors.name ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-all duration-300`}
                         placeholder="Full Name"
                         value={formData.name}
                         onChange={(e) => {
@@ -120,7 +123,7 @@ export const Contact: React.FC = () => {
                           if(errors.name) setErrors({...errors, name: undefined});
                         }}
                      />
-                     {errors.name && <p id="name-error" className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} /> {errors.name}</p>}
+                     {errors.name && <p id="name-error" className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-in slide-in-from-top-1"><AlertCircle size={12} /> {errors.name}</p>}
                    </div>
 
                    <div className="group relative">
@@ -132,7 +135,7 @@ export const Contact: React.FC = () => {
                         id="email"
                         aria-invalid={!!errors.email}
                         aria-describedby={errors.email ? "email-error" : undefined}
-                        className={`w-full bg-slate-900 border ${errors.email ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-all`}
+                        className={`w-full bg-slate-900 border ${errors.email ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-all duration-300`}
                         placeholder="Email Address"
                         value={formData.email}
                         onChange={(e) => {
@@ -140,7 +143,7 @@ export const Contact: React.FC = () => {
                           if(errors.email) setErrors({...errors, email: undefined});
                         }}
                      />
-                     {errors.email && <p id="email-error" className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} /> {errors.email}</p>}
+                     {errors.email && <p id="email-error" className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-in slide-in-from-top-1"><AlertCircle size={12} /> {errors.email}</p>}
                    </div>
                  </div>
                  
@@ -153,7 +156,7 @@ export const Contact: React.FC = () => {
                       aria-invalid={!!errors.message}
                       aria-describedby={errors.message ? "message-error" : undefined}
                       rows={4}
-                      className={`w-full bg-slate-900 border ${errors.message ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-all resize-none`}
+                      className={`w-full bg-slate-900 border ${errors.message ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-all duration-300 resize-none`}
                       placeholder="Tell us about your project requirements..."
                       value={formData.message}
                       onChange={(e) => {
@@ -161,18 +164,27 @@ export const Contact: React.FC = () => {
                         if(errors.message) setErrors({...errors, message: undefined});
                       }}
                    />
-                   {errors.message && <p id="message-error" className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} /> {errors.message}</p>}
+                   {errors.message && <p id="message-error" className="text-red-400 text-xs mt-1 flex items-center gap-1 animate-in slide-in-from-top-1"><AlertCircle size={12} /> {errors.message}</p>}
                  </div>
 
                  <Button 
                    type="submit" 
                    variant="primary" 
                    size="lg" 
-                   className="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all"
+                   className="w-full bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-900/40 active:scale-95 transition-all"
                    disabled={status === 'sending'}
-                   aria-label={status === 'sending' ? 'Sending message...' : 'Send message now'}
+                   aria-label={status === 'sending' ? 'Sending message' : 'Send message now'}
                  >
-                   {status === 'sending' ? 'Sending...' : 'Send Message'}
+                   {status === 'sending' ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                        Sending...
+                      </span>
+                   ) : (
+                     <span className="flex items-center">
+                       Send Message <Send className="ml-2 w-4 h-4" aria-hidden="true" />
+                     </span>
+                   )}
                  </Button>
                </form>
              )}
