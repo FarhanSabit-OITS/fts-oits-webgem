@@ -1,11 +1,10 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowDown, X, ExternalLink, Calendar, Code2, ArrowUpRight, Play, Film, Tag, Volume2, VolumeX, Pause, Subtitles, MonitorPlay } from 'lucide-react';
+import { ArrowDown, X, ExternalLink, Calendar, Code2, ArrowUpRight, Play, Film, Tag, Volume2, VolumeX, Pause, Subtitles, MonitorPlay, SearchX } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { SectionId, Project } from '../types';
 import { Button } from './ui/Button';
 
-// --- Types & Constants ---
 const ALL_CATEGORY = 'All';
 const ALL_TAG = 'All Tech';
 
@@ -40,282 +39,46 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
     const updateTime = () => setCurrentTime(video.currentTime);
     const updateDuration = () => setDuration(video.duration);
     const onEnded = () => setIsPlaying(false);
     const onLoadedData = () => setIsVideoLoaded(true);
-    const onWaiting = () => setIsVideoLoaded(false);
-    const onPlaying = () => {
-      setIsVideoLoaded(true);
-      setIsPlaying(true);
-    };
+    const onPlaying = () => { setIsVideoLoaded(true); setIsPlaying(true); };
     const onPause = () => setIsPlaying(false);
 
     video.addEventListener('timeupdate', updateTime);
     video.addEventListener('loadedmetadata', updateDuration);
     video.addEventListener('ended', onEnded);
     video.addEventListener('loadeddata', onLoadedData);
-    video.addEventListener('waiting', onWaiting);
     video.addEventListener('playing', onPlaying);
     video.addEventListener('pause', onPause);
-
     video.play().catch(err => console.error("Autoplay failed:", err));
-
-    if (containerRef.current) {
-      containerRef.current.focus();
-    }
 
     return () => {
       video.removeEventListener('timeupdate', updateTime);
       video.removeEventListener('loadedmetadata', updateDuration);
       video.removeEventListener('ended', onEnded);
       video.removeEventListener('loadeddata', onLoadedData);
-      video.removeEventListener('waiting', onWaiting);
       video.removeEventListener('playing', onPlaying);
       video.removeEventListener('pause', onPause);
     };
   }, []);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video && video.textTracks && video.textTracks.length > 0) {
-      const track = video.textTracks[0];
-      track.mode = captionsEnabled ? 'showing' : 'hidden';
-    }
-  }, [captionsEnabled]);
-
   const togglePlay = () => {
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
+      if (isPlaying) videoRef.current.pause();
+      else videoRef.current.play();
     }
-  };
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
-  };
-
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVol = parseFloat(e.target.value);
-    setVolume(newVol);
-    if (videoRef.current) {
-      videoRef.current.volume = newVol;
-      setIsMuted(newVol === 0);
-    }
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = parseFloat(e.target.value);
-    setCurrentTime(time);
-    if (videoRef.current) {
-      videoRef.current.currentTime = time;
-    }
-  };
-
-  const resetControlsTimeout = () => {
-    setShowControls(true);
-    if (controlsTimeoutRef.current) window.clearTimeout(controlsTimeoutRef.current);
-    if (isPlaying) {
-      controlsTimeoutRef.current = window.setTimeout(() => setShowControls(false), 2500);
-    }
-  };
-
-  const handleInteraction = () => {
-    resetControlsTimeout();
-  };
-
-  const handleMouseLeave = () => {
-    if (isPlaying) {
-      setShowControls(false);
-    }
-  };
-
-  const handleFocus = () => {
-    setShowControls(true);
-    if (controlsTimeoutRef.current) window.clearTimeout(controlsTimeoutRef.current);
-  };
-
-  const handleBlur = () => {
-      if(isPlaying) resetControlsTimeout();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    handleInteraction();
-    
-    switch(e.key) {
-      case ' ':
-      case 'Enter':
-      case 'k':
-      case 'K':
-        e.preventDefault();
-        togglePlay();
-        break;
-      case 'm':
-      case 'M':
-        e.preventDefault();
-        toggleMute();
-        break;
-      case 'c':
-      case 'C':
-        if(captionsUrl) {
-           e.preventDefault();
-           setCaptionsEnabled(prev => !prev);
-        }
-        break;
-      case 'ArrowRight':
-        e.preventDefault();
-        if (videoRef.current) videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + 5);
-        break;
-      case 'ArrowLeft':
-        e.preventDefault();
-        if (videoRef.current) videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 5);
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setVolume(prev => Math.min(1, prev + 0.1));
-        if (videoRef.current) {
-           videoRef.current.volume = Math.min(1, videoRef.current.volume + 0.1);
-           setIsMuted(false);
-        }
-        break;
-      case 'ArrowDown':
-        e.preventDefault();
-        setVolume(prev => Math.max(0, prev - 0.1));
-        if (videoRef.current) videoRef.current.volume = Math.max(0, videoRef.current.volume - 0.1);
-        break;
-    }
-  };
-
-  const stopPropagation = (e: React.KeyboardEvent) => {
-    e.stopPropagation();
   };
 
   return (
-    <div 
-      ref={containerRef}
-      className="relative w-full h-full bg-black group overflow-hidden flex flex-col justify-center outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
-      onMouseMove={handleInteraction}
-      onMouseLeave={handleMouseLeave}
-      onKeyDown={handleKeyDown}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      tabIndex={0}
-      role="region"
-      aria-label="Video Player"
-    >
-      <div 
-        className={`absolute inset-0 bg-cover bg-center z-0 transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-0' : 'opacity-100'}`}
-        style={{ 
-          backgroundImage: poster ? `url(${poster})` : 'none',
-          filter: 'blur(20px) brightness(0.4)',
-          transform: 'scale(1.1)' 
-        }}
-        aria-hidden="true"
-      />
-
-      {!isVideoLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-           <div className="w-16 h-16 border-4 border-white/20 border-t-white/90 rounded-full animate-spin"></div>
-        </div>
-      )}
-
-      <video
-        ref={videoRef}
-        src={src}
-        poster={poster} 
-        className={`relative z-10 w-full h-full object-contain transition-opacity duration-700 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}
-        onClick={togglePlay}
-        playsInline
-        crossOrigin="anonymous"
-      >
-        {captionsUrl && <track kind="captions" src={captionsUrl} srcLang="en" label="English" default={captionsEnabled} />}
-      </video>
-
-      <div 
-        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent px-4 pb-4 pt-20 transition-all duration-300 ease-in-out z-20 flex flex-col gap-4 ${showControls || !isPlaying ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}
-      >
-        <input
-          type="range"
-          min="0"
-          max={duration || 0}
-          value={currentTime}
-          onChange={handleSeek}
-          onKeyDown={stopPropagation}
-          aria-label="Seek video"
-          className="w-full h-1.5 bg-white/30 rounded-lg appearance-none cursor-pointer accent-blue-500 hover:h-2.5 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-
-        <div className="flex items-center justify-between text-white">
-          <div className="flex items-center gap-4 sm:gap-6">
-            <button 
-              onClick={togglePlay} 
-              className="p-2 hover:bg-white/20 rounded-full transition-colors focus:outline-none"
-              aria-label={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
-            </button>
-
-            <div className="flex items-center gap-3 group/vol">
-              <button 
-                onClick={toggleMute} 
-                className="p-2 hover:bg-white/20 rounded-full transition-colors focus:outline-none"
-                aria-label={isMuted ? "Unmute" : "Mute"}
-              >
-                {isMuted || volume === 0 ? <VolumeX size={24} /> : <Volume2 size={24} />}
-              </button>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                value={isMuted ? 0 : volume}
-                onChange={handleVolumeChange}
-                onKeyDown={stopPropagation}
-                aria-label="Volume"
-                className="w-20 sm:w-24 h-1.5 bg-white/30 rounded-lg accent-white cursor-pointer focus:outline-none"
-              />
-            </div>
-
-            <span className="text-xs sm:text-sm font-mono font-medium opacity-80 select-none hidden sm:block">
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {captionsUrl && (
-              <button
-                onClick={() => setCaptionsEnabled(!captionsEnabled)}
-                className={`p-2 rounded-full transition-colors focus:outline-none ${captionsEnabled ? 'text-blue-400 bg-white/20' : 'text-white/70 hover:bg-white/20 hover:text-white'}`}
-                aria-label={captionsEnabled ? "Disable Captions" : "Enable Captions"}
-              >
-                <Subtitles size={24} />
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              className="flex items-center gap-2 px-4 py-1.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-xs sm:text-sm font-bold transition-all active:scale-95 focus:outline-none"
-              aria-label="Exit full screen video"
-            >
-              <ArrowDown size={16} className="rotate-90" /> <span className="hidden sm:inline">Exit</span>
-            </button>
-          </div>
-        </div>
+    <div className="relative w-full h-full bg-black flex flex-col justify-center overflow-hidden" tabIndex={0} role="region" aria-label="Project Demo Player">
+      {!isVideoLoaded && <div className="absolute inset-0 flex items-center justify-center z-10"><div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div></div>}
+      <video ref={videoRef} src={src} className="w-full h-full object-contain z-10" onClick={togglePlay} playsInline />
+      <div className="absolute bottom-6 right-6 z-20 flex gap-2">
+        <button onClick={togglePlay} className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-all">{isPlaying ? <Pause size={20} /> : <Play size={20} />}</button>
+        <button onClick={onClose} className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-all"><X size={20} /></button>
       </div>
-
-      {!isPlaying && isVideoLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/20">
-          <div className="w-20 h-20 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-white/90 border border-white/20 shadow-xl">
-            <Play size={40} fill="currentColor" className="ml-2" />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -330,296 +93,100 @@ interface ProjectModalProps {
 
 const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, onClose, onProjectSelect }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [activeProject, setActiveProject] = useState<Project | null>(project);
-  const [isClosing, setIsClosing] = useState(false);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (project) {
-      setActiveProject(project);
       setIsVisible(true);
-      setIsClosing(false);
       setIsPlayingVideo(autoPlay && !!project.demoVideoUrl);
       document.body.style.overflow = 'hidden';
-      if (contentRef.current) contentRef.current.scrollTop = 0;
+    } else {
+      setIsVisible(false);
+      document.body.style.overflow = 'unset';
     }
-    return () => { document.body.style.overflow = 'unset'; };
   }, [project, autoPlay]);
 
-  const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsVisible(false);
-      onClose();
-      setIsClosing(false);
-      setIsPlayingVideo(false);
-    }, 300);
-  };
-
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, []);
-
-  if (!isVisible || !activeProject) return null;
-
-  const relatedProjects = PROJECTS.filter(
-    p => p.category === activeProject.category && p.id !== activeProject.id
-  ).slice(0, 3);
-
-  const backdropClass = `fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] transition-opacity duration-300 ease-in-out ${isClosing ? 'opacity-0' : 'opacity-100'}`;
-  const modalContainerClass = `fixed inset-0 z-[101] flex items-center justify-center p-4 sm:p-6 pointer-events-none`;
-  const modalContentClass = `relative w-full max-w-5xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] pointer-events-auto transform transition-all duration-300 ease-in-out ${
-    isClosing ? 'opacity-0 scale-95 translate-y-4' : 'opacity-100 scale-100 translate-y-0'
-  }`;
+  if (!isVisible || !project) return null;
 
   return (
-    <>
-      <div className={backdropClass} onClick={handleClose} aria-hidden="true" />
-      <div className={modalContainerClass} role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <div className={modalContentClass}>
-          <div ref={contentRef} className="overflow-y-auto custom-scrollbar scroll-smooth">
-            <div key={activeProject.id} className="animate-fade-in">
-              <div className={`relative w-full shrink-0 bg-slate-900 ${isPlayingVideo ? 'aspect-video' : 'h-64 md:h-96'}`}>
-                 {isPlayingVideo && activeProject.demoVideoUrl ? (
-                   <CustomVideoPlayer 
-                      src={activeProject.demoVideoUrl}
-                      captionsUrl={activeProject.captionsUrl}
-                      poster={activeProject.imageUrl}
-                      onClose={() => setIsPlayingVideo(false)}
-                   />
-                 ) : (
-                   <div className="relative w-full h-full group">
-                    <img 
-                      src={activeProject.imageUrl} 
-                      alt={activeProject.title} 
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-90 group-hover:opacity-100"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent" aria-hidden="true" />
-                    
-                    <button 
-                      onClick={handleClose}
-                      className="absolute top-4 right-4 p-2 bg-black/20 hover:bg-black/40 backdrop-blur-md rounded-full text-white transition-all z-30 active:scale-95"
-                      aria-label="Close modal"
-                    >
-                      <X size={24} />
-                    </button>
-
-                    <div className="absolute bottom-0 left-0 right-0 p-8 text-white z-20 pointer-events-none">
-                      <span className="inline-block px-3 py-1 bg-blue-600 rounded-full text-xs font-semibold uppercase tracking-wider mb-3 shadow-sm border border-blue-500/50">
-                        {activeProject.category}
-                      </span>
-                      <h3 id="modal-title" className="text-3xl md:text-5xl font-bold mb-2 tracking-tight">{activeProject.title}</h3>
-                    </div>
-
-                    {activeProject.demoVideoUrl && (
-                      <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                         <button 
-                           onClick={() => setIsPlayingVideo(true)}
-                           className="pointer-events-auto flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/40 rounded-full text-white font-bold transition-all hover:scale-105 active:scale-95 group/play shadow-xl"
-                           aria-label="Watch demo video"
-                         >
-                           <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-blue-600 group-hover/play:scale-110 transition-transform">
-                             <Play size={16} fill="currentColor" />
-                           </div>
-                           Watch Demo
-                         </button>
-                      </div>
-                    )}
-                   </div>
-                 )}
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-5xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
+        <div className={`relative w-full ${isPlayingVideo ? 'aspect-video' : 'h-64 md:h-96'}`}>
+          {isPlayingVideo ? (
+            <CustomVideoPlayer src={project.demoVideoUrl!} poster={project.imageUrl} onClose={() => setIsPlayingVideo(false)} />
+          ) : (
+            <div className="w-full h-full relative">
+              <img src={project.imageUrl} className="w-full h-full object-cover" alt={project.title} />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+              <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-black/20 hover:bg-black/40 rounded-full text-white transition-all"><X size={24} /></button>
+              <div className="absolute bottom-8 left-8 text-white">
+                <span className="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase mb-3 inline-block">{project.category}</span>
+                <h3 className="text-4xl font-bold">{project.title}</h3>
               </div>
-
-              <div className="p-8 md:p-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                  <div className="md:col-span-2 space-y-8">
-                    <div>
-                      <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Project Overview</h4>
-                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg">
-                        {activeProject.fullDescription || activeProject.description}
-                      </p>
-                    </div>
-                    {activeProject.technologies && (
-                      <div>
-                        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                          <Code2 size={20} className="text-blue-500" aria-hidden="true" />
-                          Technologies Used
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {activeProject.technologies.map((tech) => (
-                            <span key={tech} className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium border border-slate-200 dark:border-slate-700 hover:border-blue-300 transition-colors cursor-default">
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-6">
-                     <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 sticky top-6">
-                        <h4 className="font-bold text-slate-900 dark:text-white mb-6 text-lg">At a Glance</h4>
-                        <ul className="space-y-4 text-sm">
-                          <li className="flex flex-col pb-4 border-b border-slate-200 dark:border-slate-700 last:border-0 last:pb-0">
-                            <span className="text-slate-500 dark:text-slate-400 mb-1">Client</span>
-                            <span className="font-semibold text-slate-900 dark:text-white">Confidential Partner</span>
-                          </li>
-                          <li className="flex flex-col pb-4 border-b border-slate-200 dark:border-slate-700 last:border-0 last:pb-0">
-                            <span className="text-slate-500 dark:text-slate-400 mb-1">Timeline</span>
-                            <span className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                               <Calendar size={14} className="text-blue-500" aria-hidden="true"/> 3 Months
-                            </span>
-                          </li>
-                          <li className="flex flex-col pb-4 border-b border-slate-200 dark:border-slate-700 last:border-0 last:pb-0">
-                            <span className="text-slate-500 dark:text-slate-400 mb-1">Services</span>
-                            <span className="font-semibold text-slate-900 dark:text-white">{activeProject.category}</span>
-                          </li>
-                        </ul>
-                        <Button className="w-full mt-8 flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 group" variant="primary" onClick={() => window.open(activeProject.link || '#', '_blank')} aria-label="Visit the live project website">
-                          Visit Live Site <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                     </div>
-                  </div>
-                </div>
-
-                {relatedProjects.length > 0 && (
-                  <div className="mt-16 pt-10 border-t border-slate-100 dark:border-slate-800">
-                    <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Related Projects</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                      {relatedProjects.map((relProject) => (
-                        <div 
-                          key={relProject.id} 
-                          className="group cursor-pointer"
-                          onClick={() => onProjectSelect(relProject)}
-                        >
-                          <div className="relative aspect-video rounded-xl overflow-hidden mb-3 border border-slate-100 dark:border-slate-700">
-                            <img 
-                              src={relProject.imageUrl} 
-                              alt={relProject.title}
-                              loading="lazy"
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                            />
-                            <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center z-10 backdrop-blur-[1px]" aria-hidden="true">
-                              <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white text-slate-900 px-4 py-2 rounded-full font-bold text-xs shadow-xl flex items-center gap-1">
-                                View Project <ArrowUpRight size={14} />
-                              </div>
-                            </div>
-                          </div>
-                          <h5 className="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">{relProject.title}</h5>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">{relProject.category}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              {project.demoVideoUrl && (
+                <button onClick={() => setIsPlayingVideo(true)} className="absolute inset-0 flex items-center justify-center group">
+                  <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white scale-100 group-hover:scale-110 transition-transform"><Play size={32} fill="currentColor" className="ml-1" /></div>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+        <div className="p-8 md:p-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="md:col-span-2 space-y-6">
+              <h4 className="text-xl font-bold text-slate-900 dark:text-white">Overview</h4>
+              <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">{project.fullDescription || project.description}</p>
+              <div className="flex flex-wrap gap-2">
+                {project.technologies?.map(t => <span key={t} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm">{t}</span>)}
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-xl space-y-4">
+                <h5 className="font-bold">Project Details</h5>
+                <div className="flex flex-col text-sm"><span className="text-slate-500">Timeline</span><span className="font-semibold">3-4 Months</span></div>
+                <Button className="w-full" onClick={() => window.open(project.link || '#', '_blank')}>Visit Live Project</Button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 // --- Project Card Component ---
-interface ProjectCardProps {
-  project: Project;
-  index: number;
-  onClick: () => void;
-  onViewDemo: () => void;
-}
-
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onClick, onViewDemo }) => {
+const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Project, autoPlay: boolean) => void }> = ({ project, index, onSelect }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
-    return () => {
-      if (cardRef.current) observer.disconnect();
-    };
+    const obs = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setIsVisible(true); obs.disconnect(); } }, { threshold: 0.1 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
   }, []);
 
   return (
     <div 
-      ref={cardRef}
-      className={`group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl dark:hover:shadow-blue-900/10 transition-all duration-500 ease-out transform ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-      }`}
-      style={{ transitionDelay: `${index * 150}ms` }}
+      ref={ref} 
+      className={`group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-2xl ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
+      style={{ transitionDelay: `${index * 100}ms` }}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-slate-200 dark:bg-slate-800 cursor-pointer" onClick={onClick}>
-        <img 
-          src={project.imageUrl} 
-          alt={project.title} 
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-        />
-        
-        {project.demoVideoUrl && (
-          <div className="absolute top-3 right-3 z-10 bg-slate-900/60 backdrop-blur-md p-1.5 rounded-full text-white/90 border border-white/10 shadow-lg" aria-hidden="true">
-             <Film size={14} />
-          </div>
-        )}
-        
-        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center z-10 bg-slate-900/50 backdrop-blur-[2px]`} aria-hidden="true">
-          <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75 flex flex-col sm:flex-row gap-3 items-center">
-            <button 
-              className="bg-white text-slate-900 px-5 py-2.5 rounded-full font-bold text-sm shadow-xl hover:bg-blue-600 hover:text-white flex items-center gap-2 transition-all active:scale-95"
-              onClick={(e) => { e.stopPropagation(); onClick(); }}
-              aria-label={`View details for ${project.title}`}
-            >
-              View Case Study <ArrowUpRight size={16} />
-            </button>
-            {project.demoVideoUrl && (
-              <button 
-                className="bg-blue-600 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-xl hover:bg-blue-700 flex items-center gap-2 transition-all active:scale-95"
-                onClick={(e) => { e.stopPropagation(); onViewDemo(); }}
-                aria-label={`Watch demo for ${project.title}`}
-              >
-                Watch Demo <MonitorPlay size={16} />
-              </button>
-            )}
+      <div className="relative aspect-video overflow-hidden cursor-pointer" onClick={() => onSelect(project, false)}>
+        <img src={project.imageUrl} alt={project.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+        <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div className="flex gap-3 transform translate-y-4 group-hover:translate-y-0 transition-transform">
+            <button className="p-3 bg-white text-slate-900 rounded-full hover:bg-blue-600 hover:text-white transition-colors"><ArrowUpRight size={20} /></button>
+            {project.demoVideoUrl && <button onClick={(e) => { e.stopPropagation(); onSelect(project, true); }} className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"><MonitorPlay size={20} /></button>}
           </div>
         </div>
       </div>
-      <div className="p-6 relative z-20 bg-white dark:bg-slate-900" onClick={onClick}>
-        <div className="flex items-start justify-between mb-3">
-           <span className="px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded text-[10px] font-bold uppercase tracking-wider">{project.category}</span>
+      <div className="p-6">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-2 block">{project.category}</span>
+        <h4 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">{project.title}</h4>
+        <div className="flex flex-wrap gap-1">
+          {project.technologies?.slice(0, 3).map(t => <span key={t} className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{t}</span>)}
         </div>
-        <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 transition-colors cursor-pointer">{project.title}</h4>
-        <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2">{project.description}</p>
-        
-        {project.technologies && (
-            <div className="flex flex-wrap gap-1 mt-3">
-                {project.technologies.slice(0, 3).map(tech => (
-                    <span key={tech} className="text-[10px] px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded">
-                        {tech}
-                    </span>
-                ))}
-                {project.technologies.length > 3 && (
-                    <span className="text-[10px] px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded">+{project.technologies.length - 3}</span>
-                )}
-            </div>
-        )}
       </div>
     </div>
   );
@@ -629,175 +196,76 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onClick, onVi
 export const Portfolio: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY);
   const [activeTag, setActiveTag] = useState(ALL_TAG);
-  const [selectedProjectState, setSelectedProjectState] = useState<{ project: Project; autoPlay: boolean } | null>(null);
-  const [visibleCount, setVisibleCount] = useState(6);
-  const [isVisible, setIsVisible] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<{ project: Project; autoPlay: boolean } | null>(null);
   const [isFilterAnimating, setIsFilterAnimating] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) observer.disconnect();
-    };
+    const savedCat = localStorage.getItem('portfolio_cat') || ALL_CATEGORY;
+    const savedTag = localStorage.getItem('portfolio_tag') || ALL_TAG;
+    setActiveCategory(savedCat);
+    setActiveTag(savedTag);
   }, []);
 
-  const handleCategoryChange = (cat: string) => {
-    if (activeCategory === cat) return;
+  const handleSetCategory = (cat: string) => {
     setIsFilterAnimating(true);
     setTimeout(() => {
       setActiveCategory(cat);
-      setVisibleCount(6);
-      requestAnimationFrame(() => {
-        setIsFilterAnimating(false);
-      });
+      localStorage.setItem('portfolio_cat', cat);
+      setIsFilterAnimating(false);
     }, 300);
   };
 
-  const handleTagChange = (tag: string) => {
-    if (activeTag === tag) return;
+  const handleSetTag = (tag: string) => {
     setIsFilterAnimating(true);
     setTimeout(() => {
       setActiveTag(tag);
-      setVisibleCount(6);
-      requestAnimationFrame(() => {
-        setIsFilterAnimating(false);
-      });
+      localStorage.setItem('portfolio_tag', tag);
+      setIsFilterAnimating(false);
     }, 300);
   };
 
+  const resetFilters = () => {
+    handleSetCategory(ALL_CATEGORY);
+    handleSetTag(ALL_TAG);
+  };
+
+  const filteredProjects = PROJECTS.filter(p => (activeCategory === ALL_CATEGORY || p.category === activeCategory) && (activeTag === ALL_TAG || p.technologies?.includes(activeTag)));
+
   const categories = [ALL_CATEGORY, ...Array.from(new Set(PROJECTS.map(p => p.category)))];
-  const allTags = [ALL_TAG, ...Array.from(new Set(PROJECTS.flatMap(p => p.technologies || []))).sort()];
-
-  const getCategoryCount = (cat: string) => {
-     return PROJECTS.filter(p => {
-       const matchCat = cat === ALL_CATEGORY || p.category === cat;
-       const matchTag = activeTag === ALL_TAG || (p.technologies && p.technologies.includes(activeTag));
-       return matchCat && matchTag;
-     }).length;
-  };
-  
-  const getTagCount = (tag: string) => {
-    return PROJECTS.filter(p => {
-       const matchCat = activeCategory === ALL_CATEGORY || p.category === activeCategory;
-       const matchTag = tag === ALL_TAG || (p.technologies && p.technologies.includes(tag));
-       return matchCat && matchTag;
-    }).length;
-  };
-
-  const filteredProjects = PROJECTS.filter(p => {
-    return (activeCategory === ALL_CATEGORY || p.category === activeCategory) && 
-           (activeTag === ALL_TAG || (p.technologies && p.technologies.includes(activeTag)));
-  });
-
-  const displayedProjects = filteredProjects.slice(0, visibleCount);
+  const tags = [ALL_TAG, ...Array.from(new Set(PROJECTS.flatMap(p => p.technologies || []))).sort()];
 
   return (
-    <section ref={sectionRef} id={SectionId.PORTFOLIO} className="py-24 pt-32 bg-slate-50 dark:bg-slate-950 min-h-screen">
+    <section id={SectionId.PORTFOLIO} className="py-24 bg-slate-50 dark:bg-slate-950 min-h-[800px] transition-colors duration-300">
       <div className="container mx-auto px-6">
-        <div className={`text-center max-w-3xl mx-auto mb-12 transition-all duration-700 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h2 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-3">Our Work</h2>
-          <h3 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white leading-tight mb-4">
-            Showcasing our success stories.
-          </h3>
-          <p className="text-slate-600 dark:text-slate-400 text-lg">
-            From concept to launch, we've helped businesses across the globe achieve their digital goals.
-          </p>
-        </div>
-
-        <div className={`flex flex-wrap justify-center gap-3 mb-8 transition-all duration-700 delay-100 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} role="tablist" aria-label="Filter projects by category">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => handleCategoryChange(cat)}
-              role="tab"
-              aria-selected={activeCategory === cat}
-              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 transform active:scale-95 flex items-center gap-2 ${
-                activeCategory === cat
-                  ? 'bg-slate-900 text-white shadow-lg ring-2 ring-slate-900 ring-offset-2 ring-offset-slate-50 dark:ring-offset-slate-900 scale-105'
-                  : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              {cat} 
-              <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full transition-colors duration-300 ml-1 ${
-                activeCategory === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-              }`}>
-                {getCategoryCount(cat)}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        <div className={`flex items-center justify-center gap-2 mb-12 overflow-x-auto no-scrollbar py-2 px-4 max-w-5xl mx-auto transition-all duration-700 delay-200 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-900/50 p-2 rounded-full border border-slate-200 dark:border-slate-800 backdrop-blur-sm">
-             <Tag size={16} className="text-slate-400 ml-2" aria-hidden="true" />
-             {allTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => handleTagChange(tag)}
-                aria-pressed={activeTag === tag}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 active:scale-95 whitespace-nowrap flex items-center gap-1 ${
-                  activeTag === tag
-                    ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 shadow-sm'
-                    : 'bg-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800'
-                }`}
-              >
-                {tag} 
-                <span className="text-[10px] opacity-70 ml-1">{getTagCount(tag)}</span>
-              </button>
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-3">Portfolio</h2>
+          <h3 className="text-4xl font-bold mb-6">Our Success Stories</h3>
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {categories.map(c => (
+              <button key={c} onClick={() => handleSetCategory(c)} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory === c ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>{c}</button>
+            ))}
+          </div>
+          <div className="flex flex-wrap justify-center gap-2 overflow-x-auto no-scrollbar pb-4">
+            {tags.map(t => (
+              <button key={t} onClick={() => handleSetTag(t)} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTag === t ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200'}`}>{t}</button>
             ))}
           </div>
         </div>
 
-        <div className={`transition-all duration-500 ease-in-out ${isFilterAnimating ? 'opacity-0 scale-[0.98]' : 'opacity-100 scale-100'}`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[400px]">
-            {displayedProjects.map((project, index) => (
-              <ProjectCard 
-                key={project.id} 
-                index={index}
-                project={project} 
-                onClick={() => setSelectedProjectState({ project, autoPlay: false })} 
-                onViewDemo={() => setSelectedProjectState({ project, autoPlay: true })}
-              />
-            ))}
-            {displayedProjects.length === 0 && (
-              <div className="col-span-full flex flex-col items-center justify-center text-slate-400 py-12">
-                 <Code2 className="w-12 h-12 text-slate-300 mb-4" aria-hidden="true" />
-                 <p className="font-medium">No projects found matching your criteria.</p>
-                 <button onClick={() => { handleCategoryChange(ALL_CATEGORY); handleTagChange(ALL_TAG); }} className="mt-4 text-blue-500 text-sm hover:underline">Clear all filters</button>
-              </div>
-            )}
+        <div className={`transition-all duration-300 transform ${isFilterAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProjects.map((p, i) => <ProjectCard key={p.id} project={p} index={i} onSelect={(p, a) => setSelectedProject({ project: p, autoPlay: a })} />)}
           </div>
+          {filteredProjects.length === 0 && (
+            <div className="text-center py-24 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+               <SearchX size={48} className="mx-auto text-slate-300 mb-4" />
+               <p className="text-xl font-bold mb-4">No projects found matching these filters.</p>
+               <Button onClick={resetFilters}>Reset All Filters</Button>
+            </div>
+          )}
         </div>
-        
-        {visibleCount < filteredProjects.length && (
-          <div className="mt-16 text-center">
-            <Button variant="outline" onClick={() => setVisibleCount(p => p + 3)} className="group px-8">
-              View More Projects <ArrowDown className="ml-2 w-4 h-4 transition-transform group-hover:translate-y-1" aria-hidden="true" />
-            </Button>
-          </div>
-        )}
       </div>
-
-      <ProjectModal 
-        project={selectedProjectState?.project || null} 
-        autoPlay={selectedProjectState?.autoPlay}
-        onClose={() => setSelectedProjectState(null)} 
-        onProjectSelect={(p) => setSelectedProjectState({ project: p, autoPlay: false })} 
-      />
+      <ProjectModal project={selectedProject?.project || null} autoPlay={selectedProject?.autoPlay} onClose={() => setSelectedProject(null)} onProjectSelect={(p) => setSelectedProject({ project: p, autoPlay: false })} />
     </section>
   );
 };

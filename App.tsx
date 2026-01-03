@@ -13,6 +13,7 @@ import { Footer } from './components/Footer';
 import { AiAssistant } from './components/AiAssistant';
 import { SectionId } from './types';
 import { COMPANY_NAME, TAGLINE } from './constants';
+import { ArrowUp } from 'lucide-react';
 
 const SEO_DATA = {
   [SectionId.HOME]: {
@@ -43,6 +44,7 @@ const SEO_DATA = {
 
 function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme');
@@ -53,6 +55,14 @@ function App() {
       setTheme('light');
       document.documentElement.classList.remove('dark');
     }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -68,7 +78,6 @@ function App() {
             if (metaDesc) {
               metaDesc.setAttribute('content', seoInfo.description);
             }
-            // CRITICAL: Removed history.replaceState to avoid SecurityError in sandboxed environments.
           }
         }
       });
@@ -97,6 +106,10 @@ function App() {
     localStorage.setItem('theme', newTheme);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100 transition-colors duration-300 relative">
       <Header theme={theme} toggleTheme={toggleTheme} />
@@ -112,6 +125,17 @@ function App() {
       </main>
       <Footer theme={theme} toggleTheme={toggleTheme} />
       <AiAssistant />
+      
+      {/* Scroll to Top Button */}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-24 right-6 z-[90] p-3 rounded-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-2xl border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:scale-110 active:scale-95 ${
+          showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+        }`}
+        aria-label="Scroll to top of page"
+      >
+        <ArrowUp size={24} />
+      </button>
     </div>
   );
 }
