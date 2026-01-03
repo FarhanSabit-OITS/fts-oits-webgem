@@ -90,8 +90,8 @@ setMessages(prev => [...prev, { id: Date.now().toString(), role: 'bot' as const,
                     {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
                   </div>
                   <div className={`p-3 rounded-2xl text-sm ${
-                    msg.role === 'user' 
-                      ? 'bg-blue-600 text-white rounded-tr-none' 
+                    msg.role === 'user'
+                      ? 'bg-blue-600 text-white rounded-tr-none'
                       : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-sm border border-slate-100 dark:border-slate-700 rounded-tl-none'
                   }`}>
                     {msg.text}
@@ -107,25 +107,25 @@ setMessages(prev => [...prev, { id: Date.now().toString(), role: 'bot' as const,
                       <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:0.2s]"></div>
                       <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:0.4s]"></div>
                     </div>
-                 </div>
+</div>
               </div>
             )}
           </div>
 
           {/* Input */}
           <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            <form 
+            <form
               onSubmit={(e) => { e.preventDefault(); handleSend(); }}
               className="relative"
             >
-              <input 
-                type="text" 
-                placeholder="Describe your idea..." 
+              <input
+                type="text"
+                placeholder="Describe your idea..."
                 className="w-full bg-slate-100 dark:bg-slate-800 rounded-xl px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:text-white"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
               />
-              <button 
+              <button
                 type="submit"
                 disabled={!input.trim() || isTyping}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-blue-600 disabled:text-slate-400"
@@ -136,13 +136,13 @@ setMessages(prev => [...prev, { id: Date.now().toString(), role: 'bot' as const,
           </div>
         </div>
       ) : (
-        <button 
+        <button
           onClick={() => setIsOpen(true)}
           className="w-14 h-14 bg-slate-900 dark:bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all group relative"
         >
           <div className="absolute -top-2 -right-1 bg-green-500 w-4 h-4 rounded-full border-4 border-white dark:border-slate-950"></div>
           <MessageSquare size={24} className="group-hover:animate-subtle-bounce" />
-          
+
           <span className="absolute right-full mr-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 rounded-xl text-xs font-bold shadow-xl border border-slate-100 dark:border-slate-700 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             How can we help?
           </span>

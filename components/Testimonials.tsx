@@ -42,14 +42,14 @@ export const Testimonials: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {TESTIMONIALS.map((t, index) => (
-            <div 
-              key={t.id} 
+            <div
+              key={t.id}
               className={`bg-slate-50 dark:bg-slate-800 p-8 rounded-3xl relative transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               <Quote className="text-blue-100 dark:text-blue-900 w-12 h-12 mb-6" />
               <p className="text-slate-700 dark:text-slate-300 italic mb-8 relative z-10 leading-relaxed">"{t.content}"</p>
-              
+
               <div className="flex items-center gap-4 mt-auto">
                 <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full object-cover" />
                 <div>
