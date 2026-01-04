@@ -93,6 +93,7 @@ export const PROJECTS: Project[] = [
     description: 'A comprehensive financial analytics dashboard for real-time market tracking.',
     technologies: ['React', 'D3.js', 'Node.js', 'PostgreSQL'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    duration: '4-5 Months'
   },
   {
     id: '2',
@@ -102,6 +103,7 @@ export const PROJECTS: Project[] = [
     description: 'A HIPAA-compliant telemedicine platform with secure video conferencing.',
     technologies: ['Flutter', 'Firebase', 'WebRTC'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    duration: '3-4 Months'
   },
   {
     id: '3',
@@ -111,6 +113,70 @@ export const PROJECTS: Project[] = [
     description: 'AI-driven logistics platform managing complex global supply chains.',
     technologies: ['Next.js', 'Python', 'AWS SageMaker'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    duration: '6 Months'
+  },
+  {
+    id: '4',
+    title: 'Retail POS System',
+    category: 'Enterprise Software',
+    imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1000',
+    description: 'Cloud-based Point of Sale system for multi-location retail businesses.',
+    technologies: ['Vue.js', 'Go', 'Redis'],
+    duration: '4 Months'
+  },
+  {
+    id: '5',
+    title: 'EduTrack LMS',
+    category: 'Web Application',
+    imageUrl: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
+    description: 'Scalable learning management system for higher education institutions.',
+    technologies: ['React', 'NestJS', 'PostgreSQL'],
+    duration: '5-6 Months'
+  },
+  {
+    id: '6',
+    title: 'TravelGo Mobile',
+    category: 'Mobile Application',
+    imageUrl: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=1000',
+    description: 'Personalized travel companion with offline maps and real-time booking.',
+    technologies: ['React Native', 'TypeScript', 'GraphQL'],
+    duration: '3 Months'
+  },
+  {
+    id: '7',
+    title: 'SecurePay Gateway',
+    category: 'SaaS Platform',
+    imageUrl: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1000',
+    description: 'High-security payment orchestration layer for global merchants.',
+    technologies: ['Node.js', 'Kubernetes', 'AWS'],
+    duration: '6-8 Months'
+  },
+  {
+    id: '8',
+    title: 'Wellness Tracker',
+    category: 'Mobile Application',
+    imageUrl: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=1000',
+    description: 'Health and wellness tracking app with wearable integration.',
+    technologies: ['Flutter', 'HealthKit', 'Firebase'],
+    duration: '4 Months'
+  },
+  {
+    id: '9',
+    title: 'ProAuto Insurance',
+    category: 'Enterprise Software',
+    imageUrl: 'https://images.unsplash.com/photo-1554224155-1696413565d3?auto=format&fit=crop&q=80&w=1000',
+    description: 'End-to-end insurance claim processing and policy management.',
+    technologies: ['Angular', 'Java', 'Oracle'],
+    duration: '9 Months'
+  },
+  {
+    id: '10',
+    title: 'Foodie Delivery',
+    category: 'SaaS Platform',
+    imageUrl: 'https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&q=80&w=1000',
+    description: 'Multi-vendor food delivery platform with real-time driver tracking.',
+    technologies: ['Next.js', 'Prisma', 'Socket.io'],
+    duration: '5 Months'
   }
 ];
 

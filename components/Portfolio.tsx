@@ -1,31 +1,23 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowDown, X, ExternalLink, Calendar, Code2, ArrowUpRight, Play, Film, Tag, Volume2, VolumeX, Pause, Subtitles, MonitorPlay, SearchX } from 'lucide-react';
+import { ArrowDown, X, ExternalLink, Calendar, Code2, ArrowUpRight, Play, Film, Tag, Volume2, VolumeX, Pause, Subtitles, MonitorPlay, SearchX, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { SectionId, Project } from '../types';
 import { Button } from './ui/Button';
 
 const ALL_CATEGORY = 'All';
 const ALL_TAG = 'All Tech';
-
-const formatTime = (seconds: number): string => {
-  if (!seconds || isNaN(seconds)) return "0:00";
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-};
+const PROJECTS_PER_PAGE = 9;
 
 // --- Custom Video Player Component ---
 interface CustomVideoPlayerProps {
   src: string;
-  captionsUrl?: string;
   poster?: string;
   onClose: () => void;
 }
 
-const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl, poster, onClose }) => {
+const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, poster, onClose }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
@@ -61,7 +53,7 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
   return (
     <div className="relative w-full h-full bg-black flex flex-col justify-center overflow-hidden" tabIndex={0} role="region" aria-label="Project Demo Player">
       {!isVideoLoaded && <div className="absolute inset-0 flex items-center justify-center z-10"><div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div></div>}
-      <video ref={videoRef} src={src} className="w-full h-full object-contain z-10" onClick={togglePlay} playsInline />
+      <video ref={videoRef} src={src} poster={poster} className="w-full h-full object-contain z-10" onClick={togglePlay} playsInline />
       <div className="absolute bottom-6 right-6 z-20 flex gap-2">
         <button onClick={togglePlay} className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-all">{isPlaying ? <Pause size={20} /> : <Play size={20} />}</button>
         <button onClick={onClose} className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-all"><X size={20} /></button>
@@ -75,10 +67,9 @@ interface ProjectModalProps {
   project: Project | null;
   autoPlay?: boolean;
   onClose: () => void;
-  onProjectSelect: (project: Project) => void;
 }
 
-const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, onClose, onProjectSelect }) => {
+const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
 
@@ -106,13 +97,13 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, 
             <div className="w-full h-full relative">
               <img src={project.imageUrl} className="w-full h-full object-cover" alt={project.title} />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-              <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-black/20 hover:bg-black/40 rounded-full text-white transition-all"><X size={24} /></button>
-              <div className="absolute bottom-8 left-8 text-white">
-                <span className="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase mb-3 inline-block">{project.category}</span>
-                <h3 className="text-4xl font-bold">{project.title}</h3>
+              <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-black/20 hover:bg-black/40 rounded-full text-white transition-all z-20"><X size={24} /></button>
+              <div className="absolute bottom-8 left-8 text-white z-10">
+                <span className="px-3 py-1 bg-blue-600 rounded-full text-xs font-bold uppercase mb-3 inline-block shadow-lg">{project.category}</span>
+                <h3 className="text-4xl md:text-5xl font-extrabold tracking-tight">{project.title}</h3>
               </div>
               {project.demoVideoUrl && (
-                <button onClick={() => setIsPlayingVideo(true)} className="absolute inset-0 flex items-center justify-center group">
+                <button onClick={() => setIsPlayingVideo(true)} className="absolute inset-0 flex items-center justify-center group z-10">
                   <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white scale-100 group-hover:scale-110 transition-transform"><Play size={32} fill="currentColor" className="ml-1" /></div>
                 </button>
               )}
@@ -122,17 +113,31 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, 
         <div className="p-8 md:p-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="md:col-span-2 space-y-6">
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white">Overview</h4>
+              <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold uppercase tracking-widest text-sm">
+                <Calendar size={18} /> Project Overview
+              </div>
               <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">{project.fullDescription || project.description}</p>
-              <div className="flex flex-wrap gap-2">
-                {project.technologies?.map(t => <span key={t} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm">{t}</span>)}
+              <div className="space-y-4 pt-4">
+                <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-2"><Code2 size={20} /> Stack & Tools</h4>
+                <div className="flex flex-wrap gap-2">
+                  {project.technologies?.map(t => <span key={t} className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium border border-slate-200 dark:border-slate-700">{t}</span>)}
+                </div>
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-xl space-y-4">
-                <h5 className="font-bold">Project Details</h5>
-                <div className="flex flex-col text-sm"><span className="text-slate-500">Timeline</span><span className="font-semibold">3-4 Months</span></div>
-                <Button className="w-full" onClick={() => window.open(project.link || '#', '_blank')}>Visit Live Project</Button>
+            <div className="space-y-6">
+              <div className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 space-y-6">
+                <h5 className="font-bold text-lg">Key Information</h5>
+                <div className="space-y-4">
+                   <div className="flex justify-between items-center text-sm">
+                     <span className="text-slate-500">Timeline</span>
+                     <span className="font-bold flex items-center gap-1.5"><Clock size={14} className="text-blue-500" /> {project.duration || 'N/A'}</span>
+                   </div>
+                   <div className="flex justify-between items-center text-sm">
+                     <span className="text-slate-500">Industry</span>
+                     <span className="font-bold">{project.category}</span>
+                   </div>
+                </div>
+                <Button className="w-full shadow-lg shadow-blue-500/20" onClick={() => window.open(project.link || '#', '_blank')}>Visit Live Site <ArrowUpRight className="ml-2 w-4 h-4" /></Button>
               </div>
             </div>
           </div>
@@ -157,18 +162,20 @@ const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Pro
     <div 
       ref={ref} 
       className={`group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-2xl ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
-      style={{ transitionDelay: `${index * 100}ms` }}
+      style={{ transitionDelay: `${(index % PROJECTS_PER_PAGE) * 100}ms` }}
     >
       <div className="relative aspect-video overflow-hidden cursor-pointer" onClick={() => onSelect(project, false)}>
         <img src={project.imageUrl} alt={project.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
         
         {/* Description Overlay on Hover */}
-        <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-center text-white">
-          <p className="text-sm line-clamp-4 leading-relaxed font-medium mb-4">{project.description}</p>
-          <div className="flex gap-3">
-             <button className="px-4 py-2 bg-white text-slate-900 rounded-full text-xs font-bold hover:bg-blue-600 hover:text-white transition-colors">Case Study</button>
+        <div className="absolute inset-0 bg-slate-900/85 backdrop-blur-[4px] opacity-0 group-hover:opacity-100 transition-all duration-300 p-6 flex flex-col justify-center text-white translate-y-4 group-hover:translate-y-0">
+          <p className="text-sm line-clamp-4 leading-relaxed font-medium mb-6 opacity-0 group-hover:opacity-100 transition-opacity delay-100">{project.description}</p>
+          <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-all delay-200">
+             <button className="px-5 py-2.5 bg-white text-slate-900 rounded-full text-xs font-bold hover:bg-blue-600 hover:text-white transition-colors flex items-center gap-1.5 shadow-lg active:scale-95" onClick={(e) => { e.stopPropagation(); onSelect(project, false); }}>
+               Case Study <ArrowUpRight size={14} />
+             </button>
              {project.demoVideoUrl && (
-               <button onClick={(e) => { e.stopPropagation(); onSelect(project, true); }} className="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-bold hover:bg-blue-700 transition-colors flex items-center gap-2">
+               <button onClick={(e) => { e.stopPropagation(); onSelect(project, true); }} className="px-5 py-2.5 bg-blue-600 text-white rounded-full text-xs font-bold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg active:scale-95">
                  <Play size={12} fill="currentColor" /> Play Demo
                </button>
              )}
@@ -176,14 +183,17 @@ const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Pro
         </div>
       </div>
       <div className="p-6">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-2 block">{project.category}</span>
-        <h4 className="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors cursor-pointer" onClick={() => onSelect(project, false)}>{project.title}</h4>
+        <div className="flex justify-between items-center mb-2">
+           <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded">{project.category}</span>
+           <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1"><Clock size={10} /> {project.duration || 'N/A'}</span>
+        </div>
+        <h4 className="text-xl font-bold mb-4 group-hover:text-blue-600 transition-colors cursor-pointer" onClick={() => onSelect(project, false)}>{project.title}</h4>
         <div className="flex flex-wrap gap-1.5">
           {project.technologies?.slice(0, 4).map(t => (
             <button 
               key={t} 
               onClick={(e) => { e.stopPropagation(); onTagClick(t); }}
-              className="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 px-2 py-0.5 rounded transition-colors"
+              className="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 dark:hover:bg-blue-600 text-slate-500 dark:text-slate-400 hover:text-white px-2 py-0.5 rounded transition-all active:scale-90"
             >
               {t}
             </button>
@@ -201,6 +211,7 @@ const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Pro
 export const Portfolio: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState(ALL_CATEGORY);
   const [activeTag, setActiveTag] = useState(ALL_TAG);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedProject, setSelectedProject] = useState<{ project: Project; autoPlay: boolean } | null>(null);
   const [isFilterAnimating, setIsFilterAnimating] = useState(false);
 
@@ -217,6 +228,7 @@ export const Portfolio: React.FC = () => {
     setIsFilterAnimating(true);
     setTimeout(() => {
       setActiveCategory(cat);
+      setCurrentPage(1);
       localStorage.setItem('portfolio_cat', cat);
       setIsFilterAnimating(false);
     }, 300);
@@ -227,6 +239,7 @@ export const Portfolio: React.FC = () => {
     setIsFilterAnimating(true);
     setTimeout(() => {
       setActiveTag(tag);
+      setCurrentPage(1);
       localStorage.setItem('portfolio_tag', tag);
       setIsFilterAnimating(false);
     }, 300);
@@ -238,34 +251,38 @@ export const Portfolio: React.FC = () => {
   };
 
   const filteredProjects = PROJECTS.filter(p => (activeCategory === ALL_CATEGORY || p.category === activeCategory) && (activeTag === ALL_TAG || p.technologies?.includes(activeTag)));
+  
+  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
+  const currentProjects = filteredProjects.slice((currentPage - 1) * PROJECTS_PER_PAGE, currentPage * PROJECTS_PER_PAGE);
 
   const categories = [ALL_CATEGORY, ...Array.from(new Set(PROJECTS.map(p => p.category)))];
   const tags = [ALL_TAG, ...Array.from(new Set(PROJECTS.flatMap(p => p.technologies || []))).sort()];
 
   return (
-    <section id={SectionId.PORTFOLIO} className="py-24 bg-slate-50 dark:bg-slate-950 min-h-[800px] transition-colors duration-300">
+    <section id={SectionId.PORTFOLIO} className="py-24 bg-slate-50 dark:bg-slate-950 min-h-[900px] transition-colors duration-300">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-3">Portfolio</h2>
-          <h3 className="text-4xl font-bold mb-6">Our Success Stories</h3>
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-3">Portfolio</h2>
+          <h3 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight text-slate-900 dark:text-white">Our Success Stories</h3>
+          <p className="text-slate-600 dark:text-slate-300 text-lg mb-10">We deliver high-impact digital solutions that transform businesses and delight users.</p>
           
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
+          <div className="flex flex-wrap justify-center gap-3 mb-6">
             {categories.map(c => (
               <button 
                 key={c} 
                 onClick={() => handleSetCategory(c)} 
-                className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all transform active:scale-95 ${activeCategory === c ? 'bg-blue-600 text-white shadow-lg' : 'bg-white dark:bg-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'}`}
+                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all transform active:scale-95 border ${activeCategory === c ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-500/20' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700'}`}
               >
                 {c}
               </button>
             ))}
           </div>
-          <div className="flex flex-wrap justify-center gap-2 overflow-x-auto no-scrollbar pb-4 max-w-3xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-2 overflow-x-auto no-scrollbar pb-4 max-w-4xl mx-auto">
             {tags.map(t => (
               <button 
                 key={t} 
                 onClick={() => handleSetTag(t)} 
-                className={`px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-tight transition-all active:scale-90 ${activeTag === t ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'}`}
+                className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-tight transition-all active:scale-90 border ${activeTag === t ? 'bg-slate-900 border-slate-900 text-white dark:bg-white dark:border-white dark:text-slate-900 shadow-md' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700'}`}
               >
                 {t}
               </button>
@@ -274,22 +291,56 @@ export const Portfolio: React.FC = () => {
         </div>
 
         <div className={`transition-all duration-300 transform ${isFilterAnimating ? 'opacity-0 scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'}`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((p, i) => (
-              <ProjectCard 
-                key={p.id} 
-                project={p} 
-                index={i} 
-                onTagClick={handleSetTag} 
-                onSelect={(p, a) => setSelectedProject({ project: p, autoPlay: a })} 
-              />
-            ))}
-          </div>
-          {filteredProjects.length === 0 && (
+          {currentProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+              {currentProjects.map((p, i) => (
+                <ProjectCard 
+                  key={p.id} 
+                  project={p} 
+                  index={i} 
+                  onTagClick={handleSetTag} 
+                  onSelect={(p, a) => setSelectedProject({ project: p, autoPlay: a })} 
+                />
+              ))}
+            </div>
+          ) : (
             <div className="text-center py-24 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 animate-in fade-in duration-500">
                <SearchX size={48} className="mx-auto text-slate-300 mb-4" />
                <p className="text-xl font-bold mb-4">No projects found matching these filters.</p>
                <Button onClick={resetFilters} variant="outline">Reset All Filters</Button>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-4 mt-12">
+              <button 
+                onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: document.getElementById(SectionId.PORTFOLIO)?.offsetTop, behavior: 'smooth' }); }}
+                disabled={currentPage === 1}
+                className="p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 disabled:opacity-30 transition-all hover:bg-slate-100 dark:hover:bg-slate-700"
+                aria-label="Previous Page"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => { setCurrentPage(i + 1); window.scrollTo({ top: document.getElementById(SectionId.PORTFOLIO)?.offsetTop, behavior: 'smooth' }); }}
+                    className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${currentPage === i + 1 ? 'bg-blue-600 text-white shadow-lg' : 'bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+              <button 
+                onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: document.getElementById(SectionId.PORTFOLIO)?.offsetTop, behavior: 'smooth' }); }}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 disabled:opacity-30 transition-all hover:bg-slate-100 dark:hover:bg-slate-700"
+                aria-label="Next Page"
+              >
+                <ChevronRight size={20} />
+              </button>
             </div>
           )}
         </div>
@@ -298,7 +349,6 @@ export const Portfolio: React.FC = () => {
         project={selectedProject?.project || null} 
         autoPlay={selectedProject?.autoPlay} 
         onClose={() => setSelectedProject(null)} 
-        onProjectSelect={(p) => setSelectedProject({ project: p, autoPlay: false })} 
       />
     </section>
   );

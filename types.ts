@@ -18,6 +18,7 @@ export interface Project {
   link?: string;
   demoVideoUrl?: string;
   captionsUrl?: string;
+  duration?: string;
 }
 
 export interface Testimonial {
