@@ -59,7 +59,7 @@ export const Services: React.FC = () => {
               style={{ transitionDelay: `${index * 120}ms` }}
             >
               <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-sm mb-8 transition-all duration-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-[15deg] group-hover:shadow-blue-500/30">
-                <div className="transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:animate-pulse">
+                <div className="transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:animate-subtle-bounce">
                   {iconMap[service.icon]}
                 </div>
               </div>
@@ -71,7 +71,7 @@ export const Services: React.FC = () => {
                 {service.features.map((feature, idx) => (
                   <span 
                     key={idx} 
-                    className={`px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 shadow-sm transition-all duration-500 transform scale-95 opacity-80 group-hover:scale-100 group-hover:opacity-100 group-hover:border-blue-200 dark:group-hover:border-blue-800 group-hover:text-blue-600 dark:group-hover:text-blue-300`}
+                    className={`px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 shadow-sm transition-all duration-500 transform scale-95 opacity-80 group-hover:scale-105 group-hover:opacity-100 group-hover:border-blue-200 dark:group-hover:border-blue-800 group-hover:text-blue-600 dark:group-hover:text-blue-300`}
                     style={{ transitionDelay: `${idx * 100}ms` }}
                   >
                     {feature}

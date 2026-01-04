@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, LayoutGrid, Play, Zap, Cpu } from 'lucide-react';
+import { ArrowRight, LayoutGrid, Zap, Cpu } from 'lucide-react';
 import { Button } from './ui/Button';
 import { TAGLINE } from '../constants';
 import { SectionId } from '../types';
@@ -31,7 +31,7 @@ export const Hero: React.FC = () => {
     };
   }, []);
 
-  // Particle Background Logic
+  // Theme-aware Dynamic Particle Background Logic
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -40,6 +40,7 @@ export const Hero: React.FC = () => {
 
     let animationFrameId: number;
     let particles: Particle[] = [];
+    
     const isDarkMode = document.documentElement.classList.contains('dark');
 
     const resizeCanvas = () => {
@@ -52,17 +53,17 @@ export const Hero: React.FC = () => {
       constructor() {
         this.x = Math.random() * (canvas?.width || 0);
         this.y = Math.random() * (canvas?.height || 0);
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = Math.random() * 0.2 - 0.1;
-        this.speedY = Math.random() * 0.2 - 0.1;
-        // Theme-aware particle color
-        this.color = isDarkMode ? '59, 130, 246' : '37, 99, 235';
-        this.alpha = Math.random() * 0.4 + 0.1;
+        this.size = Math.random() * 1.5 + 0.2;
+        this.speedX = Math.random() * 0.1 - 0.05;
+        this.speedY = Math.random() * 0.1 - 0.05;
+        // Theme-responsive color palette
+        this.color = isDarkMode ? '56, 189, 248' : '37, 99, 235'; 
+        this.alpha = Math.random() * 0.3 + 0.1;
       }
       update(mX: number, mY: number) {
-        // Particles react to mouse position
-        this.x += this.speedX + (mX * 0.4);
-        this.y += this.speedY + (mY * 0.4);
+        // Particles move slightly away from mouse
+        this.x += this.speedX + (mX * 0.3);
+        this.y += this.speedY + (mY * 0.3);
         
         if (canvas) {
           if (this.x > canvas.width) this.x = 0; if (this.x < 0) this.x = canvas.width;
@@ -71,23 +72,20 @@ export const Hero: React.FC = () => {
       }
       draw() {
         if (!ctx) return;
-        ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+        ctx.fillStyle = isDarkMode ? `rgba(56, 189, 248, ${this.alpha})` : `rgba(37, 99, 235, ${this.alpha})`;
         ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
       }
     }
 
     const init = () => {
       particles = [];
-      const numberOfParticles = Math.floor(window.innerWidth / 12);
+      const numberOfParticles = Math.floor(window.innerWidth / 18);
       for (let i = 0; i < numberOfParticles; i++) particles.push(new Particle());
     };
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let p of particles) { 
-        p.update(mousePos.x, mousePos.y); 
-        p.draw(); 
-      }
+      for (let p of particles) { p.update(mousePos.x, mousePos.y); p.draw(); }
       animationFrameId = requestAnimationFrame(animate);
     };
 
@@ -113,36 +111,48 @@ export const Hero: React.FC = () => {
 
   return (
     <section id={SectionId.HOME} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[100vh] flex items-center">
-      {/* Background Layers */}
-      <div className="absolute top-0 left-0 w-full h-full -z-40 overflow-hidden pointer-events-none">
-        {/* Layer 1: Parallax Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-30 dark:opacity-20 transition-transform duration-1000 ease-out will-change-transform scale-110"
-          style={{ 
-            backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 40 + scrollY * 0.15}px) scale(1.1)`
-          }}
-          aria-hidden="true"
-        />
+      
+      {/* Dynamic Background Layers */}
+      <div className="absolute top-0 left-0 w-full h-full -z-50 overflow-hidden pointer-events-none">
         
-        {/* Layer 2: Theme Gradients */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-50/95 via-slate-50/70 to-slate-50/95 dark:from-slate-950/95 dark:via-slate-950/85 dark:to-slate-950/95" />
+        {/* Layer 1: Looping Video Background */}
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute inset-0 w-full h-full object-cover opacity-15 dark:opacity-5 transition-opacity duration-1000 scale-105"
+          style={{ transform: `scale(1.05) translate(${mousePos.x * 25}px, ${mousePos.y * 25}px)` }}
+          poster="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=2070"
+        >
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-circuit-board-loop-animation-4424-large.mp4" type="video/mp4" />
+        </video>
+
+        {/* Layer 2: Theme-aware Gradient Mesh */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-50/95 via-slate-50/80 to-slate-50/95 dark:from-slate-950/98 dark:via-slate-950/90 dark:to-slate-950/98 transition-colors duration-500" />
         
-        {/* Layer 3: Particle Canvas */}
+        {/* Layer 3: Interactive Particle Overlay */}
         <canvas 
           ref={canvasRef} 
-          className="absolute inset-0 z-20 opacity-50 pointer-events-none" 
+          className="absolute inset-0 z-20 opacity-30 pointer-events-none" 
           aria-hidden="true" 
+        />
+        
+        {/* Layer 4: Abstract Glowing Blobs */}
+        <div 
+          className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-blue-500/10 dark:bg-blue-600/5 rounded-full blur-[180px] opacity-70 animate-float will-change-transform z-0" 
+          style={{ transform: `translate(${mousePos.x * -120}px, ${mousePos.y * -120}px)` }}
         />
       </div>
 
       <div className="container mx-auto px-6 relative z-30">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
           
-          <div className="flex-1 space-y-10 text-center lg:text-left relative">
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50/80 dark:bg-blue-900/40 backdrop-blur-3xl border border-blue-200 dark:border-blue-800 text-[10px] font-black text-blue-700 dark:text-blue-400 uppercase tracking-[0.25em] shadow-sm transition-all duration-[1000ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          {/* Main Staggered Entrance Content */}
+          <div className="flex-1 space-y-10 text-center lg:text-left relative z-40">
+            <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-50/90 dark:bg-blue-900/40 backdrop-blur-3xl border border-blue-200 dark:border-blue-800 text-[10px] font-black text-blue-700 dark:text-blue-400 uppercase tracking-[0.3em] shadow-sm transition-all duration-[1200ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              Pioneering Enterprise Solutions
+              Engineering High-Performance Futures
             </div>
             
             <div className="space-y-4">
@@ -151,8 +161,8 @@ export const Hero: React.FC = () => {
                   {titleLine1.split(' ').map((word, i) => (
                     <span 
                       key={i} 
-                      className={`inline-block transition-all duration-[800ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'}`}
-                      style={{ transitionDelay: `${i * 100 + 200}ms` }}
+                      className={`inline-block transition-all duration-[1000ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-full scale-95'}`}
+                      style={{ transitionDelay: `${i * 150 + 200}ms` }}
                     >
                       {word}&nbsp;
                     </span>
@@ -162,8 +172,8 @@ export const Hero: React.FC = () => {
                    {titleLine2.split(' ').map((word, i) => (
                     <span 
                       key={i} 
-                      className={`inline-block transition-all duration-[800ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'}`}
-                      style={{ transitionDelay: `${i * 100 + 500}ms` }}
+                      className={`inline-block transition-all duration-[1000ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-full scale-95'}`}
+                      style={{ transitionDelay: `${i * 150 + 600}ms` }}
                     >
                       {word}&nbsp;
                     </span>
@@ -176,18 +186,19 @@ export const Hero: React.FC = () => {
               {taglineWords.map((word, i) => (
                 <span 
                   key={i}
-                  className={`inline-block transition-all duration-[600ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                  style={{ transitionDelay: `${i * 50 + 800}ms` }}
+                  className={`inline-block transition-all duration-[800ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                  style={{ transitionDelay: `${i * 70 + 1000}ms` }}
                 >
                   {word}&nbsp;
                 </span>
               ))}
             </p>
 
-            <div className={`flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start transition-all duration-[1000ms] delay-[1200ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {/* CTA Group with high prominence */}
+            <div className={`flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start transition-all duration-[1000ms] delay-[1800ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <Button 
                 size="lg" variant="primary" 
-                className="group h-20 px-14 rounded-3xl font-black text-xl shadow-2xl shadow-blue-500/30 hover:scale-[1.08] active:scale-95 transition-all duration-300" 
+                className="group h-20 px-14 rounded-3xl font-black text-xl shadow-2xl shadow-blue-500/30 hover:scale-[1.1] active:scale-95 transition-all duration-500 z-50" 
                 onClick={scrollToContact}
               >
                 Launch Project
@@ -195,52 +206,85 @@ export const Hero: React.FC = () => {
               </Button>
               <Button 
                 variant="outline" size="lg" 
-                className="h-20 px-12 rounded-3xl group font-black text-xl backdrop-blur-xl border-2 hover:bg-slate-900 hover:text-white"
+                className="h-20 px-12 rounded-3xl group font-black text-xl backdrop-blur-3xl border-2 hover:bg-slate-900 hover:text-white z-50 transition-all duration-300"
                 onClick={scrollToPortfolio}
               >
                 <LayoutGrid className="mr-3 w-5 h-5 group-hover:rotate-12 transition-transform" />
-                Request Demo
+                Explore Portfolio
               </Button>
             </div>
           </div>
 
-          <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-[1500ms] delay-[400ms] ease-out transform ${isVisible ? 'opacity-100 translate-x-0 rotate-0' : 'opacity-0 translate-x-24 rotate-3'}`}>
-             <div className="relative group" style={{ perspective: '2000px' }}>
+          {/* Right Visual Area: Interactive SVG Transformation */}
+          <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-[1800ms] delay-[400ms] ease-out transform ${isVisible ? 'opacity-100 translate-x-0 rotate-0 scale-100' : 'opacity-0 translate-x-32 rotate-6 scale-90'}`}>
+             <div className="relative group" style={{ perspective: '2500px' }}>
                 <div 
-                  className="relative bg-white dark:bg-slate-800 border-4 border-white dark:border-slate-700 rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden aspect-[4/3] transform-gpu transition-all duration-700 hover:scale-[1.02] z-10"
-                  style={{ transform: `rotateY(${mousePos.x * -15}deg) rotateX(${mousePos.y * 15}deg)` }}
+                  className="relative bg-white/5 dark:bg-slate-800/10 backdrop-blur-3xl border-2 border-white/20 dark:border-slate-700/50 rounded-[6rem] shadow-[0_80px_120px_-40px_rgba(0,0,0,0.25)] aspect-[1/1] transform-gpu transition-all duration-700 hover:scale-[1.03] flex items-center justify-center overflow-hidden z-10"
+                  style={{ transform: `rotateY(${mousePos.x * -25}deg) rotateX(${mousePos.y * 25}deg)` }}
                 >
-                  <img 
-                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200" 
-                    alt="Digital Innovation Dashboard" 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 to-transparent" />
+                  {/* Digital Transformation SVG (Sophisticated Animation) */}
+                  <svg viewBox="0 0 400 400" className="w-3/4 h-3/4 overflow-visible drop-shadow-2xl">
+                    <defs>
+                      <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#3b82f6" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#818cf8" stopOpacity="1" />
+                      </linearGradient>
+                      <filter id="glow">
+                        <feGaussianBlur stdDeviation="6" result="blur" />
+                        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                      </filter>
+                    </defs>
+                    
+                    {/* Pulsing Circuit Paths */}
+                    <g className="animate-float" style={{ animationDuration: '10s' }}>
+                      <circle cx="200" cy="200" r="150" fill="none" stroke="url(#primaryGrad)" strokeWidth="0.5" strokeDasharray="10 20" className="animate-[spin_60s_linear_infinite]" opacity="0.3" />
+                      <circle cx="200" cy="200" r="100" fill="none" stroke="url(#primaryGrad)" strokeWidth="1" strokeDasharray="5 15" className="animate-[spin_30s_linear_infinite_reverse]" opacity="0.4" />
+                      
+                      <g className="animate-pulse" style={{ animationDuration: '4s' }}>
+                         <rect x="160" y="160" width="80" height="80" rx="20" fill="url(#primaryGrad)" fillOpacity="0.15" filter="url(#glow)" stroke="white" strokeWidth="2" strokeOpacity="0.5" />
+                         <path d="M180 200 L195 215 L225 185" fill="none" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" filter="url(#glow)" />
+                      </g>
+                    </g>
+
+                    {/* Drifting Floating Nodes */}
+                    {[0, 72, 144, 216, 288].map((angle, i) => {
+                      const r = 135;
+                      const x = 200 + r * Math.cos((angle * Math.PI) / 180);
+                      const y = 200 + r * Math.sin((angle * Math.PI) / 180);
+                      return (
+                        <g key={i} className="animate-float" style={{ animationDelay: `${i * 0.5}s`, animationDuration: '7s' }}>
+                          <line x1="200" y1="200" x2={x} y2={y} stroke="white" strokeOpacity="0.1" strokeWidth="1.5" strokeDasharray="6 6" />
+                          <circle cx={x} cy={y} r="8" fill="#3b82f6" className="animate-pulse" style={{ animationDelay: `${i * 0.4}s` }} filter="url(#glow)" />
+                        </g>
+                      );
+                    })}
+                  </svg>
                 </div>
                 
-                {/* Enhanced Interactive Parallax Elements */}
+                {/* Floating Cards with Intense Parallax */}
                 <div 
-                  className="absolute -bottom-10 -left-10 md:-left-16 p-8 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-6 z-20 transition-transform duration-200 ease-out"
-                  style={{ transform: `translate(${mousePos.x * 70}px, ${mousePos.y * 70}px) rotateZ(${mousePos.x * 5}deg)` }}
+                  className="absolute -bottom-12 -left-12 md:-left-20 p-8 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-6 z-20 transition-transform duration-300 ease-out"
+                  style={{ transform: `translate(${mousePos.x * 120}px, ${mousePos.y * 120}px) rotateZ(${mousePos.x * 10}deg)` }}
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/40 group-hover:scale-110 transition-transform">
-                     <Cpu size={28} className="animate-pulse" />
+                  <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/40 group-hover:scale-110 transition-transform duration-500">
+                     <Cpu size={30} className="animate-pulse" />
                   </div>
                   <div>
                     <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Architecture</p>
-                    <p className="text-2xl font-black text-slate-900 dark:text-white leading-tight">Elite Scalability</p>
+                    <p className="text-2xl font-black text-slate-900 dark:text-white leading-tight">Enterprise Scale</p>
                   </div>
                 </div>
 
                 <div 
-                  className="absolute -top-8 -right-8 p-6 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2rem] shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-4 z-20 transition-transform duration-200 ease-out"
-                  style={{ transform: `translate(${mousePos.x * -50}px, ${mousePos.y * -50}px) rotateZ(${mousePos.y * -5}deg)` }}
+                  className="absolute -top-16 -right-16 p-7 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-5 z-20 transition-transform duration-300 ease-out"
+                  style={{ transform: `translate(${mousePos.x * -80}px, ${mousePos.y * -80}px) rotateZ(${mousePos.y * -10}deg)` }}
                 >
-                  <div className="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-600 flex items-center justify-center text-indigo-600 dark:text-white">
-                    <Zap size={22} className="animate-bounce" />
+                  <div className="w-14 h-14 rounded-2xl bg-indigo-100 dark:bg-indigo-600 flex items-center justify-center text-indigo-600 dark:text-white group-hover:rotate-12 transition-transform duration-500">
+                    <Zap size={26} className="animate-subtle-bounce" />
                   </div>
-                  <div>
+                  <div className="pr-4">
                     <p className="text-xl font-black text-slate-900 dark:text-white leading-tight">99.9% Uptime</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Guaranteed SLA</p>
                   </div>
                 </div>
              </div>
