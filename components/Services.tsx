@@ -4,11 +4,11 @@ import { SERVICES, TECH_DOMAINS } from '../constants';
 import { SectionId } from '../types';
 
 const iconMap: Record<string, React.ReactNode> = {
-  Globe: <Globe className="w-6 h-6" />,
-  Smartphone: <Smartphone className="w-6 h-6" />,
-  PenTool: <PenTool className="w-6 h-6" />,
-  Cloud: <Cloud className="w-6 h-6" />,
-  Users: <Users className="w-6 h-6" />,
+  Globe: <Globe className="w-8 h-8" />,
+  Smartphone: <Smartphone className="w-8 h-8" />,
+  PenTool: <PenTool className="w-8 h-8" />,
+  Cloud: <Cloud className="w-8 h-8" />,
+  Users: <Users className="w-8 h-8" />,
 };
 
 const domainIcons: Record<string, React.ReactNode> = {
@@ -41,8 +41,8 @@ export const Services: React.FC = () => {
       const rect = sectionRef.current?.getBoundingClientRect();
       if (rect) {
         setMousePos({
-          x: (e.clientX - rect.left) / rect.width - 0.5,
-          y: (e.clientY - rect.top) / rect.height - 0.5,
+          x: (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2),
+          y: (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2),
         });
       }
     };
@@ -59,7 +59,7 @@ export const Services: React.FC = () => {
   return (
     <section ref={sectionRef} id={SectionId.SERVICES} className="py-32 bg-white dark:bg-slate-950 relative transition-colors duration-300 overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className={`flex flex-col md:flex-row justify-between items-end mb-20 gap-8 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] transform ${isVisible ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 translate-y-24 -rotate-3'}`}>
+        <div className={`flex flex-col md:flex-row justify-between items-end mb-20 gap-8 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] transform ${isVisible ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 translate-y-24 rotate-[-3deg]'}`}>
           <div className="max-w-2xl relative">
             <h2 className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Our Expertise</h2>
             <h3 
@@ -68,9 +68,9 @@ export const Services: React.FC = () => {
               {expertiseTitle.split(' ').map((word, i) => (
                 <span 
                   key={i} 
-                  className="mr-3 transition-transform duration-300 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110"
+                  className="mr-3 transition-all duration-500 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-105 inline-block"
                   style={{ 
-                    transform: `translate(${mousePos.x * (10 + i * 2)}px, ${mousePos.y * (10 + i * 2)}px)` 
+                    transform: isVisible ? `translate(${mousePos.x * (5 + i)}px, ${mousePos.y * (5 + i)}px)` : 'none'
                   }}
                 >
                   {word}
@@ -78,7 +78,7 @@ export const Services: React.FC = () => {
               ))}
             </h3>
           </div>
-          <p className="text-slate-800 dark:text-slate-300 max-w-md pb-2 text-xl font-bold leading-relaxed">We leverage modern architectures and industry best practices to build software that lasts.</p>
+          <p className="text-slate-900 dark:text-slate-100 max-w-md pb-2 text-xl font-bold leading-relaxed">We leverage modern architectures and industry best practices to build software that lasts.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
@@ -86,17 +86,17 @@ export const Services: React.FC = () => {
             <div 
               key={service.id} 
               id={`service-card-${service.id}`}
-              className={`group relative bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[3rem] p-12 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/40 hover:border-blue-500/30 ${isVisible ? 'opacity-100 translate-y-0 rotate-0 scale-100' : 'opacity-0 translate-y-32 -rotate-12 scale-90'}`}
+              className={`group relative bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[3rem] p-12 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/40 hover:border-blue-500/30 ${isVisible ? 'opacity-100 translate-y-0 rotate-0 scale-100' : 'opacity-0 translate-y-32 rotate-[-10deg] scale-90'}`}
               style={{ transitionDelay: `${index * 120}ms` }}
             >
-              <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-125 group-hover:rotate-[360deg] group-hover:shadow-blue-500/40">
+              <div className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:shadow-blue-500/40">
                 <div className="transition-all duration-500 group-hover:animate-slow-pulse group-hover:rotate-12">
                   {iconMap[service.icon]}
                 </div>
               </div>
 
               <h4 className="text-2xl font-black text-slate-950 dark:text-white mb-6 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors tracking-tight">{service.title}</h4>
-              <p className="text-slate-700 dark:text-slate-400 mb-10 text-base leading-relaxed font-semibold">{service.description}</p>
+              <p className="text-slate-700 dark:text-slate-300 mb-10 text-base leading-relaxed font-semibold">{service.description}</p>
 
               <div className="flex flex-wrap gap-2.5">
                 {service.features.map((feature, idx) => (

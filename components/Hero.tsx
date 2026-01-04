@@ -30,19 +30,19 @@ export const Hero: React.FC = () => {
   return (
     <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
       
-      {/* Dynamic Background Lottie Container */}
+      {/* Dynamic Background Lottie Container - Updated to a verified URL and fixed loop attribute */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-40 dark:opacity-20">
         <div 
           className="w-full h-full max-w-[1400px] max-h-[1400px] scale-125 md:scale-100 transition-transform duration-1000 ease-out"
-          style={{ transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)` }}
+          style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)` }}
         >
           <dotlottie-player
-            src="https://lottie.host/27f3f11d-2830-466d-921c-a960965e6480/28GisCdfuR.lottie"
+            src="https://lottie.host/825441b8-3e4b-4b1d-8557-3759976721d6/fE0Y9uKshZ.json"
             background="transparent"
             speed="0.5"
             style={{ width: '100%', height: '100%' }}
-            loop
-            autoplay
+            loop={true}
+            autoplay={true}
           ></dotlottie-player>
         </div>
       </div>
@@ -72,12 +72,12 @@ export const Hero: React.FC = () => {
         <div className="max-w-5xl">
           
           {/* Badge */}
-          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50/80 dark:bg-blue-900/40 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-blue-100 dark:border-blue-800/50 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50/90 dark:bg-blue-900/40 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-blue-100 dark:border-blue-800/50 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <Terminal size={18} className="animate-slow-pulse" />
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          {/* Main Tagline with Sophisticated Stagger */}
+          {/* Main Tagline with Sophisticated Stagger and ensured visibility */}
           <h1 className="text-glow text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.85] tracking-tighter mb-10 flex flex-wrap gap-x-4">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
@@ -90,16 +90,16 @@ export const Hero: React.FC = () => {
             ))}
           </h1>
 
-          {/* Tagline / Description - Delayed relative to title */}
+          {/* Description - Ensuring text is opaque enough to be visible */}
           <div className="relative mb-14 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-[800ms]">
             <div className="absolute -left-4 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.4)]" />
-            <p className="text-glow text-xl md:text-3xl text-slate-800 dark:text-slate-100 font-bold max-w-3xl leading-[1.3] pl-8 drop-shadow-sm">
+            <p className="text-glow text-xl md:text-3xl text-slate-900 dark:text-white font-bold max-w-3xl leading-[1.3] pl-8 drop-shadow-sm">
               We architect high-performance digital systems for global disruptors. <br className="hidden md:block" />
               From strategic consultation to industrial-grade deployment.
             </p>
           </div>
 
-          {/* Action Buttons - Final step in entrance sequence */}
+          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row items-center gap-8 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-[1200ms]">
             <Button 
               variant="primary" 
@@ -127,28 +127,28 @@ export const Hero: React.FC = () => {
                 <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">150+</p>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="w-6 h-0.5 bg-blue-600 rounded-full" />
-                  <p className="text-[11px] text-slate-600 dark:text-slate-300 uppercase tracking-[0.2em] font-black">Success Deliveries</p>
+                  <p className="text-[11px] text-slate-700 dark:text-slate-300 uppercase tracking-[0.2em] font-black">Success Deliveries</p>
                 </div>
              </div>
              <div className="group">
                 <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">50+</p>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="w-6 h-0.5 bg-indigo-600 rounded-full" />
-                  <p className="text-[11px] text-slate-600 dark:text-slate-300 uppercase tracking-[0.2em] font-black">Engineering Leads</p>
+                  <p className="text-[11px] text-slate-700 dark:text-slate-300 uppercase tracking-[0.2em] font-black">Engineering Leads</p>
                 </div>
              </div>
              <div className="group">
                 <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">98%</p>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="w-6 h-0.5 bg-green-600 rounded-full" />
-                  <p className="text-[11px] text-slate-600 dark:text-slate-300 uppercase tracking-[0.2em] font-black">Client Satisfaction</p>
+                  <p className="text-[11px] text-slate-700 dark:text-slate-300 uppercase tracking-[0.2em] font-black">Client Satisfaction</p>
                 </div>
              </div>
              <div className="group">
                 <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">24/7</p>
                 <div className="flex items-center gap-2 mt-2">
                   <div className="w-6 h-0.5 bg-yellow-500 rounded-full" />
-                  <p className="text-[11px] text-slate-600 dark:text-slate-300 uppercase tracking-[0.2em] font-black">Global Support</p>
+                  <p className="text-[11px] text-slate-700 dark:text-slate-300 uppercase tracking-[0.2em] font-black">Global Support</p>
                 </div>
              </div>
           </div>
