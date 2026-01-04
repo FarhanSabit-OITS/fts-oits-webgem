@@ -59,7 +59,7 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
+      setShowScrollTop(window.scrollY > 400);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -126,15 +126,16 @@ function App() {
       <Footer theme={theme} toggleTheme={toggleTheme} />
       <AiAssistant />
       
-      {/* Scroll to Top Button */}
+      {/* Refined Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-24 right-6 z-[90] p-3.5 rounded-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-2xl border border-slate-200 dark:border-slate-700 transition-all duration-500 hover:scale-110 hover:-translate-y-1 active:scale-90 group ${
-          showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+        className={`fixed bottom-24 right-8 z-[90] p-4 rounded-full bg-slate-900 dark:bg-blue-600 text-white shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_40px_-10px_rgba(37,99,235,0.4)] border-none transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-125 hover:-translate-y-2 active:scale-90 group transform-gpu ${
+          showScrollTop ? 'opacity-100 translate-y-0 translate-x-0' : 'opacity-0 translate-y-20 translate-x-4 pointer-events-none'
         }`}
         aria-label="Scroll to top of page"
       >
-        <ArrowUp size={24} className="group-hover:animate-bounce" />
+        <ArrowUp size={24} className="group-hover:animate-subtle-bounce" />
+        <div className="absolute inset-0 rounded-full bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
       </button>
     </div>
   );

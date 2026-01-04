@@ -78,7 +78,7 @@ export const Contact: React.FC = () => {
             </div>
             
             <p className={`text-slate-700 dark:text-slate-300 text-xl font-medium max-w-lg transition-all duration-1000 delay-150 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              Ready to modernize your infrastructure? Connect with our senior engineers today.
+              Ready to modernize your infrastructure? Connect with our senior engineers today for a strategic architecture session.
             </p>
 
             <div className="space-y-12 pt-6">
@@ -87,7 +87,7 @@ export const Contact: React.FC = () => {
                   <Mail className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-3">Reach Us Directly</p>
+                  <p className="text-[11px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-3">Direct Correspondence</p>
                   <div className="flex flex-wrap items-center gap-4">
                     <p className="text-2xl md:text-3xl font-black text-slate-950 dark:text-slate-100 tracking-tight">{CONTACT_EMAIL}</p>
                     <button 
@@ -115,15 +115,28 @@ export const Contact: React.FC = () => {
           </div>
 
           <div className={`relative transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className={`bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-[0_60px_100px_-30px_rgba(0,0,0,0.12)] dark:shadow-none transition-all duration-500 ${status === 'sending' ? 'scale-[0.98] blur-[0.5px]' : 'scale-100'}`}>
+            {/* Distinct Submission Indicator Overlay */}
+            {status === 'sending' && (
+              <div className="absolute inset-0 z-40 bg-white/60 dark:bg-slate-950/60 backdrop-blur-[4px] rounded-[4rem] flex flex-col items-center justify-center animate-in fade-in duration-500 border-2 border-blue-500/20 shadow-2xl">
+                <div className="relative">
+                  <div className="w-24 h-24 border-[6px] border-blue-600/20 border-t-blue-600 rounded-full animate-spin shadow-inner"></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Send size={32} className="text-blue-600 animate-pulse" />
+                  </div>
+                </div>
+                <p className="mt-8 text-sm font-black text-blue-600 uppercase tracking-[0.25em] animate-pulse">Dispatching Mission...</p>
+              </div>
+            )}
+            
+            <div className={`bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-[0_60px_100px_-30px_rgba(0,0,0,0.12)] dark:shadow-none transition-all duration-700 ${status === 'sending' ? 'scale-[0.98] blur-[0.5px]' : 'scale-100'}`}>
               
               {status === 'success' ? (
                 <div className="h-full flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-700 py-20">
                   <div className="w-32 h-32 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-10 shadow-2xl shadow-green-500/10">
                     <CheckCircle2 size={64} className="stroke-[2.5px]" />
                   </div>
-                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter">Mission Received</h4>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg mb-12 max-w-sm font-medium">Your request has been securely dispatched to our strategy team.</p>
+                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter">Transmission Successful</h4>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg mb-12 max-w-sm font-medium leading-relaxed">Your message has been securely delivered to our project architects.</p>
                   <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg transition-all active:scale-95">Send New Message</Button>
                 </div>
               ) : (
@@ -131,12 +144,12 @@ export const Contact: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-4 group">
                       <label htmlFor="name-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-slate-100 ml-1 group-focus-within:text-blue-600 transition-colors">
-                        Full Name <span className="text-blue-500">*</span>
+                        Full Name <span className="text-blue-500 font-black">*</span>
                       </label>
                       <input 
                         type="text" id="name-input" name="name" aria-invalid={!!errors.name} 
-                        className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.name ? 'border-red-600 dark:border-red-500 bg-red-50/20' : 'border-slate-200 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                        placeholder="Johnathan Doe" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                        className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.name ? 'border-red-600 dark:border-red-500 bg-red-50/20 shadow-[0_0_15px_rgba(220,38,38,0.1)]' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm`} 
+                        placeholder="e.g. John Doe" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} 
                       />
                       {errors.name && (
                         <p className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
@@ -146,12 +159,12 @@ export const Contact: React.FC = () => {
                     </div>
                     <div className="space-y-4 group">
                       <label htmlFor="email-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-slate-100 ml-1 group-focus-within:text-blue-600 transition-colors">
-                        Work Email <span className="text-blue-500">*</span>
+                        Business Email <span className="text-blue-500 font-black">*</span>
                       </label>
                       <input 
                         type="email" id="email-input" name="email" aria-invalid={!!errors.email}
-                        className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.email ? 'border-red-600 dark:border-red-500 bg-red-50/20' : 'border-slate-200 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                        placeholder="ceo@company.com" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                        className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.email ? 'border-red-600 dark:border-red-500 bg-red-50/20 shadow-[0_0_15px_rgba(220,38,38,0.1)]' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm`} 
+                        placeholder="name@company.com" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} 
                       />
                       {errors.email && (
                         <p className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
@@ -163,12 +176,12 @@ export const Contact: React.FC = () => {
                   
                   <div className="space-y-4 group">
                     <label htmlFor="message-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-slate-100 ml-1 group-focus-within:text-blue-600 transition-colors">
-                      Brief Message <span className="text-blue-500">*</span>
+                      Brief Your Mission <span className="text-blue-500 font-black">*</span>
                     </label>
                     <textarea 
                       id="message-input" name="message" aria-invalid={!!errors.message} rows={5}
-                      className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.message ? 'border-red-600 dark:border-red-500 bg-red-50/20' : 'border-slate-200 dark:border-slate-700'} rounded-[2.5rem] px-7 py-6 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all resize-none font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                      placeholder="What are we building?" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} 
+                      className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.message ? 'border-red-600 dark:border-red-500 bg-red-50/20 shadow-[0_0_15px_rgba(220,38,38,0.1)]' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'} rounded-[2.5rem] px-7 py-6 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all resize-none font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm`} 
+                      placeholder="What can we help you build?" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} 
                     />
                     {errors.message && (
                       <p className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
@@ -180,13 +193,13 @@ export const Contact: React.FC = () => {
                   <div className="pt-4">
                     <Button 
                       type="submit" variant="primary" size="lg" 
-                      className={`w-full bg-slate-950 dark:bg-blue-600 text-white rounded-[2rem] shadow-2xl transition-all duration-300 font-black text-xl h-20 border-none group transform active:scale-[0.97] ${status === 'sending' ? 'cursor-wait opacity-60' : 'hover:shadow-blue-600/30'}`} 
+                      className={`w-full bg-slate-950 dark:bg-blue-600 text-white rounded-[2rem] shadow-2xl transition-all duration-500 font-black text-xl h-20 border-none group transform active:scale-[0.97] ${status === 'sending' ? 'cursor-wait opacity-60' : 'hover:shadow-blue-600/30'}`} 
                       disabled={status === 'sending'}
                     >
                       {status === 'sending' ? (
                         <div className="flex items-center gap-4">
-                          <div className="w-6 h-6 border-4 border-white/20 border-t-white rounded-full animate-spin"></div> 
-                          Securely Sending...
+                          <div className="w-7 h-7 border-4 border-white/20 border-t-white rounded-full animate-spin"></div> 
+                          Securely Dispatching...
                         </div>
                       ) : (
                         <span className="flex items-center gap-4">

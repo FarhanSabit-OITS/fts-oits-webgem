@@ -14,7 +14,7 @@ export const Hero: React.FC = () => {
 
   useEffect(() => {
     // Staggered activation
-    const timer = setTimeout(() => setIsVisible(true), 200);
+    const timer = setTimeout(() => setIsVisible(true), 150);
     
     const handleScroll = () => setScrollY(window.scrollY);
     const handleMouseMove = (e: MouseEvent) => {
@@ -58,14 +58,13 @@ export const Hero: React.FC = () => {
         this.size = Math.random() * 2 + 0.5;
         this.speedX = Math.random() * 0.2 - 0.1;
         this.speedY = Math.random() * 0.2 - 0.1;
-        // Theme-aware colors: Cool blue for dark, vibrant cyan for light
         this.color = isDarkMode ? '59, 130, 246' : '14, 165, 233';
         this.alpha = Math.random() * 0.3 + 0.05;
         this.targetAlpha = this.alpha;
       }
       update() {
-        this.x += this.speedX + (mousePos.x * 0.5);
-        this.y += this.speedY + (mousePos.y * 0.5);
+        this.x += this.speedX + (mousePos.x * 0.7);
+        this.y += this.speedY + (mousePos.y * 0.7);
         if (Math.abs(this.alpha - this.targetAlpha) < 0.01) this.targetAlpha = Math.random() * 0.3 + 0.05;
         else this.alpha += (this.targetAlpha - this.alpha) * 0.01;
         if (canvas) {
@@ -109,7 +108,8 @@ export const Hero: React.FC = () => {
           loop 
           muted 
           playsInline 
-          className="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-20 transition-opacity duration-1000"
+          className="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-20 transition-opacity duration-1000 scale-105"
+          style={{ transform: `scale(1.05) translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)` }}
           poster="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1000"
         >
           <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-circuit-board-loop-animation-4424-large.mp4" type="video/mp4" />
@@ -120,7 +120,7 @@ export const Hero: React.FC = () => {
 
         <div 
           className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[150px] opacity-70 animate-float will-change-transform" 
-          style={{ transform: `translate(${mousePos.x * -60}px, ${mousePos.y * -60}px)` }}
+          style={{ transform: `translate(${mousePos.x * -80}px, ${mousePos.y * -80}px)` }}
         />
       </div>
 
@@ -129,25 +129,25 @@ export const Hero: React.FC = () => {
           <div className="flex-1 space-y-10 text-center lg:text-left relative z-10">
             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50/50 dark:bg-blue-900/30 backdrop-blur-2xl border border-blue-100 dark:border-blue-800 text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.25em] shadow-sm transition-all duration-[1200ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              Pioneering Enterprise Solutions
+              Engineering High-Performance Futures
             </div>
             
             <div className="space-y-4">
               <h1 className="text-6xl md:text-7xl lg:text-9xl font-black text-slate-900 dark:text-white tracking-tighter leading-[0.95] overflow-hidden">
-                <span className={`block transition-all duration-[1500ms] delay-[100ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-20 scale-95'}`}>
+                <span className={`block transition-all duration-[1200ms] delay-[100ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-20 scale-95'}`}>
                   We Engineer
                 </span>
-                <span className={`block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-400 transition-all duration-[1500ms] delay-[300ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-20 scale-95'}`}>
+                <span className={`block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-400 transition-all duration-[1200ms] delay-[300ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-20 scale-95'}`}>
                   Digital Mastery
                 </span>
               </h1>
             </div>
             
-            <p className={`text-xl md:text-3xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium transition-all duration-[1500ms] delay-[500ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-              {TAGLINE}. High-performance engineering for the visionary age.
+            <p className={`text-xl md:text-3xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium transition-all duration-[1200ms] delay-[500ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+              {TAGLINE}. High-performance software engineering combined with award-winning design thinking.
             </p>
 
-            <div className={`flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start transition-all duration-[1500ms] delay-[700ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className={`flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start transition-all duration-[1200ms] delay-[700ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <Button 
                 size="lg" variant="primary" aria-label="Request a demo"
                 className="group h-20 px-14 rounded-3xl font-black text-xl transition-all duration-300" 
@@ -163,12 +163,11 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Animated "Lottie-style" SVG and Parallax Card */}
-          <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-[2000ms] delay-[400ms] ease-out transform ${isVisible ? 'opacity-100 translate-x-0 rotate-0' : 'opacity-0 translate-x-24 rotate-3'}`}>
+          <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-[1500ms] delay-[400ms] ease-out transform ${isVisible ? 'opacity-100 translate-x-0 rotate-0' : 'opacity-0 translate-x-24 rotate-3'}`}>
             <div className="relative" style={{ perspective: '2000px' }}>
               <div 
                 className="relative bg-white/10 dark:bg-slate-900/20 backdrop-blur-3xl border-2 border-white/20 dark:border-slate-800 rounded-[4rem] shadow-2xl overflow-hidden aspect-[1/1] flex items-center justify-center transform-gpu transition-all duration-700 hover:shadow-blue-500/10"
-                style={{ transform: `rotateY(${mousePos.x * -15}deg) rotateX(${mousePos.y * 15}deg) translateZ(50px)` }}
+                style={{ transform: `rotateY(${mousePos.x * -18}deg) rotateX(${mousePos.y * 18}deg) translateZ(50px)` }}
               >
                 {/* Custom Digital Transformation SVG Animation */}
                 <svg viewBox="0 0 400 400" className="w-4/5 h-4/5">
@@ -185,12 +184,10 @@ export const Hero: React.FC = () => {
                     </filter>
                   </defs>
                   
-                  {/* Floating Tech Orbs */}
                   <g className="animate-float" style={{ animationDuration: '4s' }}>
-                    <circle cx="200" cy="200" r="100" fill="none" stroke="url(#grad1)" strokeWidth="0.5" strokeDasharray="10 5" className="animate-[spin_20s_linear_infinite]" />
-                    <circle cx="200" cy="200" r="140" fill="none" stroke="url(#grad1)" strokeWidth="0.5" strokeDasharray="20 10" className="animate-[spin_40s_linear_infinite_reverse]" />
+                    <circle cx="200" cy="200" r="100" fill="none" stroke="url(#grad1)" strokeWidth="0.5" strokeDasharray="10 5" className="animate-[spin_25s_linear_infinite]" />
+                    <circle cx="200" cy="200" r="140" fill="none" stroke="url(#grad1)" strokeWidth="0.5" strokeDasharray="20 10" className="animate-[spin_45s_linear_infinite_reverse]" />
                     
-                    {/* Pulsing Core */}
                     <circle cx="200" cy="200" r="40" fill="url(#grad1)" className="animate-pulse opacity-40" filter="url(#glow)" />
                     <g className="text-white">
                        <rect x="180" y="180" width="40" height="40" rx="8" fill="rgba(255,255,255,0.2)" backdrop-filter="blur(4px)" stroke="white" strokeWidth="2" />
@@ -198,7 +195,6 @@ export const Hero: React.FC = () => {
                     </g>
                   </g>
 
-                  {/* Tech Connectors */}
                   {[0, 60, 120, 180, 240, 300].map((angle, i) => {
                     const r = 140;
                     const x = 200 + r * Math.cos((angle * Math.PI) / 180);
@@ -213,12 +209,11 @@ export const Hero: React.FC = () => {
                 </svg>
               </div>
               
-              {/* Parallax Floating Card */}
               <div 
                 className="absolute -bottom-10 -right-10 md:-right-16 p-8 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border border-slate-200 dark:border-slate-800 flex items-center gap-6 z-20 transition-transform duration-200 ease-out"
-                style={{ transform: `translate(${mousePos.x * 50}px, ${mousePos.y * 50}px) rotateZ(${mousePos.x * 5}deg)` }}
+                style={{ transform: `translate(${mousePos.x * 60}px, ${mousePos.y * 60}px) rotateZ(${mousePos.x * 6}deg)` }}
               >
-                <div className="w-16 h-16 rounded-[1.25rem] bg-blue-100 dark:bg-blue-600 flex items-center justify-center text-blue-600 dark:text-white shadow-xl shadow-blue-500/20">
+                <div className="w-16 h-16 rounded-[1.25rem] bg-blue-100 dark:bg-blue-600 flex items-center justify-center text-blue-600 dark:text-white shadow-xl shadow-blue-500/20 group hover:rotate-12 transition-transform">
                   <Cpu size={32} />
                 </div>
                 <div>
@@ -229,10 +224,10 @@ export const Hero: React.FC = () => {
 
               <div 
                 className="absolute -top-10 -left-10 p-6 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2rem] shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-4 z-20 transition-transform duration-200 ease-out"
-                style={{ transform: `translate(${mousePos.x * -30}px, ${mousePos.y * -30}px)` }}
+                style={{ transform: `translate(${mousePos.x * -40}px, ${mousePos.y * -40}px)` }}
               >
                 <div className="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-600 flex items-center justify-center text-indigo-600 dark:text-white">
-                  <Zap size={24} />
+                  <Zap size={24} className="animate-pulse" />
                 </div>
                 <div>
                   <p className="text-xl font-black text-slate-900 dark:text-white">99.9% Uptime</p>
