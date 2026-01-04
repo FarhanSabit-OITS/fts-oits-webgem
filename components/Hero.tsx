@@ -30,19 +30,19 @@ export const Hero: React.FC = () => {
   return (
     <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
       
-      {/* Dynamic Background Lottie Container - Fixed 403 error with robust .lottie URL */}
+      {/* Dynamic Background Lottie Container - Fixed 403 error with robust public URL */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-40 dark:opacity-20">
         <div 
           className="w-full h-full max-w-[1400px] max-h-[1400px] scale-125 md:scale-100 transition-transform duration-1000 ease-out"
-          style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)` }}
+          style={{ transform: `translate(${mousePos.x * 25}px, ${mousePos.y * 25}px)` }}
         >
           <dotlottie-player
-            src="https://lottie.host/27f3f11d-2830-466d-921c-a960965e6480/28GisCdfuR.lottie"
+            src="https://lottie.host/80709b4f-8386-447a-853f-e51c8973b137/95u3yV9Y4X.json"
             background="transparent"
             speed="0.5"
             style={{ width: '100%', height: '100%' }}
-            loop
-            autoplay
+            loop={true}
+            autoplay={true}
           ></dotlottie-player>
         </div>
       </div>
