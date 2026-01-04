@@ -59,18 +59,16 @@ export const Services: React.FC = () => {
   return (
     <section ref={sectionRef} id={SectionId.SERVICES} className="py-32 bg-white dark:bg-slate-950 relative transition-colors duration-300 overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className={`flex flex-col md:flex-row justify-between items-end mb-20 gap-8 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] transform ${isVisible ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 translate-y-24 rotate-[-6deg]'}`}>
+        <div className={`flex flex-col md:flex-row justify-between items-end mb-20 gap-8 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] transform ${isVisible ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 translate-y-24 rotate-[-10deg]'}`}>
           <div className="max-w-2xl relative">
             <h2 className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Our Expertise</h2>
-            <h3 
-              className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white leading-tight tracking-tighter cursor-default flex flex-wrap"
-            >
+            <h3 className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white leading-tight tracking-tighter cursor-default flex flex-wrap">
               {expertiseTitle.split(' ').map((word, i) => (
                 <span 
                   key={i} 
                   className="mr-3 transition-all duration-500 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110 inline-block transform-gpu"
                   style={{ 
-                    transform: isVisible ? `translate(${mousePos.x * (12 + i)}px, ${mousePos.y * (8 + i)}px)` : 'none'
+                    transform: isVisible ? `translate(${mousePos.x * (10 + i * 2)}px, ${mousePos.y * (6 + i * 1.5)}px)` : 'none'
                   }}
                 >
                   {word}
@@ -90,7 +88,7 @@ export const Services: React.FC = () => {
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               <div className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-125 group-hover:shadow-blue-500/40">
-                <div className="transition-all duration-500 group-hover:animate-slow-pulse group-hover:rotate-[360deg]">
+                <div className="transition-all duration-500 group-hover:animate-subtle-bounce group-hover:rotate-12">
                   {iconMap[service.icon]}
                 </div>
               </div>
@@ -105,7 +103,7 @@ export const Services: React.FC = () => {
                   <span 
                     key={idx} 
                     className={`px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 shadow-sm transition-all duration-500 transform scale-75 opacity-0 translate-y-4 group-hover:scale-100 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600`}
-                    style={{ transitionDelay: `${index * 150 + (idx + 1) * 80}ms` }}
+                    style={{ transitionDelay: `${(idx + 1) * 100}ms` }}
                   >
                     {feature}
                   </span>
@@ -115,7 +113,6 @@ export const Services: React.FC = () => {
           ))}
         </div>
 
-        {/* Technology Ecosystem Section */}
         <div className={`mt-32 transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
           <div className="text-center mb-16">
              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-100/50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-sm ring-1 ring-blue-500/20"><Layers size={16} /> Technology Stack</div>

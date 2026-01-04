@@ -16,9 +16,9 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles = "inline-flex items-center justify-center rounded-lg font-black tracking-tight transition-all duration-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96] overflow-hidden relative group/btn-ui";
   
   const variants = {
-    primary: "bg-slate-950 text-white hover:bg-slate-800 hover:scale-[1.05] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] dark:bg-blue-600 dark:hover:bg-blue-500 dark:hover:shadow-[0_20px_40px_-10px_rgba(37,99,235,0.6)] border border-transparent hover:border-white/10",
+    primary: "bg-slate-950 text-white hover:bg-slate-800 hover:scale-[1.05] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] dark:bg-blue-600 dark:hover:bg-blue-500 dark:hover:shadow-[0_20px_40px_-10px_rgba(37,99,235,0.6)] border border-transparent hover:border-white/10 shadow-lg",
     secondary: "bg-slate-100 text-slate-950 hover:bg-slate-200 hover:scale-[1.03] dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700",
-    outline: "border-2 border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-transparent backdrop-blur-sm text-slate-950 dark:text-white hover:bg-slate-950 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 hover:border-slate-950 dark:hover:border-white hover:scale-[1.05] shadow-sm hover:shadow-xl",
+    outline: "border-2 border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-transparent backdrop-blur-sm text-slate-950 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-900 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-600 dark:hover:border-blue-500 hover:scale-[1.02] shadow-sm hover:shadow-md",
     ghost: "hover:bg-slate-100 text-slate-800 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800",
   };
 
@@ -34,10 +34,8 @@ export const Button: React.FC<ButtonProps> = ({
       {...props}
     >
       <span className="relative z-10">{children}</span>
-      {/* Subtle border animation for outline */}
-      {variant === 'outline' && (
-        <div className="absolute inset-0 border-2 border-transparent group-hover/btn-ui:scale-105 transition-transform duration-500 pointer-events-none" />
-      )}
+      {/* Subtle overlay effect */}
+      <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/btn-ui:opacity-100 transition-opacity duration-300 pointer-events-none" />
     </button>
   );
 };

@@ -45,7 +45,12 @@ export const Contact: React.FC = () => {
     // Simulated engineering transmission
     setTimeout(() => {
       if (Math.random() < 0.02) { setStatus('error'); } 
-      else { setStatus('success'); setFormData({ name: '', email: '', message: '' }); setErrors({}); setTimeout(() => setStatus('idle'), 8000); }
+      else { 
+        setStatus('success'); 
+        setFormData({ name: '', email: '', message: '' }); 
+        setErrors({}); 
+        setTimeout(() => setStatus('idle'), 8000); 
+      }
     }, 2500);
   };
 
@@ -197,7 +202,6 @@ export const Contact: React.FC = () => {
           </div>
         </div>
 
-        {/* Map Section */}
         <div className={`transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
           <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-4 border-2 border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden group/map ring-4 ring-white dark:ring-slate-900 ring-offset-0 group-hover/map:ring-blue-500/10 transition-all">
             <div className="relative aspect-[21/9] w-full rounded-[2.5rem] overflow-hidden grayscale contrast-125 dark:grayscale-0 dark:contrast-100 transition-all duration-700 group-hover/map:grayscale-0 group-hover/map:contrast-100 group-hover/map:scale-[1.01]">
