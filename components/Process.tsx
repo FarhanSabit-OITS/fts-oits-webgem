@@ -55,8 +55,8 @@ export const Process: React.FC = () => {
               className={`relative z-10 flex flex-col items-center text-center transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              <div className="mb-6 relative">
-                 <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-xl shadow-blue-500/5 group-hover:scale-110 transition-transform">
+              <div className="mb-6 relative group">
+                 <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-xl shadow-blue-500/5 group-hover:scale-110 group-hover:rotate-6 transition-transform">
                     {iconMap[step.icon]}
                  </div>
                  <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-slate-900 dark:bg-blue-600 text-white text-xs font-bold flex items-center justify-center border-2 border-white dark:border-slate-900">
@@ -78,14 +78,15 @@ export const Process: React.FC = () => {
           ))}
         </div>
         
-        <div className="mt-20 p-8 rounded-3xl bg-blue-600 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/20">
-           <div className="max-w-xl">
-             <h4 className="text-2xl font-bold mb-2">Ready to start the discovery?</h4>
-             <p className="text-blue-100">Schedule a 30-minute consultation with our lead architect to discuss your project requirements.</p>
+        <div className="mt-20 p-8 md:p-12 rounded-[3rem] bg-blue-600 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/30 overflow-hidden relative group">
+           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[marquee_3s_linear_infinite] pointer-events-none" />
+           <div className="max-w-xl relative z-10">
+             <h4 className="text-3xl font-black mb-3 tracking-tight">Ready to start the discovery?</h4>
+             <p className="text-blue-100 text-lg">Schedule a 30-minute consultation with our lead architect to discuss your project requirements.</p>
            </div>
            <button 
              onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
-             className="px-8 py-4 bg-white text-blue-600 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg shadow-black/10"
+             className="relative z-10 px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-lg hover:scale-[1.1] hover:bg-slate-50 active:scale-95 transition-all duration-300 shadow-xl shadow-black/20 group-hover:shadow-white/10"
            >
              Book Consultation
            </button>

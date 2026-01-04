@@ -23,6 +23,7 @@ const domainIcons: Record<string, React.ReactNode> = {
 export const Services: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(TECH_DOMAINS[0].id);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -36,16 +37,36 @@ export const Services: React.FC = () => {
       { threshold: 0.1 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = sectionRef.current?.getBoundingClientRect();
+      if (rect) {
+        setMousePos({
+          x: (e.clientX - rect.left) / rect.width - 0.5,
+          y: (e.clientY - rect.top) / rect.height - 0.5,
+        });
+      }
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   return (
     <section ref={sectionRef} id={SectionId.SERVICES} className="py-24 bg-white dark:bg-slate-900 relative transition-colors duration-300 overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className={`flex flex-col md:flex-row justify-between items-end mb-16 gap-6 transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="max-w-2xl">
+        <div className={`flex flex-col md:flex-row justify-between items-end mb-16 gap-6 transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 translate-y-12 -rotate-2'}`}>
+          <div className="max-w-2xl relative">
             <h2 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-3">Our Expertise</h2>
-            <h3 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tighter">Comprehensive solutions for <br/> digital transformation.</h3>
+            <h3 
+              className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight tracking-tighter transition-transform duration-300 ease-out"
+              style={{ transform: `translate(${mousePos.x * 25}px, ${mousePos.y * 15}px)` }}
+            >
+              Comprehensive solutions for <br/> digital transformation.
+            </h3>
           </div>
           <p className="text-slate-600 dark:text-slate-400 max-w-md pb-2 text-lg font-medium">We leverage modern architectures and industry best practices to build software that lasts.</p>
         </div>
@@ -55,11 +76,11 @@ export const Services: React.FC = () => {
             <div 
               key={service.id} 
               id={`service-card-${service.id}`}
-              className={`group relative bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-[2.5rem] p-10 transition-all duration-700 ease-out hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/20 hover:border-blue-400/50 dark:hover:border-blue-600/50 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              className={`group relative bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-[2.5rem] p-10 transition-all duration-1000 ease-out hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/20 hover:border-blue-400/50 dark:hover:border-blue-600/50 ${isVisible ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 translate-y-20 -rotate-12'}`}
               style={{ transitionDelay: `${index * 120}ms` }}
             >
               <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-sm mb-8 transition-all duration-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-[15deg] group-hover:shadow-blue-500/30">
-                <div className="transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:animate-subtle-bounce">
+                <div className="transition-all duration-500 group-hover:animate-subtle-bounce group-hover:scale-110 group-hover:rotate-12">
                   {iconMap[service.icon]}
                 </div>
               </div>
@@ -71,7 +92,7 @@ export const Services: React.FC = () => {
                 {service.features.map((feature, idx) => (
                   <span 
                     key={idx} 
-                    className={`px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 shadow-sm transition-all duration-500 transform scale-95 opacity-80 group-hover:scale-105 group-hover:opacity-100 group-hover:border-blue-200 dark:group-hover:border-blue-800 group-hover:text-blue-600 dark:group-hover:text-blue-300`}
+                    className={`px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 shadow-sm transition-all duration-500 transform scale-90 opacity-0 translate-y-4 group-hover:scale-100 group-hover:opacity-100 group-hover:translate-y-0 group-hover:border-blue-200 dark:group-hover:border-blue-800 group-hover:text-blue-600 dark:group-hover:text-blue-300`}
                     style={{ transitionDelay: `${idx * 100}ms` }}
                   >
                     {feature}
@@ -100,8 +121,8 @@ export const Services: React.FC = () => {
                 {TECH_DOMAINS.map((domain) => (
                   <div key={domain.id} className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 transition-all duration-700 ${activeTab === domain.id ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-6 absolute inset-0 pointer-events-none'}`} style={{ display: activeTab === domain.id ? 'grid' : 'none' }}>
                     {domain.skills.map((skill) => (
-                      <div key={skill} className="flex items-center gap-4 p-5 rounded-[1.5rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-800 transition-all duration-300 group cursor-default hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-blue-500/5">
-                         <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-blue-500 transition-all shadow-sm group-hover:scale-110"><Terminal size={20} /></div>
+                      <div key={skill} className="flex items-center gap-4 p-5 rounded-[1.5rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-500 group cursor-default hover:bg-white dark:hover:bg-slate-800 hover:shadow-xl hover:shadow-blue-500/10 hover:scale-[1.08] hover:-translate-y-1">
+                         <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-blue-500 transition-all shadow-sm group-hover:scale-110 group-hover:rotate-12"><Terminal size={20} /></div>
                          <span className="font-black text-slate-700 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-white">{skill}</span>
                       </div>
                     ))}

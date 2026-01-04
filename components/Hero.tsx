@@ -154,7 +154,7 @@ export const Hero: React.FC = () => {
             </div>
             
             <div className="space-y-4">
-              <h1 className="text-6xl md:text-7xl lg:text-9xl font-black text-slate-900 dark:text-white tracking-tighter leading-[0.95]">
+              <h1 className="text-6xl md:text-7xl lg:text-9xl font-black text-slate-900 dark:text-white tracking-tighter leading-[1.1] pb-2">
                 <span className="block overflow-hidden">
                   {titleLine1.split(' ').map((word, i) => (
                     <span 
@@ -166,7 +166,7 @@ export const Hero: React.FC = () => {
                     </span>
                   ))}
                 </span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-400 overflow-hidden">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 overflow-hidden py-4 -my-4">
                    {titleLine2.split(' ').map((word, i) => (
                     <span 
                       key={i} 
