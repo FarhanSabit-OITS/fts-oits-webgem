@@ -40,7 +40,6 @@ export const Hero: React.FC = () => {
 
     let animationFrameId: number;
     let particles: Particle[] = [];
-
     const isDarkMode = document.documentElement.classList.contains('dark');
 
     const resizeCanvas = () => {
@@ -49,21 +48,21 @@ export const Hero: React.FC = () => {
     };
 
     class Particle {
-      x: number; y: number; size: number; speedX: number; speedY: number; color: string; alpha: number; targetAlpha: number;
+      x: number; y: number; size: number; speedX: number; speedY: number; color: string; alpha: number;
       constructor() {
         this.x = Math.random() * (canvas?.width || 0);
         this.y = Math.random() * (canvas?.height || 0);
-        this.size = Math.random() * 1.5 + 0.5;
-        this.speedX = Math.random() * 0.15 - 0.075;
-        this.speedY = Math.random() * 0.15 - 0.075;
-        this.color = isDarkMode ? '96, 165, 250' : '37, 99, 235';
-        this.alpha = Math.random() * 0.3 + 0.1;
-        this.targetAlpha = this.alpha;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = Math.random() * 0.2 - 0.1;
+        this.speedY = Math.random() * 0.2 - 0.1;
+        // Theme-aware particle color
+        this.color = isDarkMode ? '59, 130, 246' : '37, 99, 235';
+        this.alpha = Math.random() * 0.4 + 0.1;
       }
       update(mX: number, mY: number) {
-        // Subtle drift + mouse interaction
-        this.x += this.speedX + (mX * 0.2);
-        this.y += this.speedY + (mY * 0.2);
+        // Particles react to mouse position
+        this.x += this.speedX + (mX * 0.4);
+        this.y += this.speedY + (mY * 0.4);
         
         if (canvas) {
           if (this.x > canvas.width) this.x = 0; if (this.x < 0) this.x = canvas.width;
@@ -72,14 +71,14 @@ export const Hero: React.FC = () => {
       }
       draw() {
         if (!ctx) return;
-        ctx.fillStyle = `rgba(${this.color === '96, 165, 250' ? '96, 165, 250' : '37, 99, 235'}, ${this.alpha})`;
+        ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
         ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
       }
     }
 
     const init = () => {
       particles = [];
-      const numberOfParticles = Math.floor(window.innerWidth / 15);
+      const numberOfParticles = Math.floor(window.innerWidth / 12);
       for (let i = 0; i < numberOfParticles; i++) particles.push(new Particle());
     };
 
@@ -108,54 +107,46 @@ export const Hero: React.FC = () => {
     document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Split titles for staggered word animation
   const titleLine1 = "We Engineer";
   const titleLine2 = "Digital Mastery";
   const taglineWords = TAGLINE.split(' ');
 
   return (
     <section id={SectionId.HOME} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[100vh] flex items-center">
-      {/* Background Layering */}
-      <div className="absolute top-0 left-0 w-full h-full -z-30 overflow-hidden pointer-events-none">
-        {/* Parallax Image */}
+      {/* Background Layers */}
+      <div className="absolute top-0 left-0 w-full h-full -z-40 overflow-hidden pointer-events-none">
+        {/* Layer 1: Parallax Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40 dark:opacity-20 blur-[1px] scale-110 will-change-transform transition-transform duration-1000 ease-out"
+          className="absolute inset-0 bg-cover bg-center opacity-30 dark:opacity-20 transition-transform duration-1000 ease-out will-change-transform scale-110"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30 + scrollY * 0.1}px) scale(1.1)`
+            transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 40 + scrollY * 0.15}px) scale(1.1)`
           }}
           aria-hidden="true"
         />
         
-        {/* Dynamic Particle Overlay */}
+        {/* Layer 2: Theme Gradients */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-slate-50/95 via-slate-50/70 to-slate-50/95 dark:from-slate-950/95 dark:via-slate-950/85 dark:to-slate-950/95" />
+        
+        {/* Layer 3: Particle Canvas */}
         <canvas 
           ref={canvasRef} 
-          className="absolute inset-0 z-10 opacity-60 pointer-events-none" 
+          className="absolute inset-0 z-20 opacity-50 pointer-events-none" 
           aria-hidden="true" 
-        />
-        
-        {/* Gradients */}
-        <div className="absolute inset-0 z-20 bg-gradient-to-b from-slate-50/90 via-slate-50/70 to-slate-50/90 dark:from-slate-950/95 dark:via-slate-950/85 dark:to-slate-950/95 transition-colors duration-500" />
-
-        {/* Floating Blur */}
-        <div 
-          className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[150px] opacity-70 animate-float will-change-transform z-0" 
-          style={{ transform: `translate(${mousePos.x * -80}px, ${mousePos.y * -80}px)` }}
         />
       </div>
 
-      <div className="container mx-auto px-6 relative z-20">
+      <div className="container mx-auto px-6 relative z-30">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
           
-          {/* Main Content Area */}
-          <div className="flex-1 space-y-10 text-center lg:text-left">
-            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50/50 dark:bg-blue-900/30 backdrop-blur-2xl border border-blue-100 dark:border-blue-800 text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-[0.25em] shadow-sm transition-all duration-[1000ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          <div className="flex-1 space-y-10 text-center lg:text-left relative">
+            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50/80 dark:bg-blue-900/40 backdrop-blur-3xl border border-blue-200 dark:border-blue-800 text-[10px] font-black text-blue-700 dark:text-blue-400 uppercase tracking-[0.25em] shadow-sm transition-all duration-[1000ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              Engineering High-Performance Futures
+              Pioneering Enterprise Solutions
             </div>
             
             <div className="space-y-4">
-              <h1 className="text-6xl md:text-7xl lg:text-9xl font-black text-slate-900 dark:text-white tracking-tighter leading-[0.95] overflow-hidden">
+              <h1 className="text-6xl md:text-7xl lg:text-9xl font-black text-slate-900 dark:text-white tracking-tighter leading-[0.95]">
                 <span className="block overflow-hidden">
                   {titleLine1.split(' ').map((word, i) => (
                     <span 
@@ -191,16 +182,12 @@ export const Hero: React.FC = () => {
                   {word}&nbsp;
                 </span>
               ))}
-              <span className={`inline-block transition-all duration-[1000ms] delay-[1200ms] ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-                High-performance software engineering combined with award-winning design thinking.
-              </span>
             </p>
 
-            {/* CTA Group with high prominence */}
-            <div className={`flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start transition-all duration-[1000ms] delay-[1400ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className={`flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start transition-all duration-[1000ms] delay-[1200ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <Button 
                 size="lg" variant="primary" 
-                className="group h-20 px-14 rounded-3xl font-black text-xl transition-all duration-300 relative z-30 shadow-xl shadow-blue-500/20" 
+                className="group h-20 px-14 rounded-3xl font-black text-xl shadow-2xl shadow-blue-500/30 hover:scale-[1.08] active:scale-95 transition-all duration-300" 
                 onClick={scrollToContact}
               >
                 Launch Project
@@ -208,7 +195,7 @@ export const Hero: React.FC = () => {
               </Button>
               <Button 
                 variant="outline" size="lg" 
-                className="h-20 px-12 rounded-3xl group font-black text-xl backdrop-blur-md relative z-30 border-2"
+                className="h-20 px-12 rounded-3xl group font-black text-xl backdrop-blur-xl border-2 hover:bg-slate-900 hover:text-white"
                 onClick={scrollToPortfolio}
               >
                 <LayoutGrid className="mr-3 w-5 h-5 group-hover:rotate-12 transition-transform" />
@@ -217,27 +204,26 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Visual Showcase with Enhanced Parallax */}
           <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-[1500ms] delay-[400ms] ease-out transform ${isVisible ? 'opacity-100 translate-x-0 rotate-0' : 'opacity-0 translate-x-24 rotate-3'}`}>
              <div className="relative group" style={{ perspective: '2000px' }}>
                 <div 
                   className="relative bg-white dark:bg-slate-800 border-4 border-white dark:border-slate-700 rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden aspect-[4/3] transform-gpu transition-all duration-700 hover:scale-[1.02] z-10"
-                  style={{ transform: `rotateY(${mousePos.x * -12}deg) rotateX(${mousePos.y * 12}deg)` }}
+                  style={{ transform: `rotateY(${mousePos.x * -15}deg) rotateX(${mousePos.y * 15}deg)` }}
                 >
                   <img 
                     src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200" 
-                    alt="Software Engineering Dashboard" 
+                    alt="Digital Innovation Dashboard" 
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 to-transparent" />
                 </div>
                 
-                {/* Parallax Floating Card 1 */}
+                {/* Enhanced Interactive Parallax Elements */}
                 <div 
                   className="absolute -bottom-10 -left-10 md:-left-16 p-8 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-6 z-20 transition-transform duration-200 ease-out"
-                  style={{ transform: `translate(${mousePos.x * 60}px, ${mousePos.y * 60}px) rotateZ(${mousePos.x * 5}deg)` }}
+                  style={{ transform: `translate(${mousePos.x * 70}px, ${mousePos.y * 70}px) rotateZ(${mousePos.x * 5}deg)` }}
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/30">
+                  <div className="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-xl shadow-blue-500/40 group-hover:scale-110 transition-transform">
                      <Cpu size={28} className="animate-pulse" />
                   </div>
                   <div>
@@ -246,13 +232,12 @@ export const Hero: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Parallax Floating Card 2 */}
                 <div 
                   className="absolute -top-8 -right-8 p-6 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2rem] shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-4 z-20 transition-transform duration-200 ease-out"
-                  style={{ transform: `translate(${mousePos.x * -40}px, ${mousePos.y * -40}px) rotateZ(${mousePos.y * -5}deg)` }}
+                  style={{ transform: `translate(${mousePos.x * -50}px, ${mousePos.y * -50}px) rotateZ(${mousePos.y * -5}deg)` }}
                 >
                   <div className="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-600 flex items-center justify-center text-indigo-600 dark:text-white">
-                    <Zap size={22} className="animate-subtle-bounce" />
+                    <Zap size={22} className="animate-bounce" />
                   </div>
                   <div>
                     <p className="text-xl font-black text-slate-900 dark:text-white leading-tight">99.9% Uptime</p>
