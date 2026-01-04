@@ -54,11 +54,12 @@ export const Services: React.FC = () => {
           {SERVICES.map((service, index) => (
             <div 
               key={service.id} 
+              id={`service-card-${service.id}`}
               className={`group relative bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-[2.5rem] p-10 transition-all duration-700 ease-out hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/20 hover:border-blue-400/50 dark:hover:border-blue-600/50 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
               style={{ transitionDelay: `${index * 120}ms` }}
             >
-              <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-sm mb-8 transition-all duration-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-[12deg] group-hover:shadow-blue-500/20 group-hover:shadow-lg">
-                <div className="transition-transform duration-500 group-hover:animate-pulse">
+              <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-sm mb-8 transition-all duration-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-[15deg] group-hover:shadow-blue-500/30">
+                <div className="transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:animate-pulse">
                   {iconMap[service.icon]}
                 </div>
               </div>
@@ -70,7 +71,7 @@ export const Services: React.FC = () => {
                 {service.features.map((feature, idx) => (
                   <span 
                     key={idx} 
-                    className={`px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 transition-all duration-500 transform group-hover:scale-105 group-hover:border-blue-200 dark:group-hover:border-blue-800 group-hover:text-blue-600 dark:group-hover:text-blue-300 shadow-sm`}
+                    className={`px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 shadow-sm transition-all duration-500 transform scale-95 opacity-80 group-hover:scale-100 group-hover:opacity-100 group-hover:border-blue-200 dark:group-hover:border-blue-800 group-hover:text-blue-600 dark:group-hover:text-blue-300`}
                     style={{ transitionDelay: `${idx * 100}ms` }}
                   >
                     {feature}

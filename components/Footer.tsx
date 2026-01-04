@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Terminal, Github, Linkedin, Twitter, Facebook, Sun, Moon } from 'lucide-react';
-import { COMPANY_NAME, NAV_ITEMS } from '../constants';
+import { COMPANY_NAME, NAV_ITEMS, SERVICES } from '../constants';
 import { SectionId } from '../types';
 
 interface FooterProps {
@@ -32,6 +33,16 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleServiceClick = (e: React.MouseEvent<HTMLAnchorElement>, serviceId: string) => {
+    e.preventDefault();
+    const element = document.getElementById(`service-card-${serviceId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      document.getElementById(SectionId.SERVICES)?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -83,10 +94,17 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
           <div>
             <h4 className="text-white font-bold mb-6">Services</h4>
             <ul className="space-y-4">
-              <li><a href={`#${SectionId.SERVICES}`} onClick={(e) => handleNavClick(e, `#${SectionId.SERVICES}`)} className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400">Web Development</a></li>
-              <li><a href={`#${SectionId.SERVICES}`} onClick={(e) => handleNavClick(e, `#${SectionId.SERVICES}`)} className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400">Mobile Apps</a></li>
-              <li><a href={`#${SectionId.SERVICES}`} onClick={(e) => handleNavClick(e, `#${SectionId.SERVICES}`)} className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400">UI/UX Design</a></li>
-              <li><a href={`#${SectionId.SERVICES}`} onClick={(e) => handleNavClick(e, `#${SectionId.SERVICES}`)} className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400">Cloud Solutions</a></li>
+              {SERVICES.map((service) => (
+                <li key={service.id}>
+                  <a 
+                    href={`#service-card-${service.id}`} 
+                    onClick={(e) => handleServiceClick(e, service.id)} 
+                    className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400"
+                  >
+                    {service.title}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, MapPin, Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles } from 'lucide-react';
+import { Mail, MapPin, Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw } from 'lucide-react';
 import { Button } from './ui/Button';
 import { ADDRESS, CONTACT_EMAIL } from '../constants';
 import { SectionId } from '../types';
@@ -8,7 +8,7 @@ import { SectionId } from '../types';
 export const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [isCopied, setIsCopied] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -47,11 +47,18 @@ export const Contact: React.FC = () => {
     e.preventDefault();
     if (!validate()) return;
     setStatus('sending');
+    
+    // Simulating API call
     setTimeout(() => {
-      setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-      setErrors({});
-      setTimeout(() => setStatus('idle'), 6000);
+      // Simulate 5% chance of network failure for demonstration of error states
+      if (Math.random() < 0.05) {
+        setStatus('error');
+      } else {
+        setStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+        setErrors({});
+        setTimeout(() => setStatus('idle'), 6000);
+      }
     }, 2000);
   };
 
@@ -73,7 +80,7 @@ export const Contact: React.FC = () => {
                 <Sparkles size={16} className="text-blue-600" /> Partner With Us
               </div>
               <h3 className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tighter text-slate-950 dark:text-white">
-                Let's architect <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 animate-gradient-x">your legacy.</span>
+                Let's architect <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 animate-pulse">your legacy.</span>
               </h3>
             </div>
             
@@ -115,9 +122,9 @@ export const Contact: React.FC = () => {
           </div>
 
           <div className={`relative transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            {/* Distinct Submission Indicator Overlay */}
+            {/* Submission Indicator Overlay */}
             {status === 'sending' && (
-              <div className="absolute inset-0 z-40 bg-white/60 dark:bg-slate-950/60 backdrop-blur-[4px] rounded-[4rem] flex flex-col items-center justify-center animate-in fade-in duration-500 border-2 border-blue-500/20 shadow-2xl">
+              <div className="absolute inset-0 z-40 bg-white/60 dark:bg-slate-950/60 backdrop-blur-[6px] rounded-[4rem] flex flex-col items-center justify-center animate-in fade-in duration-500 border-2 border-blue-500/20 shadow-2xl">
                 <div className="relative">
                   <div className="w-24 h-24 border-[6px] border-blue-600/20 border-t-blue-600 rounded-full animate-spin shadow-inner"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -128,16 +135,27 @@ export const Contact: React.FC = () => {
               </div>
             )}
             
-            <div className={`bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-[0_60px_100px_-30px_rgba(0,0,0,0.12)] dark:shadow-none transition-all duration-700 ${status === 'sending' ? 'scale-[0.98] blur-[0.5px]' : 'scale-100'}`}>
+            <div className={`bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-[0_60px_100px_-30px_rgba(0,0,0,0.12)] dark:shadow-none transition-all duration-700 ${status === 'sending' ? 'scale-[0.98] blur-[1px]' : 'scale-100'}`}>
               
               {status === 'success' ? (
                 <div className="h-full flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-700 py-20">
                   <div className="w-32 h-32 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-10 shadow-2xl shadow-green-500/10">
                     <CheckCircle2 size={64} className="stroke-[2.5px]" />
                   </div>
-                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter">Transmission Successful</h4>
+                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter">Mission Received</h4>
                   <p className="text-slate-600 dark:text-slate-400 text-lg mb-12 max-w-sm font-medium leading-relaxed">Your message has been securely delivered to our project architects.</p>
                   <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg transition-all active:scale-95">Send New Message</Button>
+                </div>
+              ) : status === 'error' ? (
+                <div className="h-full flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-700 py-20">
+                  <div className="w-32 h-32 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-600 dark:text-red-400 mb-10 shadow-2xl shadow-red-500/10">
+                    <AlertCircle size={64} className="stroke-[2.5px]" />
+                  </div>
+                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter">Transmission Failed</h4>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg mb-12 max-w-sm font-medium leading-relaxed">A temporary network disruption occurred. Please try resending your inquiry.</p>
+                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg transition-all active:scale-95 flex items-center gap-3">
+                    <RefreshCcw size={20} /> Retry Now
+                  </Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-10" noValidate>
@@ -147,12 +165,14 @@ export const Contact: React.FC = () => {
                         Full Name <span className="text-blue-500 font-black">*</span>
                       </label>
                       <input 
-                        type="text" id="name-input" name="name" aria-invalid={!!errors.name} 
+                        type="text" id="name-input" name="name" 
+                        aria-invalid={!!errors.name} 
+                        aria-describedby={errors.name ? "name-error" : undefined}
                         className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.name ? 'border-red-600 dark:border-red-500 bg-red-50/20 shadow-[0_0_15px_rgba(220,38,38,0.1)]' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm`} 
-                        placeholder="e.g. John Doe" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                        placeholder="e.g. Johnathan Doe" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} 
                       />
                       {errors.name && (
-                        <p className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
+                        <p id="name-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
                           <AlertCircle size={14} /> {errors.name}
                         </p>
                       )}
@@ -162,12 +182,14 @@ export const Contact: React.FC = () => {
                         Business Email <span className="text-blue-500 font-black">*</span>
                       </label>
                       <input 
-                        type="email" id="email-input" name="email" aria-invalid={!!errors.email}
+                        type="email" id="email-input" name="email" 
+                        aria-invalid={!!errors.email}
+                        aria-describedby={errors.email ? "email-error" : undefined}
                         className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.email ? 'border-red-600 dark:border-red-500 bg-red-50/20 shadow-[0_0_15px_rgba(220,38,38,0.1)]' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm`} 
-                        placeholder="name@company.com" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                        placeholder="ceo@company.com" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} 
                       />
                       {errors.email && (
-                        <p className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
+                        <p id="email-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
                           <AlertCircle size={14} /> {errors.email}
                         </p>
                       )}
@@ -179,12 +201,15 @@ export const Contact: React.FC = () => {
                       Brief Your Mission <span className="text-blue-500 font-black">*</span>
                     </label>
                     <textarea 
-                      id="message-input" name="message" aria-invalid={!!errors.message} rows={5}
+                      id="message-input" name="message" 
+                      aria-invalid={!!errors.message} 
+                      aria-describedby={errors.message ? "message-error" : undefined}
+                      rows={5}
                       className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.message ? 'border-red-600 dark:border-red-500 bg-red-50/20 shadow-[0_0_15px_rgba(220,38,38,0.1)]' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'} rounded-[2.5rem] px-7 py-6 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all resize-none font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm`} 
                       placeholder="What can we help you build?" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} 
                     />
                     {errors.message && (
-                      <p className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
+                      <p id="message-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500">
                         <AlertCircle size={14} /> {errors.message}
                       </p>
                     )}
@@ -193,7 +218,7 @@ export const Contact: React.FC = () => {
                   <div className="pt-4">
                     <Button 
                       type="submit" variant="primary" size="lg" 
-                      className={`w-full bg-slate-950 dark:bg-blue-600 text-white rounded-[2rem] shadow-2xl transition-all duration-500 font-black text-xl h-20 border-none group transform active:scale-[0.97] ${status === 'sending' ? 'cursor-wait opacity-60' : 'hover:shadow-blue-600/30'}`} 
+                      className={`w-full bg-slate-950 dark:bg-blue-600 text-white rounded-[2rem] shadow-2xl transition-all duration-500 font-black text-xl h-20 border-none group transform active:scale-[0.97] ${status === 'sending' ? 'cursor-wait opacity-60 animate-pulse' : 'hover:shadow-blue-600/40'}`} 
                       disabled={status === 'sending'}
                     >
                       {status === 'sending' ? (

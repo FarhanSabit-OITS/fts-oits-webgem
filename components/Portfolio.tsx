@@ -1,12 +1,13 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Code2, ArrowUpRight, Play, Pause, SearchX, ChevronLeft, ChevronRight, Clock, Info, Rocket, RefreshCw, Eye, Target, TrendingUp, Cpu } from 'lucide-react';
+import { X, Code2, ArrowUpRight, Play, Pause, SearchX, Clock, Info, Rocket, RefreshCw, Eye, Target, TrendingUp, Cpu, Filter } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { SectionId, Project } from '../types';
 import { Button } from './ui/Button';
 
 const ALL_CATEGORY = 'All';
 const ALL_TAG = 'All Technologies';
+const ALL_STATUS = 'All Statuses';
 const PROJECTS_PER_PAGE = 9;
 
 // --- Custom Video Player Component ---
@@ -265,19 +266,29 @@ const ProjectCard: React.FC<{
       <div className="relative aspect-video overflow-hidden cursor-pointer" onClick={() => onSelect(project, 'full')}>
         <img src={project.imageUrl} alt={project.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
         
-        <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out p-8 flex flex-col justify-center text-white translate-y-6 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
-          <p className="text-sm md:text-base line-clamp-4 leading-relaxed font-bold mb-10 opacity-0 group-hover:opacity-100 transition-all delay-150 duration-500">
+        {/* Refined Project Overlay */}
+        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out p-10 flex flex-col justify-center text-white pointer-events-none group-hover:pointer-events-auto">
+          <p className="text-sm md:text-base line-clamp-3 leading-relaxed font-bold mb-10 opacity-0 group-hover:opacity-100 transition-all delay-150 duration-500 text-slate-100">
             {project.description}
           </p>
-          <div className="grid grid-cols-2 gap-3 opacity-0 group-hover:opacity-100 transition-all delay-250 duration-500">
-             <button className="px-4 py-4 bg-white text-slate-900 rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl" onClick={(e) => { e.stopPropagation(); onSelect(project, 'full'); }}>
+          <div className="grid grid-cols-2 gap-4 opacity-0 group-hover:opacity-100 transition-all delay-250 duration-500">
+             <button 
+                className="px-4 py-4 bg-white text-slate-900 rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl ring-2 ring-white/10"
+                onClick={(e) => { e.stopPropagation(); onSelect(project, 'full'); }}
+             >
                Case Study <ArrowUpRight size={14} />
              </button>
-             <button className="px-4 py-4 bg-slate-800 text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl" onClick={(e) => { e.stopPropagation(); onSelect(project, 'quick'); }}>
+             <button 
+                className="px-4 py-4 bg-slate-800 text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl ring-2 ring-white/10"
+                onClick={(e) => { e.stopPropagation(); onSelect(project, 'quick'); }}
+             >
                Quick View <Eye size={14} />
              </button>
              {project.demoVideoUrl && (
-               <button onClick={(e) => { e.stopPropagation(); onSelect(project, 'video'); }} className="col-span-2 px-6 py-4 bg-blue-600 text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl">
+               <button 
+                  onClick={(e) => { e.stopPropagation(); onSelect(project, 'video'); }}
+                  className="col-span-2 px-6 py-4 bg-blue-600 text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl shadow-blue-500/20"
+               >
                  <Play size={14} fill="currentColor" /> Play Demo
                </button>
              )}
@@ -298,13 +309,19 @@ const ProjectCard: React.FC<{
         <h4 className="text-2xl md:text-3xl font-black mb-8 tracking-tighter group-hover:text-blue-600 transition-colors cursor-pointer leading-tight" onClick={() => onSelect(project, 'full')}>{project.title}</h4>
         <div className="flex flex-wrap gap-2.5">
           {project.technologies?.slice(0, 4).map(t => (
-            <button 
-              key={t} 
-              onClick={(e) => { e.stopPropagation(); onTagClick(t); }}
-              className="text-[10px] bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-600 dark:hover:bg-blue-600 text-slate-500 dark:text-slate-400 hover:text-white px-3.5 py-2 rounded-xl transition-all transform hover:scale-110 active:scale-90 font-black border border-slate-100 dark:border-slate-700"
-            >
-              {t}
-            </button>
+            <div key={t} className="relative group/tag">
+              <button 
+                onClick={(e) => { e.stopPropagation(); onTagClick(t); }}
+                className="text-[10px] bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-600 dark:hover:bg-blue-600 text-slate-500 dark:text-slate-400 hover:text-white px-3.5 py-2 rounded-xl transition-all transform hover:scale-110 active:scale-90 font-black border border-slate-100 dark:border-slate-700"
+              >
+                {t}
+              </button>
+              {/* Refined Tooltip */}
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest rounded-lg opacity-0 group-hover/tag:opacity-100 transition-all duration-300 pointer-events-none translate-y-2 group-hover/tag:translate-y-0 shadow-2xl border border-slate-700 whitespace-nowrap z-30">
+                {t} Project
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-slate-900"></div>
+              </div>
+            </div>
           ))}
           {project.technologies && project.technologies.length > 4 && (
             <span className="text-[10px] bg-slate-50 dark:bg-slate-800 px-3.5 py-2 rounded-xl text-slate-400 font-black border border-slate-100 dark:border-slate-700">+{project.technologies.length - 4}</span>
@@ -315,10 +332,29 @@ const ProjectCard: React.FC<{
   );
 };
 
+// --- Skeleton Shimmer Component ---
+const ProjectSkeleton = () => (
+  <div className="bg-white dark:bg-slate-900 rounded-[3rem] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm animate-pulse">
+    <div className="aspect-video bg-slate-200 dark:bg-slate-800 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
+    </div>
+    <div className="p-8 md:p-10 space-y-4">
+      <div className="h-6 bg-slate-100 dark:bg-slate-800 rounded-full w-24"></div>
+      <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl w-3/4"></div>
+      <div className="flex gap-2 pt-4">
+        <div className="h-8 bg-slate-100 dark:bg-slate-800 rounded-lg w-16"></div>
+        <div className="h-8 bg-slate-100 dark:bg-slate-800 rounded-lg w-16"></div>
+        <div className="h-8 bg-slate-100 dark:bg-slate-800 rounded-lg w-16"></div>
+      </div>
+    </div>
+  </div>
+);
+
 // --- Main Portfolio Component ---
 export const Portfolio: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState(() => localStorage.getItem('portfolio_cat') || ALL_CATEGORY);
   const [activeTag, setActiveTag] = useState(() => localStorage.getItem('portfolio_tag') || ALL_TAG);
+  const [activeStatus, setActiveStatus] = useState(() => localStorage.getItem('portfolio_status') || ALL_STATUS);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProject, setSelectedProject] = useState<{ project: Project; mode: 'full' | 'quick' | 'video' } | null>(null);
   const [isFilterAnimating, setIsFilterAnimating] = useState(false);
@@ -326,25 +362,16 @@ export const Portfolio: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('portfolio_cat', activeCategory);
     localStorage.setItem('portfolio_tag', activeTag);
-  }, [activeCategory, activeTag]);
+    localStorage.setItem('portfolio_status', activeStatus);
+  }, [activeCategory, activeTag, activeStatus]);
 
-  const handleSetCategory = (cat: string) => {
-    if (activeCategory === cat) return;
+  const handleFilterChange = (setter: (v: string) => void, value: string) => {
+    if (isFilterAnimating) return;
     setIsFilterAnimating(true);
     setTimeout(() => {
-      setActiveCategory(cat);
+      setter(value);
       setCurrentPage(1);
-      setTimeout(() => setIsFilterAnimating(false), 50);
-    }, 400);
-  };
-
-  const handleSetTag = (tag: string) => {
-    if (activeTag === tag) return;
-    setIsFilterAnimating(true);
-    setTimeout(() => {
-      setActiveTag(tag);
-      setCurrentPage(1);
-      setTimeout(() => setIsFilterAnimating(false), 50);
+      setTimeout(() => setIsFilterAnimating(false), 500);
     }, 400);
   };
 
@@ -353,43 +380,83 @@ export const Portfolio: React.FC = () => {
     setTimeout(() => {
       setActiveCategory(ALL_CATEGORY);
       setActiveTag(ALL_TAG);
+      setActiveStatus(ALL_STATUS);
       setCurrentPage(1);
-      setTimeout(() => setIsFilterAnimating(false), 50);
+      setTimeout(() => setIsFilterAnimating(false), 500);
     }, 400);
   };
 
-  const filteredProjects = PROJECTS.filter(p => (activeCategory === ALL_CATEGORY || p.category === activeCategory) && (activeTag === ALL_TAG || p.technologies?.includes(activeTag)));
+  const filteredProjects = PROJECTS.filter(p => 
+    (activeCategory === ALL_CATEGORY || p.category === activeCategory) && 
+    (activeTag === ALL_TAG || p.technologies?.includes(activeTag)) &&
+    (activeStatus === ALL_STATUS || p.status === activeStatus)
+  );
   
-  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
   const currentProjects = filteredProjects.slice((currentPage - 1) * PROJECTS_PER_PAGE, currentPage * PROJECTS_PER_PAGE);
 
   const categories = [ALL_CATEGORY, ...Array.from(new Set(PROJECTS.map(p => p.category)))];
   const tags = [ALL_TAG, ...Array.from(new Set(PROJECTS.flatMap(p => p.technologies || []))).sort()];
+  const statuses = [ALL_STATUS, 'Completed', 'In Progress', 'Maintenance'];
+
+  // Count helper
+  const getCountForCategory = (cat: string) => {
+    if (cat === ALL_CATEGORY) return PROJECTS.length;
+    return PROJECTS.filter(p => p.category === cat).length;
+  };
+
+  const getCountForStatus = (stat: string) => {
+    if (stat === ALL_STATUS) return PROJECTS.length;
+    return PROJECTS.filter(p => p.status === stat).length;
+  };
 
   return (
     <section id={SectionId.PORTFOLIO} className="py-24 bg-slate-50 dark:bg-slate-950 min-h-[1000px] transition-colors duration-500 overflow-hidden relative">
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-4xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-8">
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-8 shadow-sm">
              <Rocket size={16} /> Showcase Gallery
           </div>
           <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tighter text-slate-900 dark:text-white">Engineering <br className="hidden md:block"/> Success Stories</h2>
           <p className="text-slate-600 dark:text-slate-400 text-xl font-medium mb-16 max-w-2xl mx-auto">High-performance digital products shipped for visionary global brands.</p>
           
-          <div className="flex flex-col gap-10 items-center">
+          <div className="flex flex-col gap-12 items-center">
+            {/* Category Filters with Counts */}
             <div className="flex flex-wrap justify-center gap-4">
               {categories.map(c => (
                 <button 
                   key={c} 
-                  onClick={() => handleSetCategory(c)} 
-                  className={`px-8 md:px-10 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all transform hover:scale-105 active:scale-95 border-2 ${activeCategory === c ? 'bg-blue-600 border-blue-600 text-white shadow-2xl shadow-blue-500/40 ring-4 ring-blue-500/10' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-100 dark:border-slate-800 hover:border-blue-300'}`}
+                  onClick={() => handleFilterChange(setActiveCategory, c)} 
+                  className={`px-8 md:px-10 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all transform hover:scale-105 active:scale-95 border-2 flex items-center gap-3 ${activeCategory === c ? 'bg-blue-600 border-blue-600 text-white shadow-2xl shadow-blue-500/40 ring-4 ring-blue-500/10' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 hover:border-blue-400/50'}`}
                 >
                   {c}
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${activeCategory === c ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
+                    {getCountForCategory(c)}
+                  </span>
                 </button>
               ))}
+            </div>
+
+            {/* Sub Filters: Status and Reset */}
+            <div className="flex flex-wrap justify-center gap-6 items-center">
+              <div className="flex items-center gap-3 bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto no-scrollbar">
+                <div className="px-4 text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 whitespace-nowrap">
+                  <Filter size={12} /> Status
+                </div>
+                {statuses.map(s => (
+                  <button
+                    key={s}
+                    onClick={() => handleFilterChange(setActiveStatus, s)}
+                    className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap flex items-center gap-2 ${activeStatus === s ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                  >
+                    {s === ALL_STATUS ? 'All' : s}
+                    <span className={`text-[8px] opacity-60`}>({getCountForStatus(s)})</span>
+                  </button>
+                ))}
+              </div>
+
               <button 
                 onClick={resetFilters}
-                className="px-6 py-4 rounded-2xl bg-white dark:bg-slate-800 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 border-2 border-slate-100 dark:border-slate-800 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 font-black uppercase text-[11px] tracking-widest shadow-sm group"
+                className="px-6 py-4 rounded-2xl bg-white dark:bg-slate-800 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 border-2 border-slate-200 dark:border-slate-800 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 font-black uppercase text-[11px] tracking-widest shadow-sm group"
               >
                 <RefreshCw size={14} className={`group-hover:rotate-180 transition-transform duration-700 ${isFilterAnimating ? 'animate-spin' : ''}`} /> Reset Filters
               </button>
@@ -397,15 +464,19 @@ export const Portfolio: React.FC = () => {
           </div>
         </div>
 
-        <div className={`transition-all duration-500 transform ${isFilterAnimating ? 'opacity-0 scale-95 translate-y-8 blur-sm' : 'opacity-100 scale-100 translate-y-0 blur-0'}`}>
-          {currentProjects.length > 0 ? (
+        <div className={`transition-all duration-500 transform ${isFilterAnimating ? 'opacity-40 scale-[0.98] blur-sm' : 'opacity-100 scale-100'}`}>
+          {isFilterAnimating ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-20">
+               {[1,2,3,4,5,6].map(i => <ProjectSkeleton key={i} />)}
+            </div>
+          ) : currentProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {currentProjects.map((p, i) => (
                 <ProjectCard 
-                  key={p.id} 
+                  key={`${p.id}-${activeCategory}-${activeStatus}`} 
                   project={p} 
                   index={i} 
-                  onTagClick={handleSetTag} 
+                  onTagClick={(tag) => handleFilterChange(setActiveTag, tag)} 
                   onSelect={(p, m) => setSelectedProject({ project: p, mode: m })} 
                 />
               ))}
@@ -424,6 +495,12 @@ export const Portfolio: React.FC = () => {
         mode={selectedProject?.mode || 'full'} 
         onClose={() => setSelectedProject(null)} 
       />
+      
+      <style>{`
+        @keyframes shimmer {
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
     </section>
   );
 };
