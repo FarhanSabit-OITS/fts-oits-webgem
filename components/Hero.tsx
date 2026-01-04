@@ -12,7 +12,7 @@ export const Hero: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    // Trigger animations immediately on mount for Hero section to avoid "late" loading
+    // Immediate activation for instant first-paint impact
     setIsVisible(true);
     
     const handleScroll = () => setScrollY(window.scrollY);
@@ -98,73 +98,76 @@ export const Hero: React.FC = () => {
     <section id={SectionId.HOME} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[95vh] flex items-center">
       <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 blur-md scale-110 will-change-transform transition-transform duration-700 ease-out"
+          className="absolute inset-0 bg-cover bg-center opacity-30 dark:opacity-40 blur-[2px] scale-110 will-change-transform transition-transform duration-700 ease-out"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30 + scrollY * 0.1}px) scale(1.1)`
+            transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20 + scrollY * 0.05}px) scale(1.1)`
           }}
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-50/80 via-slate-50/70 to-slate-50/90 dark:from-slate-950/80 dark:via-slate-950/70 dark:to-slate-950/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-50/70 via-slate-50/50 to-slate-50/80 dark:from-slate-950/70 dark:via-slate-950/50 dark:to-slate-950/80" />
         <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" aria-hidden="true" />
 
         <div 
-          className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-[100px] opacity-60 animate-float will-change-transform" 
-          style={{ transform: `translate(${mousePos.x * -60}px, ${mousePos.y * -60}px)` }}
-        />
-        <div 
-          className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-400/10 rounded-full blur-[120px] opacity-60 will-change-transform" 
-          style={{ transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 40}px)` }}
+          className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] opacity-70 animate-float will-change-transform" 
+          style={{ transform: `translate(${mousePos.x * -40}px, ${mousePos.y * -40}px)` }}
         />
       </div>
 
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           <div className="flex-1 space-y-8 text-center lg:text-left relative z-10">
-            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide transition-all duration-700 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-              Available for new projects
+            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-200/50 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-300 dark:border-slate-700 text-[11px] font-black text-slate-900 dark:text-blue-400 uppercase tracking-[0.2em] transition-all duration-700 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+              Accepting New Partnerships
             </div>
             
-            <h1 className={`text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.1] transition-all duration-700 delay-100 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <h1 className={`text-5xl md:text-6xl lg:text-8xl font-black text-slate-900 dark:text-white tracking-tighter leading-[1] transition-all duration-1000 delay-100 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
               We Craft <br className="hidden md:block"/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Digital Excellence</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600">Digital Mastery</span>
             </h1>
             
-            <p className={`text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed transition-all duration-700 delay-200 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-              {TAGLINE}. We build robust software solutions that drive business growth, combining technical expertise with stunning design.
+            <p className={`text-lg md:text-2xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium transition-all duration-1000 delay-200 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              {TAGLINE}. High-performance software engineering combined with award-winning design thinking.
             </p>
 
-            <div className={`flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start transition-all duration-700 delay-300 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            <div className={`flex flex-col sm:flex-row items-center gap-5 justify-center lg:justify-start transition-all duration-1000 delay-300 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
               <Button 
-                size="lg" variant="primary" aria-label="Request a demo and start your journey"
-                className="group relative overflow-hidden transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-600/40" 
+                size="lg" variant="primary" aria-label="Request a demo"
+                className="group h-16 px-12 rounded-2xl bg-slate-950 dark:bg-blue-600 font-black text-lg transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-600/40" 
                 onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Request a Demo
-                <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                Launch Project
+                <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1.5" />
               </Button>
-              <Button variant="outline" size="lg" className="group bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm hover:bg-white/80 dark:hover:bg-slate-800 border-slate-300 dark:border-slate-700" aria-label="Learn how we work">
-                <Play className="mr-2 w-4 h-4 fill-slate-900 dark:fill-white" />
-                How We Work
+              <Button variant="outline" size="lg" className="h-16 px-10 rounded-2xl group bg-white/50 dark:bg-slate-900/50 backdrop-blur-md hover:bg-white dark:hover:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 font-black text-lg" aria-label="Learn how we work">
+                <Play className="mr-3 w-4 h-4 fill-slate-900 dark:fill-white" />
+                Workflow
               </Button>
             </div>
           </div>
 
-          <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-1000 delay-200 ease-out transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
-            <div className="relative" style={{ transform: `perspective(1000px) rotateY(${mousePos.x * -10}deg) rotateX(${mousePos.y * 10}deg)` }}>
-              <div className="absolute top-4 -right-4 w-full h-full bg-slate-200/50 dark:bg-slate-700/30 rounded-2xl -rotate-2 backdrop-blur-sm" aria-hidden="true"></div>
-              <div className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden aspect-[4/3] group">
-                <img src="https://picsum.photos/800/600?random=10" alt="Software Preview" loading="eager" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 glass-panel rounded-xl shadow-lg transform transition-all duration-700 translate-y-2 group-hover:translate-y-0">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 animate-pulse"><Play size={16} fill="currentColor" /></div>
-                    <div>
-                      <p className="text-sm font-bold text-slate-900 dark:text-white">Project Performance</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-300">Real-time Analytics</p>
-                    </div>
-                    <div className="ml-auto text-green-600 dark:text-green-400 font-bold text-sm">+24%</div>
-                  </div>
+          <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-1000 delay-200 ease-out transform ${isVisible ? 'opacity-100 translate-x-0 rotate-0' : 'opacity-0 translate-x-20 rotate-3'}`}>
+            <div className="relative group" style={{ perspective: '1000px' }}>
+              <div 
+                className="relative bg-white dark:bg-slate-800 border-4 border-white dark:border-slate-700 rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.2)] overflow-hidden aspect-[4/3] transform-gpu transition-all duration-500 hover:scale-[1.02]"
+                style={{ transform: `rotateY(${mousePos.x * -8}deg) rotateX(${mousePos.y * 8}deg)` }}
+              >
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000" alt="Software Dashboard Preview" loading="eager" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 to-transparent" />
+              </div>
+              
+              {/* Decorative Floating Card */}
+              <div 
+                className="absolute -bottom-8 -left-8 p-6 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-4 animate-float transition-transform"
+                style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)` }}
+              >
+                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600">
+                  <TrendingUp size={24} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Efficiency Gain</p>
+                  <p className="text-xl font-black text-slate-900 dark:text-white">+42.8%</p>
                 </div>
               </div>
             </div>
@@ -174,3 +177,11 @@ export const Hero: React.FC = () => {
     </section>
   );
 };
+
+// Internal icon replacement for the floating card
+const TrendingUp = ({ size }: { size: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+    <polyline points="17 6 23 6 23 12"></polyline>
+  </svg>
+);
