@@ -59,7 +59,7 @@ export const Services: React.FC = () => {
   return (
     <section ref={sectionRef} id={SectionId.SERVICES} className="py-32 bg-white dark:bg-slate-950 relative transition-colors duration-300 overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className={`flex flex-col md:flex-row justify-between items-end mb-20 gap-8 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] transform ${isVisible ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 translate-y-24 rotate-[-10deg]'}`}>
+        <div className={`flex flex-col md:flex-row justify-between items-end mb-20 gap-8 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0 rotate-0' : 'opacity-0 translate-y-24 rotate-[-6deg]'}`}>
           <div className="max-w-2xl relative">
             <h2 className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Our Expertise</h2>
             <h3 className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white leading-tight tracking-tighter cursor-default flex flex-wrap">
@@ -68,7 +68,7 @@ export const Services: React.FC = () => {
                   key={i} 
                   className="mr-3 transition-all duration-500 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110 inline-block transform-gpu"
                   style={{ 
-                    transform: isVisible ? `translate(${mousePos.x * (10 + i * 2)}px, ${mousePos.y * (6 + i * 1.5)}px)` : 'none'
+                    transform: isVisible ? `translate(${mousePos.x * (15 + i * 2)}px, ${mousePos.y * (10 + i * 1.5)}px)` : 'none'
                   }}
                 >
                   {word}
@@ -102,7 +102,7 @@ export const Services: React.FC = () => {
                 {service.features.map((feature, idx) => (
                   <span 
                     key={idx} 
-                    className={`px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 shadow-sm transition-all duration-500 transform scale-75 opacity-0 translate-y-4 group-hover:scale-100 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600`}
+                    className={`px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 shadow-sm transition-all duration-500 transform scale-75 opacity-0 translate-y-4 group-hover:scale-100 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 transform-gpu`}
                     style={{ transitionDelay: `${(idx + 1) * 100}ms` }}
                   >
                     {feature}
@@ -131,7 +131,7 @@ export const Services: React.FC = () => {
                 {TECH_DOMAINS.map((domain) => (
                   <div key={domain.id} className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 transition-all duration-700 ${activeTab === domain.id ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-8 absolute inset-0 pointer-events-none'}`} style={{ display: activeTab === domain.id ? 'grid' : 'none' }}>
                     {domain.skills.map((skill) => (
-                      <div key={skill} className="flex items-center gap-6 p-8 rounded-[2rem] bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-500 group cursor-default hover:bg-blue-600 hover:text-white hover:scale-105 hover:-translate-y-2">
+                      <div key={skill} className="flex items-center gap-6 p-8 rounded-[2rem] bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-500 group cursor-default hover:bg-blue-600 hover:text-white hover:scale-105 hover:-translate-y-2 transform-gpu">
                          <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-blue-600 transition-all shadow-md group-hover:scale-110 group-hover:rotate-12"><Terminal size={24} /></div>
                          <span className="font-black text-slate-800 dark:text-slate-200 group-hover:text-white text-lg tracking-tight transition-colors duration-300">{skill}</span>
                       </div>

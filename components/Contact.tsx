@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation, Loader2 } from 'lucide-react';
+import { Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { CONTACT_EMAIL, ADDRESS } from '../constants';
 import { SectionId } from '../types';
@@ -28,10 +28,10 @@ export const Contact: React.FC = () => {
     const newErrors: typeof errors = {};
     if (!formData.name.trim()) newErrors.name = 'Identification is required';
     if (!formData.email.trim()) { 
-      newErrors.email = 'A valid business email is required'; 
+      newErrors.email = 'A business email is required'; 
     } 
     else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) { 
-      newErrors.email = 'Please provide a standard email format (e.g. name@domain.com)'; 
+      newErrors.email = 'Please provide a valid email format (e.g. name@company.com)'; 
     }
     if (!formData.message.trim()) newErrors.message = 'Please provide a project mission overview';
     setErrors(newErrors);
@@ -42,7 +42,6 @@ export const Contact: React.FC = () => {
     e.preventDefault();
     if (!validate()) return;
     setStatus('sending');
-    // Simulated engineering transmission
     setTimeout(() => {
       if (Math.random() < 0.02) { setStatus('error'); } 
       else { 
@@ -75,7 +74,7 @@ export const Contact: React.FC = () => {
               <div className="flex flex-wrap items-center gap-4">
                 <p className="text-2xl md:text-3xl font-black text-slate-950 dark:text-slate-100 tracking-tight drop-shadow-sm">{CONTACT_EMAIL}</p>
                 <button onClick={handleCopyEmail} className={`p-4 rounded-2xl transition-all border-2 ${isCopied ? 'bg-green-600 border-green-600 text-white shadow-2xl scale-110' : 'bg-white dark:bg-slate-900 text-slate-400 hover:text-blue-600 border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-4 focus:ring-blue-500/20'}`}>
-                  {isCopied ? <Check size={22} className="animate-in zoom-in spin-in-45 duration-500" /> : <Copy size={22} />}
+                  {isCopied ? <Check size={22} className="animate-in zoom-in duration-500" /> : <Copy size={22} />}
                 </button>
               </div>
               
@@ -91,7 +90,7 @@ export const Contact: React.FC = () => {
             </div>
           </div>
 
-          <div className={`relative transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+          <div className={`relative transition-all duration-1000 delay-300 ease-out transform-gpu ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             <div className={`relative bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-700 overflow-hidden ${status === 'sending' ? 'scale-[0.98]' : 'scale-100'}`}>
               
               {status === 'sending' && (
@@ -111,8 +110,8 @@ export const Contact: React.FC = () => {
                 <div className="text-center py-20 animate-in zoom-in-95 duration-700">
                   <div className="w-32 h-32 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mx-auto mb-10 shadow-2xl shadow-green-500/10 ring-4 ring-green-500/10"><CheckCircle2 size={64} className="stroke-[2.5px]" /></div>
                   <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter text-glow">Packet Delivered</h4>
-                  <p className="text-slate-600 dark:text-slate-300 text-lg mb-10 max-w-xs mx-auto">Our engineering leads will respond to your briefing shortly.</p>
-                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg">Send New Inquiry</Button>
+                  <p className="text-slate-600 dark:text-slate-300 text-lg mb-10 max-w-xs mx-auto">Our engineering leads will respond shortly.</p>
+                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg shadow-xl shadow-green-500/5">Send New Inquiry</Button>
                 </div>
               ) : status === 'error' ? (
                 <div className="text-center py-20 animate-in zoom-in-95 duration-700">
@@ -137,9 +136,7 @@ export const Contact: React.FC = () => {
                         value={formData.name} 
                         onChange={(e) => setFormData({...formData, name: e.target.value})} 
                       />
-                      <div className="min-h-[20px]">
-                        {errors.name && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.name}</p>}
-                      </div>
+                      {errors.name && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.name}</p>}
                     </div>
                     <div className="space-y-4 group">
                       <label htmlFor="email-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-slate-100 ml-1 group-focus-within:text-blue-600 transition-colors">Business Email <span className="text-blue-500">*</span></label>
@@ -154,9 +151,7 @@ export const Contact: React.FC = () => {
                         value={formData.email} 
                         onChange={(e) => setFormData({...formData, email: e.target.value})} 
                       />
-                      <div className="min-h-[20px]">
-                        {errors.email && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.email}</p>}
-                      </div>
+                      {errors.email && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.email}</p>}
                     </div>
                   </div>
                   <div className="space-y-4 group">
@@ -171,9 +166,7 @@ export const Contact: React.FC = () => {
                       value={formData.message} 
                       onChange={(e) => setFormData({...formData, message: e.target.value})} 
                     />
-                    <div className="min-h-[20px]">
-                      {errors.message && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.message}</p>}
-                    </div>
+                    {errors.message && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.message}</p>}
                   </div>
                   <div className="pt-4">
                     <Button 
@@ -202,7 +195,7 @@ export const Contact: React.FC = () => {
           </div>
         </div>
 
-        <div className={`transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <div className={`transition-all duration-1000 delay-500 ease-out transform-gpu ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
           <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-4 border-2 border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden group/map ring-4 ring-white dark:ring-slate-900 ring-offset-0 group-hover/map:ring-blue-500/10 transition-all">
             <div className="relative aspect-[21/9] w-full rounded-[2.5rem] overflow-hidden grayscale contrast-125 dark:grayscale-0 dark:contrast-100 transition-all duration-700 group-hover/map:grayscale-0 group-hover/map:contrast-100 group-hover/map:scale-[1.01]">
               <iframe

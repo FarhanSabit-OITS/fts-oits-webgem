@@ -2,13 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Terminal, Code2, Cpu, Zap } from 'lucide-react';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
-import { COMPANY_NAME, TAGLINE } from '../constants';
+import { TAGLINE } from '../constants';
 
 export const Hero: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
 
   const scrollToContact = () => {
     document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' });
@@ -28,7 +27,6 @@ export const Hero: React.FC = () => {
       });
     };
 
-    // Particle Animation
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
@@ -46,8 +44,8 @@ export const Hero: React.FC = () => {
           this.x = Math.random() * canvas.width;
           this.y = Math.random() * canvas.height;
           this.size = Math.random() * 2 + 0.5;
-          this.speedX = Math.random() * 0.5 - 0.25;
-          this.speedY = Math.random() * 0.5 - 0.25;
+          this.speedX = Math.random() * 0.4 - 0.2;
+          this.speedY = Math.random() * 0.4 - 0.2;
         }
         update() {
           this.x += this.speedX;
@@ -60,7 +58,7 @@ export const Hero: React.FC = () => {
         draw() {
           if (!ctx) return;
           const isDark = document.documentElement.classList.contains('dark');
-          ctx.fillStyle = isDark ? 'rgba(56, 189, 248, 0.2)' : 'rgba(14, 165, 233, 0.15)';
+          ctx.fillStyle = isDark ? 'rgba(56, 189, 248, 0.25)' : 'rgba(14, 165, 233, 0.15)';
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
           ctx.fill();
@@ -69,7 +67,7 @@ export const Hero: React.FC = () => {
 
       const init = () => {
         particles = [];
-        for (let i = 0; i < 60; i++) particles.push(new Particle());
+        for (let i = 0; i < 70; i++) particles.push(new Particle());
       };
 
       const animate = () => {
@@ -95,16 +93,13 @@ export const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
-      
-      {/* Dynamic Canvas Background */}
+    <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
       <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
 
-      {/* Robust Lottie Background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-30 dark:opacity-20">
         <div 
           className="w-full h-full max-w-[1400px] max-h-[1400px] scale-125 md:scale-100 transition-transform duration-1000 ease-out"
-          style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30}px)` }}
+          style={{ transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)` }}
         >
           <dotlottie-player
             src="https://lottie.host/8210332f-a912-4467-938b-d7486e9e4f2b/X5tXb8D5Xw.json"
@@ -123,10 +118,9 @@ export const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 dark:to-slate-950/95" />
       </div>
 
-      {/* Parallax Floating Elements */}
       <div 
         className="absolute top-[18%] left-[8%] hidden lg:block text-blue-600/20 dark:text-blue-400/30 animate-float transition-transform duration-700 ease-out"
-        style={{ transform: `translate(${mousePos.x * -40}px, ${mousePos.y * -40}px) rotate(${mousePos.x * 12}deg)` }}
+        style={{ transform: `translate(${mousePos.x * -60}px, ${mousePos.y * -60}px) rotate(${mousePos.x * 10}deg)` }}
       >
         <div className="bg-white/50 dark:bg-slate-900/50 p-6 rounded-3xl backdrop-blur-xl border border-white/20 dark:border-slate-800/50 shadow-2xl">
           <Code2 size={64} strokeWidth={1.5} />
@@ -134,7 +128,7 @@ export const Hero: React.FC = () => {
       </div>
       <div 
         className="absolute bottom-[25%] right-[12%] hidden lg:block text-indigo-600/20 dark:text-indigo-400/30 animate-float transition-transform duration-1000 ease-out"
-        style={{ animationDelay: '1.2s', transform: `translate(${mousePos.x * -70}px, ${mousePos.y * -70}px) rotate(${mousePos.y * -10}deg)` }}
+        style={{ animationDelay: '1.2s', transform: `translate(${mousePos.x * -90}px, ${mousePos.y * -90}px) rotate(${mousePos.y * -15}deg)` }}
       >
         <div className="bg-white/50 dark:bg-slate-900/50 p-6 rounded-3xl backdrop-blur-xl border border-white/20 dark:border-slate-800/50 shadow-2xl">
           <Cpu size={80} strokeWidth={1.5} />
@@ -143,7 +137,6 @@ export const Hero: React.FC = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl">
-          
           <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50/90 dark:bg-blue-900/40 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-blue-100 dark:border-blue-800/50 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <Terminal size={18} className="animate-slow-pulse" />
             <span>Dhaka's Premier Engineering Studio</span>
@@ -154,7 +147,7 @@ export const Hero: React.FC = () => {
               <span 
                 key={i} 
                 className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-300 drop-shadow-md'} inline-block animate-in fade-in slide-in-from-bottom-12 duration-1000 transform-gpu`}
-                style={{ animationDelay: `${i * 180}ms`, scale: isVisible ? '1' : '0.85' }}
+                style={{ animationDelay: `${i * 150}ms`, scale: isVisible ? '1' : '0.8' }}
               >
                 {word}
               </span>
@@ -178,12 +171,7 @@ export const Hero: React.FC = () => {
             >
               Start Project Inquiry <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" size={24} />
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              onClick={scrollToServices}
-              className="w-full sm:w-auto"
-            >
+            <Button variant="outline" size="lg" onClick={scrollToServices} className="w-full sm:w-auto">
               Our Capability Matrix
             </Button>
           </div>
