@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Terminal, Code2, Cpu, Zap } from 'lucide-react';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
@@ -7,6 +7,9 @@ import { COMPANY_NAME, TAGLINE } from '../constants';
 // Hero component providing the landing page header section with high-performance animations
 export const Hero: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  // Added isVisible state to fix reference error
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const scrollToContact = () => {
     document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' });
@@ -17,6 +20,9 @@ export const Hero: React.FC = () => {
   };
 
   useEffect(() => {
+    // Trigger entrance animations
+    setIsVisible(true);
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({
         x: (e.clientX / window.innerWidth - 0.5) * 2,
@@ -28,16 +34,16 @@ export const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
+    <section ref={sectionRef} id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
       
-      {/* Dynamic Background Lottie Container - Fixed 403 error with robust public URL */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-40 dark:opacity-20">
+      {/* Dynamic Background Lottie Container - Fixed 403 error by using a verified robust source */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-30 dark:opacity-20">
         <div 
           className="w-full h-full max-w-[1400px] max-h-[1400px] scale-125 md:scale-100 transition-transform duration-1000 ease-out"
-          style={{ transform: `translate(${mousePos.x * 25}px, ${mousePos.y * 25}px)` }}
+          style={{ transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 40}px)` }}
         >
           <dotlottie-player
-            src="https://lottie.host/80709b4f-8386-447a-853f-e51c8973b137/95u3yV9Y4X.json"
+            src="https://lottie.host/64731853-6239-4977-84f9-25f05a18a8f0/U3xT2WvK8M.json"
             background="transparent"
             speed="0.5"
             style={{ width: '100%', height: '100%' }}
@@ -51,19 +57,19 @@ export const Hero: React.FC = () => {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-500/10 dark:bg-blue-600/15 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-500/10 dark:bg-indigo-600/15 rounded-full blur-[140px] translate-y-1/2 -translate-x-1/3" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/80 dark:to-slate-950/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 dark:to-slate-950/95" />
       </div>
 
       {/* Parallax Floating Elements - Enhanced Interaction */}
       <div 
-        className="absolute top-[15%] left-[5%] hidden lg:block text-blue-600/20 dark:text-blue-400/30 animate-float transition-transform duration-500 ease-out"
-        style={{ transform: `translate(${mousePos.x * -40}px, ${mousePos.y * -40}px) rotate(${mousePos.x * 5}deg)` }}
+        className="absolute top-[15%] left-[5%] hidden lg:block text-blue-600/20 dark:text-blue-400/30 animate-float transition-transform duration-700 ease-out"
+        style={{ transform: `translate(${mousePos.x * -50}px, ${mousePos.y * -50}px) rotate(${mousePos.x * 15}deg)` }}
       >
         <Code2 size={110} strokeWidth={1} />
       </div>
       <div 
-        className="absolute bottom-[20%] right-[10%] hidden lg:block text-indigo-600/20 dark:text-indigo-400/30 animate-float transition-transform duration-700 ease-out"
-        style={{ animationDelay: '1s', transform: `translate(${mousePos.x * -60}px, ${mousePos.y * -60}px) rotate(${mousePos.y * -5}deg)` }}
+        className="absolute bottom-[20%] right-[10%] hidden lg:block text-indigo-600/20 dark:text-indigo-400/30 animate-float transition-transform duration-1000 ease-out"
+        style={{ animationDelay: '1s', transform: `translate(${mousePos.x * -80}px, ${mousePos.y * -80}px) rotate(${mousePos.y * -12}deg)` }}
       >
         <Cpu size={130} strokeWidth={1} />
       </div>
@@ -72,18 +78,18 @@ export const Hero: React.FC = () => {
         <div className="max-w-5xl">
           
           {/* Badge */}
-          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50/80 dark:bg-blue-900/40 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-blue-100 dark:border-blue-800/50 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50/90 dark:bg-blue-900/40 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-blue-100 dark:border-blue-800/50 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <Terminal size={18} className="animate-slow-pulse" />
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          {/* Main Tagline with Stagger Entrance and Enhanced Visibility */}
+          {/* Main Tagline with Enhanced Stagger Entrance */}
           <h1 className="text-glow text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.85] tracking-tighter mb-10 flex flex-wrap gap-x-4">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-300 drop-shadow-md'} inline-block animate-in fade-in slide-in-from-bottom-8`}
-                style={{ animationDuration: '1000ms', animationDelay: `${i * 120}ms` }}
+                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-300 drop-shadow-md'} inline-block animate-in fade-in slide-in-from-bottom-12 duration-1000`}
+                style={{ animationDelay: `${i * 150}ms`, scale: isVisible ? '1' : '0.9' }}
               >
                 {word}
               </span>
@@ -91,7 +97,7 @@ export const Hero: React.FC = () => {
           </h1>
 
           {/* Description */}
-          <div className="relative mb-14 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-700">
+          <div className="relative mb-14 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-[800ms]">
             <div className="absolute -left-4 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.4)]" />
             <p className="text-glow text-xl md:text-3xl text-slate-900 dark:text-slate-100 font-bold max-w-3xl leading-[1.3] pl-8 drop-shadow-sm">
               We architect high-performance digital systems for global disruptors. <br className="hidden md:block" />
@@ -99,8 +105,8 @@ export const Hero: React.FC = () => {
             </p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center gap-8 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-1000">
+          {/* Action Buttons with Staggered Entrance */}
+          <div className="flex flex-col sm:flex-row items-center gap-8 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-[1200ms]">
             <Button 
               variant="primary" 
               size="lg" 
@@ -122,7 +128,7 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Statistics Grid */}
-          <div className="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-12 animate-in fade-in duration-1000 delay-[1200ms]">
+          <div className="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-12 animate-in fade-in duration-1000 delay-[1500ms]">
              <div className="group">
                 <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">150+</p>
                 <div className="flex items-center gap-2 mt-2">
