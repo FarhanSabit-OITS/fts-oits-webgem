@@ -2,7 +2,7 @@
 import { Service, Project, Testimonial, NavItem, SectionId, TechDomain, ProcessStep } from './types';
 
 export const COMPANY_NAME = "OITS Dhaka";
-export const TAGLINE = "Empowering Businesses Through Advanced Engineering";
+export const TAGLINE = "Digital Mastery Engineered for Performance";
 export const CONTACT_EMAIL = "info@oitsdhaka.com";
 export const ADDRESS = "House # 42, Road # 2/A, Block # Z, Dhaka 1209, Bangladesh";
 
@@ -134,7 +134,7 @@ export const PROJECTS: Project[] = [
     id: '4',
     title: 'Retail POS System',
     category: 'Enterprise Software',
-    imageUrl: 'https://images.unsplash.com/photo-1556740758-90eb39f3203c?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=1200',
     description: 'Cloud-based Point of Sale system with offline-first capabilities for multi-location retail.',
     fullDescription: 'A robust retail management suite that synchronizes inventory across hundreds of locations while maintaining high speed at checkout.',
     problemStatement: 'Existing POS systems were slow during peak hours and completely non-functional during internet outages.',
