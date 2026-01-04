@@ -52,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           href="#" 
           className="flex items-center gap-2 group" 
           onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
-          aria-label={`${COMPANY_NAME} home`}
+          aria-label={`${COMPANY_NAME} home - scroll to top`}
         >
           <div className="w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-slate-900 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
             <Terminal size={20} />
@@ -61,12 +61,13 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-2" aria-label="Main Navigation">
+        <nav className="hidden md:flex items-center gap-2" aria-label="Desktop primary navigation">
           {NAV_ITEMS.map((item) => (
             <a 
               key={item.label} 
               href={item.href}
               onClick={(e) => handleNavClick(e, item.href)}
+              aria-label={`Navigate to ${item.label}`}
               className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
             >
               {item.label}
@@ -77,14 +78,14 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
              <button
               onClick={toggleTheme}
               className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:rotate-12"
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
              >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
              </button>
           </div>
 
           <div className="ml-2">
-            <Button variant="primary" size="sm" onClick={scrollToContact} aria-label="Request a demonstration">
+            <Button variant="primary" size="sm" onClick={scrollToContact} aria-label="Request a demonstration of our services">
               Request Demo
             </Button>
           </div>
@@ -95,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
@@ -114,18 +115,19 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 md:hidden p-6 shadow-2xl animate-in slide-in-from-top-2 duration-300">
-          <nav className="flex flex-col gap-2" aria-label="Mobile Navigation">
+          <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
             {NAV_ITEMS.map((item) => (
               <a 
                 key={item.label} 
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
+                aria-label={`Navigate to ${item.label}`}
                 className="px-4 py-3 rounded-lg text-lg font-medium text-slate-800 dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-95"
               >
                 {item.label}
               </a>
             ))}
-            <Button className="w-full mt-4" onClick={scrollToContact} aria-label="Request a demonstration">
+            <Button className="w-full mt-4" onClick={scrollToContact} aria-label="Request a demo via contact form">
               Request Demo
             </Button>
           </nav>

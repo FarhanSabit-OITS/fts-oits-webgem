@@ -13,7 +13,7 @@ const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; labe
   <a 
     href={href} 
     className="group relative p-2 rounded-lg hover:bg-slate-800 transition-colors"
-    aria-label={label}
+    aria-label={`Follow us on ${label}`}
   >
     <div className="group-hover:animate-subtle-bounce">
       <Icon size={20} className="text-slate-400 group-hover:text-white transition-colors" />
@@ -47,12 +47,12 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
   };
 
   return (
-    <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-800">
+    <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-800" aria-label="Site footer">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           
           <div className="space-y-6">
-            <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 text-white" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}>
+            <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 text-white" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)} aria-label={`${COMPANY_NAME} home`}>
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <Terminal size={16} className="text-white" />
               </div>
@@ -72,7 +72,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
                <button
                   onClick={toggleTheme}
                   className="flex items-center gap-2 text-sm font-medium hover:text-white transition-colors bg-slate-900 px-3 py-2 rounded-lg border border-slate-800 hover:border-slate-700"
-                  aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                  aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
                >
                   {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                   <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
@@ -82,36 +82,41 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
 
           <div>
             <h4 className="text-white font-bold mb-6">Company</h4>
-            <ul className="space-y-4">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.label}>
-                  <a href={item.href} onClick={(e) => handleNavClick(e, item.href)} className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400">{item.label}</a>
-                </li>
-              ))}
-            </ul>
+            <nav aria-label="Footer company navigation">
+              <ul className="space-y-4">
+                {NAV_ITEMS.map((item) => (
+                  <li key={item.label}>
+                    <a href={item.href} onClick={(e) => handleNavClick(e, item.href)} aria-label={`Go to ${item.label}`} className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400">{item.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
           <div>
             <h4 className="text-white font-bold mb-6">Services</h4>
-            <ul className="space-y-4">
-              {SERVICES.map((service) => (
-                <li key={service.id}>
-                  <a 
-                    href={`#service-card-${service.id}`} 
-                    onClick={(e) => handleServiceClick(e, service.id)} 
-                    className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400"
-                  >
-                    {service.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <nav aria-label="Footer services navigation">
+              <ul className="space-y-4">
+                {SERVICES.map((service) => (
+                  <li key={service.id}>
+                    <a 
+                      href={`#service-card-${service.id}`} 
+                      onClick={(e) => handleServiceClick(e, service.id)} 
+                      aria-label={`Learn more about ${service.title}`}
+                      className="hover:text-blue-500 transition-colors text-slate-400 hover:text-blue-400"
+                    >
+                      {service.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
           <div>
             <h4 className="text-white font-bold mb-6">Newsletter</h4>
             <p className="text-sm mb-4 text-slate-400">Subscribe to our newsletter for the latest tech news and updates.</p>
-            <form className="flex gap-2">
+            <form className="flex gap-2" aria-label="Newsletter subscription form">
               <label htmlFor="newsletter-email" className="sr-only">Email address</label>
               <input 
                 id="newsletter-email"
@@ -119,7 +124,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
                 placeholder="Email address" 
                 className="bg-slate-900 border border-slate-800 rounded-lg px-4 py-2 text-sm w-full focus:outline-none focus:border-blue-600 text-white placeholder-slate-500"
               />
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors" aria-label="Subscribe to newsletter">
                 OK
               </button>
             </form>
@@ -130,8 +135,8 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
         <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
           <p>&copy; {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.</p>
           <div className="flex gap-8">
-            <a href="#" className="hover:text-white">Privacy Policy</a>
-            <a href="#" className="hover:text-white">Terms of Service</a>
+            <a href="#" className="hover:text-white" aria-label="View our privacy policy">Privacy Policy</a>
+            <a href="#" className="hover:text-white" aria-label="View our terms of service">Terms of Service</a>
           </div>
         </div>
       </div>

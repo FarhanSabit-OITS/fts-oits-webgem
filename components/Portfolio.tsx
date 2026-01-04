@@ -11,6 +11,17 @@ export const Portfolio: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
 
   const categories = ['All', ...new Set(PROJECTS.map(p => p.category))];
+  
+  // Calculate counts for each category
+  const categoryCounts = categories.reduce((acc, cat) => {
+    if (cat === 'All') {
+      acc[cat] = PROJECTS.length;
+    } else {
+      acc[cat] = PROJECTS.filter(p => p.category === cat).length;
+    }
+    return acc;
+  }, {} as Record<string, number>);
+
   const filteredProjects = filter === 'All' ? PROJECTS : PROJECTS.filter(p => p.category === filter);
 
   useEffect(() => {
@@ -40,13 +51,17 @@ export const Portfolio: React.FC = () => {
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
-                className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all ${
+                aria-label={`Filter projects by ${cat}. ${categoryCounts[cat]} projects available.`}
+                className={`group px-6 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
                   filter === cat 
                     ? 'bg-slate-950 text-white dark:bg-blue-600 shadow-xl' 
                     : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-slate-800'
                 }`}
               >
                 {cat}
+                <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white'}`}>
+                  {categoryCounts[cat]}
+                </span>
               </button>
             ))}
           </div>
@@ -68,12 +83,12 @@ export const Portfolio: React.FC = () => {
                 />
                 <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                   {project.demoVideoUrl && (
-                    <a href={project.demoVideoUrl} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-950 hover:scale-110 transition-transform shadow-xl">
+                    <a href={project.demoVideoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Watch demo video for ${project.title}`} className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-950 hover:scale-110 transition-transform shadow-xl">
                       <Play size={20} fill="currentColor" />
                     </a>
                   )}
                   {project.link && (
-                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-xl">
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" aria-label={`Visit project website for ${project.title}`} className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-xl">
                       <ExternalLink size={20} />
                     </a>
                   )}
@@ -88,7 +103,7 @@ export const Portfolio: React.FC = () => {
               <div className="p-10">
                 <div className="flex justify-between items-start mb-4">
                   <h4 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight">{project.title}</h4>
-                  {project.status === 'Completed' && <CheckCircle size={18} className="text-green-500" />}
+                  {project.status === 'Completed' && <CheckCircle size={18} className="text-green-500" aria-label="Project Completed" />}
                 </div>
                 <p className="text-slate-600 dark:text-slate-400 mb-8 font-medium leading-relaxed">{project.description}</p>
                 
@@ -104,7 +119,7 @@ export const Portfolio: React.FC = () => {
                   <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-wider">
                     <Clock size={14} /> {project.duration || '3-4 Months'}
                   </div>
-                  <button className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-[0.2em] hover:translate-x-1 transition-transform">
+                  <button className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-[0.2em] hover:translate-x-1 transition-transform" aria-label={`View case study for ${project.title}`}>
                     Case Study →
                   </button>
                 </div>
