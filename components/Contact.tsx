@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation } from 'lucide-react';
+import { Mail, Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { CONTACT_EMAIL, ADDRESS } from '../constants';
 import { SectionId } from '../types';
@@ -69,20 +69,32 @@ export const Contact: React.FC = () => {
                 </button>
               </div>
               
-              <div className="flex items-start gap-4 p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
+              <div className="flex items-start gap-4 p-8 bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
                  <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 shrink-0">
                     <MapPin size={24} />
                  </div>
                  <div>
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Our Studio</p>
-                    <p className="font-bold text-slate-900 dark:text-slate-100 leading-relaxed">{ADDRESS}</p>
+                    <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Our Studio</p>
+                    <p className="font-bold text-slate-900 dark:text-slate-100 leading-relaxed text-lg">{ADDRESS}</p>
                  </div>
               </div>
             </div>
           </div>
 
           <div className={`relative transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className={`bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-700 ${status === 'sending' ? 'scale-[0.98] blur-[1px]' : 'scale-100'}`}>
+            <div className={`relative bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-700 overflow-hidden ${status === 'sending' ? 'scale-[0.98]' : 'scale-100'}`}>
+              
+              {/* Submission Overlay */}
+              {status === 'sending' && (
+                <div className="absolute inset-0 z-50 bg-white/60 dark:bg-slate-900/80 backdrop-blur-[2px] flex flex-col items-center justify-center animate-in fade-in duration-300">
+                  <div className="relative">
+                    <Loader2 size={64} className="text-blue-600 animate-spin stroke-[2.5px]" />
+                    <div className="absolute inset-0 bg-blue-600/20 blur-2xl rounded-full"></div>
+                  </div>
+                  <p className="mt-6 text-xl font-black text-slate-950 dark:text-white tracking-tight">Dispatching Inquiry...</p>
+                </div>
+              )}
+
               {status === 'success' ? (
                 <div className="text-center py-20 animate-in zoom-in-95 duration-700">
                   <div className="w-32 h-32 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mx-auto mb-10 shadow-2xl shadow-green-500/10"><CheckCircle2 size={64} className="stroke-[2.5px]" /></div>
@@ -101,23 +113,23 @@ export const Contact: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-4 group">
                       <label htmlFor="name-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-slate-100 ml-1 group-focus-within:text-blue-600 transition-colors">Full Name <span className="text-blue-500">*</span></label>
-                      <input type="text" id="name-input" name="name" aria-invalid={!!errors.name} aria-describedby={errors.name ? "name-error" : undefined} className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.name ? 'border-red-600' : 'border-slate-200 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all font-bold shadow-sm`} placeholder="e.g. Johnathan Doe" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
-                      {errors.name && <p id="name-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500"><AlertCircle size={14} /> {errors.name}</p>}
+                      <input type="text" id="name-input" name="name" aria-invalid={!!errors.name} aria-describedby={errors.name ? "name-error" : undefined} className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.name ? 'border-red-600' : 'border-slate-300 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/20 transition-all font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} placeholder="e.g. Johnathan Doe" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+                      {errors.name && <p id="name-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.name}</p>}
                     </div>
                     <div className="space-y-4 group">
                       <label htmlFor="email-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-slate-100 ml-1 group-focus-within:text-blue-600 transition-colors">Business Email <span className="text-blue-500">*</span></label>
-                      <input type="email" id="email-input" name="email" aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined} className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.email ? 'border-red-600' : 'border-slate-200 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all font-bold shadow-sm`} placeholder="ceo@company.com" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
-                      {errors.email && <p id="email-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500"><AlertCircle size={14} /> {errors.email}</p>}
+                      <input type="email" id="email-input" name="email" aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-error" : undefined} className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.email ? 'border-red-600' : 'border-slate-300 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/20 transition-all font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} placeholder="ceo@company.com" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+                      {errors.email && <p id="email-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.email}</p>}
                     </div>
                   </div>
                   <div className="space-y-4 group">
                     <label htmlFor="message-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-900 dark:text-slate-100 ml-1 group-focus-within:text-blue-600 transition-colors">Brief Your Mission <span className="text-blue-500">*</span></label>
-                    <textarea id="message-input" name="message" aria-invalid={!!errors.message} aria-describedby={errors.message ? "message-error" : undefined} rows={5} className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.message ? 'border-red-600' : 'border-slate-200 dark:border-slate-700'} rounded-[2.5rem] px-7 py-6 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all resize-none font-bold shadow-sm`} placeholder="What can we help you build?" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} />
-                    {errors.message && <p id="message-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-500"><AlertCircle size={14} /> {errors.message}</p>}
+                    <textarea id="message-input" name="message" aria-invalid={!!errors.message} aria-describedby={errors.message ? "message-error" : undefined} rows={5} className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.message ? 'border-red-600' : 'border-slate-300 dark:border-slate-700'} rounded-[2.5rem] px-7 py-6 text-slate-950 dark:text-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/20 transition-all resize-none font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} placeholder="What can we help you build?" value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} />
+                    {errors.message && <p id="message-error" className="text-red-700 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300"><AlertCircle size={14} /> {errors.message}</p>}
                   </div>
                   <div className="pt-4">
-                    <Button type="submit" variant="primary" size="lg" className={`w-full bg-slate-950 dark:bg-blue-600 text-white rounded-[2rem] shadow-2xl transition-all duration-500 font-black text-xl h-20 transform active:scale-[0.97] ${status === 'sending' ? 'cursor-wait opacity-60 animate-pulse' : 'hover:shadow-blue-600/40'}`} disabled={status === 'sending'}>
-                      {status === 'sending' ? <div className="flex items-center gap-4"><div className="w-7 h-7 border-4 border-white/20 border-t-white rounded-full animate-spin"></div> Dispatching...</div> : <span className="flex items-center gap-4">Initiate Connection <Send size={24} className="transform rotate-12 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" /></span>}
+                    <Button type="submit" variant="primary" size="lg" className={`w-full bg-slate-950 dark:bg-blue-600 text-white rounded-[2rem] shadow-2xl transition-all duration-500 font-black text-xl h-20 transform active:scale-[0.97] ${status === 'sending' ? 'cursor-wait opacity-60' : 'hover:shadow-blue-600/40 hover:-translate-y-1'}`} disabled={status === 'sending'}>
+                      {status === 'sending' ? <div className="flex items-center gap-4"><Loader2 className="animate-spin" size={24} /> Dispatching...</div> : <span className="flex items-center gap-4">Initiate Connection <Send size={24} className="transform rotate-12 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" /></span>}
                     </Button>
                   </div>
                 </form>
@@ -128,7 +140,7 @@ export const Contact: React.FC = () => {
 
         {/* Map Section */}
         <div className={`transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-          <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-4 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden group">
+          <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-4 border-2 border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden group">
             <div className="relative aspect-[21/9] w-full rounded-[2.5rem] overflow-hidden grayscale contrast-125 dark:grayscale-0 dark:contrast-100 transition-all duration-700 group-hover:grayscale-0 group-hover:contrast-100">
               <iframe
                 title="Office Location"
