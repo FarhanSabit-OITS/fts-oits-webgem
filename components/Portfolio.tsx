@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, Play, Tag, Clock, CheckCircle } from 'lucide-react';
 import { PROJECTS } from '../constants';
@@ -46,20 +45,20 @@ export const Portfolio: React.FC = () => {
             <h2 className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Our Portfolio</h2>
             <h3 className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white tracking-tighter leading-tight">Engineering excellence in every pixel.</h3>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
                 aria-label={`Filter projects by ${cat}. ${categoryCounts[cat]} projects available.`}
-                className={`group px-6 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 ${
+                className={`group px-7 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-[0.15em] transition-all duration-300 flex items-center gap-3 active:scale-95 ${
                   filter === cat 
-                    ? 'bg-slate-950 text-white dark:bg-blue-600 shadow-xl' 
-                    : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-slate-800'
+                    ? 'bg-slate-950 text-white dark:bg-blue-600 shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3)] dark:shadow-[0_15px_30px_-10px_rgba(37,99,235,0.4)] ring-2 ring-slate-950 dark:ring-blue-600 ring-offset-2 dark:ring-offset-slate-950' 
+                    : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border-2 border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:scale-105'
                 }`}
               >
                 {cat}
-                <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white'}`}>
+                <span className={`px-2 py-0.5 rounded-lg text-[10px] transition-colors ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
                   {categoryCounts[cat]}
                 </span>
               </button>

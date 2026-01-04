@@ -86,15 +86,19 @@ export const Contact: React.FC = () => {
               
               {/* Submission Overlay with smoother transitions and distinct indicator */}
               {status === 'sending' && (
-                <div className="absolute inset-0 z-50 bg-white/70 dark:bg-slate-900/85 backdrop-blur-[4px] flex flex-col items-center justify-center animate-in fade-in duration-500">
-                  <div className="relative mb-8">
-                    <Loader2 size={80} className="text-blue-600 animate-spin stroke-[2px]" />
-                    <div className="absolute inset-0 bg-blue-600/30 blur-3xl rounded-full scale-150 animate-pulse"></div>
+                <div className="absolute inset-0 z-50 bg-white/70 dark:bg-slate-900/85 backdrop-blur-[6px] flex flex-col items-center justify-center animate-in fade-in duration-500">
+                  <div className="relative mb-10">
+                    <Loader2 size={100} className="text-blue-600 animate-spin stroke-[1.5px]" />
+                    <div className="absolute inset-0 bg-blue-600/20 blur-3xl rounded-full scale-150 animate-pulse"></div>
                   </div>
-                  <p className="text-2xl font-black text-slate-950 dark:text-white tracking-tight text-center">
-                    Establishing Secure Link... <br/>
-                    <span className="text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-2 inline-block">Dispatching Inquiry</span>
-                  </p>
+                  <div className="text-center space-y-3">
+                    <p className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">
+                      Establishing Link...
+                    </p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] animate-pulse">
+                      Encrypting Data Packets
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -174,16 +178,16 @@ export const Contact: React.FC = () => {
                       type="submit" 
                       variant="primary" 
                       size="lg" 
-                      className={`w-full bg-slate-950 dark:bg-blue-600 text-white rounded-[2rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] dark:shadow-[0_25px_50px_-12px_rgba(37,99,235,0.4)] transition-all duration-500 font-black text-xl h-20 transform active:scale-[0.97] hover:-translate-y-1.5 focus:ring-offset-4 focus:ring-offset-white dark:focus:ring-offset-slate-950 ${status === 'sending' ? 'cursor-wait opacity-60' : ''}`} 
+                      className={`w-full transition-all duration-500 font-black text-xl h-20 ${status === 'sending' ? 'cursor-wait opacity-60' : ''}`} 
                       disabled={status === 'sending'}
                     >
                       {status === 'sending' ? (
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 animate-pulse">
                           <Loader2 className="animate-spin" size={24} /> 
                           Establishing Link...
                         </div>
                       ) : (
-                        <span className="flex items-center gap-4">
+                        <span className="flex items-center gap-4 group">
                           Initiate Connection 
                           <Send size={24} className="transform rotate-12 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" />
                         </span>
@@ -196,7 +200,7 @@ export const Contact: React.FC = () => {
           </div>
         </div>
 
-        {/* Map Section - Enhanced contrast and interactions */}
+        {/* Map Section */}
         <div className={`transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
           <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-4 border-2 border-slate-100 dark:border-slate-800 shadow-2xl overflow-hidden group/map ring-4 ring-white dark:ring-slate-900 ring-offset-0 group-hover/map:ring-blue-500/10 transition-all">
             <div className="relative aspect-[21/9] w-full rounded-[2.5rem] overflow-hidden grayscale contrast-125 dark:grayscale-0 dark:contrast-100 transition-all duration-700 group-hover/map:grayscale-0 group-hover/map:contrast-100 group-hover/map:scale-[1.01]">

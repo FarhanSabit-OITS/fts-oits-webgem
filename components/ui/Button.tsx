@@ -13,13 +13,13 @@ export const Button: React.FC<ButtonProps> = ({
   children, 
   ...props 
 }) => {
-  const baseStyles = "inline-flex items-center justify-center rounded-lg font-black tracking-tight transition-all duration-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96] overflow-hidden relative";
+  const baseStyles = "inline-flex items-center justify-center rounded-lg font-black tracking-tight transition-all duration-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96] overflow-hidden relative group/btn-ui";
   
   const variants = {
-    primary: "bg-slate-950 text-white hover:bg-slate-800 hover:scale-[1.08] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] dark:bg-blue-600 dark:hover:bg-blue-500 dark:hover:shadow-[0_25px_50px_-12px_rgba(37,99,235,0.6)]",
-    secondary: "bg-slate-100 text-slate-950 hover:bg-slate-200 hover:scale-[1.05] dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700",
-    outline: "border-2 border-slate-300 bg-white/50 backdrop-blur-sm text-slate-950 hover:bg-slate-950 hover:text-white hover:border-slate-950 hover:scale-[1.08] dark:border-slate-700 dark:text-white dark:bg-transparent dark:hover:bg-white dark:hover:text-slate-950 dark:hover:border-white shadow-sm hover:shadow-xl",
-    ghost: "hover:bg-slate-100 text-slate-800 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 hover:scale-[1.05]",
+    primary: "bg-slate-950 text-white hover:bg-slate-800 hover:scale-[1.05] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] dark:bg-blue-600 dark:hover:bg-blue-500 dark:hover:shadow-[0_20px_40px_-10px_rgba(37,99,235,0.6)] border border-transparent hover:border-white/10",
+    secondary: "bg-slate-100 text-slate-950 hover:bg-slate-200 hover:scale-[1.03] dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700",
+    outline: "border-2 border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-transparent backdrop-blur-sm text-slate-950 dark:text-white hover:bg-slate-950 dark:hover:bg-white hover:text-white dark:hover:text-slate-950 hover:border-slate-950 dark:hover:border-white hover:scale-[1.05] shadow-sm hover:shadow-xl",
+    ghost: "hover:bg-slate-100 text-slate-800 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800",
   };
 
   const sizes = {
@@ -34,6 +34,10 @@ export const Button: React.FC<ButtonProps> = ({
       {...props}
     >
       <span className="relative z-10">{children}</span>
+      {/* Subtle border animation for outline */}
+      {variant === 'outline' && (
+        <div className="absolute inset-0 border-2 border-transparent group-hover/btn-ui:scale-105 transition-transform duration-500 pointer-events-none" />
+      )}
     </button>
   );
 };
