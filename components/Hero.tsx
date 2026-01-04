@@ -166,7 +166,7 @@ export const Hero: React.FC = () => {
                     </span>
                   ))}
                 </span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 overflow-hidden py-4 -my-4">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600 overflow-visible py-4 -my-4 h-auto min-h-[1.2em]">
                    {titleLine2.split(' ').map((word, i) => (
                     <span 
                       key={i} 
