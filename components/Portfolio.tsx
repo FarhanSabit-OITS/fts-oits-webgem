@@ -1,6 +1,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { X, Calendar, Code2, ArrowUpRight, Play, SearchX, ChevronLeft, ChevronRight, Clock, Info, Rocket } from 'lucide-react';
+/* Added Pause to the lucide-react imports to fix the error on line 58 */
+import { X, Calendar, Code2, ArrowUpRight, Play, Pause, SearchX, ChevronLeft, ChevronRight, Clock, Info, Rocket } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { SectionId, Project } from '../types';
 import { Button } from './ui/Button';
@@ -55,7 +56,7 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, poster, onCl
       {!isVideoLoaded && <div className="absolute inset-0 flex items-center justify-center z-10"><div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div></div>}
       <video ref={videoRef} src={src} poster={poster} className="w-full h-full object-contain z-10" onClick={togglePlay} playsInline />
       <div className="absolute bottom-6 right-6 z-20 flex gap-2">
-        <button onClick={togglePlay} className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-all focus:outline-none">{isPlaying ? <X size={20} className="rotate-45" /> : <Play size={20} />}</button>
+        <button onClick={togglePlay} className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-all focus:outline-none">{isPlaying ? <Pause size={20} /> : <Play size={20} />}</button>
         <button onClick={onClose} className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 transition-all focus:outline-none"><X size={20} /></button>
       </div>
     </div>
@@ -126,14 +127,14 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, 
             </div>
             <div className="space-y-8">
               <div className="p-8 bg-slate-50 dark:bg-slate-800/40 rounded-[2rem] border-2 border-white dark:border-slate-800 space-y-8 shadow-sm">
-                <h5 className="font-black text-2xl tracking-tight">Analytics</h5>
+                <h5 className="font-black text-2xl tracking-tight">Project Metrics</h5>
                 <div className="space-y-6">
                    <div className="flex justify-between items-center text-base">
-                     <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Delivery Time</span>
+                     <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Timeline</span>
                      <span className="font-black text-slate-900 dark:text-white flex items-center gap-2"><Clock size={16} className="text-blue-500" /> {project.duration || 'Variable'}</span>
                    </div>
                    <div className="flex justify-between items-center text-base">
-                     <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Industry</span>
+                     <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">Sector</span>
                      <span className="font-black text-slate-900 dark:text-white">{project.category}</span>
                    </div>
                 </div>
@@ -168,7 +169,7 @@ const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Pro
         <img src={project.imageUrl} alt={project.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
         
         {/* Description Overlay on Hover */}
-        <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out p-8 flex flex-col justify-center text-white translate-y-4 group-hover:translate-y-0">
+        <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out p-8 flex flex-col justify-center text-white translate-y-4 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
           <p className="text-sm line-clamp-4 leading-relaxed font-semibold mb-8 opacity-0 group-hover:opacity-100 transition-all delay-200 duration-500">
             {project.description}
           </p>
@@ -199,9 +200,9 @@ const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Pro
               >
                 {t}
               </button>
-              {/* Refined Tooltip */}
+              {/* Tooltip */}
               <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white text-[9px] font-black uppercase tracking-widest rounded-lg opacity-0 group-hover/tag:opacity-100 transition-all pointer-events-none whitespace-nowrap z-30 shadow-2xl border border-white/10 scale-90 group-hover/tag:scale-100">
-                Show {t} Projects
+                View {t} Work
               </span>
             </div>
           ))}
@@ -262,8 +263,6 @@ export const Portfolio: React.FC = () => {
 
   return (
     <section id={SectionId.PORTFOLIO} className="py-24 bg-slate-50 dark:bg-slate-950 min-h-[1000px] transition-colors duration-500 overflow-hidden relative">
-      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white dark:from-slate-950 to-transparent pointer-events-none" />
-      
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-4xl mx-auto mb-20">
           <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-8">
