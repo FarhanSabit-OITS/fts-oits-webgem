@@ -96,43 +96,43 @@ export const Hero: React.FC = () => {
     <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
       <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
 
-      {/* Background Animation Fix (Reliable Public URL) */}
+      {/* Lottie Background with theme-specific opacity and reliable public URL */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-30 dark:opacity-20">
         <div 
           className="w-full h-full max-w-[1400px] max-h-[1400px] scale-125 md:scale-100 transition-transform duration-1000 ease-out"
-          style={{ transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)` }}
+          style={{ transform: `translate(${mousePos.x * 25}px, ${mousePos.y * 25}px)` }}
         >
           <dotlottie-player
-            src="https://lottie.host/64731853-6239-4977-84f9-25f05a18a8f0/U3xT2WvK8M.json"
+            src="https://lottie.host/8210332f-a912-4467-938b-d7486e9e4f2b/X5tXb8D5Xw.json"
             background="transparent"
             speed="0.6"
             style={{ width: '100%', height: '100%' }}
-            loop={true}
-            autoplay={true}
+            loop
+            autoplay
           ></dotlottie-player>
         </div>
       </div>
 
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-500/10 dark:bg-blue-600/15 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-500/10 dark:bg-indigo-600/15 rounded-full blur-[140px] translate-y-1/2 -translate-x-1/3" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 dark:to-slate-950/95" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-500/10 dark:bg-blue-600/20 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-500/10 dark:bg-indigo-600/20 rounded-full blur-[140px] translate-y-1/2 -translate-x-1/3" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/95 dark:to-slate-950/95" />
       </div>
 
-      {/* More Interactive Parallax Floating Icons */}
+      {/* High-Contrast Interactive Parallax Icons */}
       <div 
-        className="absolute top-[18%] left-[8%] hidden lg:block text-blue-600/20 dark:text-blue-400/30 animate-float transition-transform duration-700 ease-out"
-        style={{ transform: `translate(${mousePos.x * -60}px, ${mousePos.y * -60}px) rotate(${mousePos.x * 10}deg)` }}
+        className="absolute top-[18%] left-[8%] hidden lg:block text-blue-600/30 dark:text-blue-400/40 animate-float transition-transform duration-700 ease-out"
+        style={{ transform: `translate(${mousePos.x * -70}px, ${mousePos.y * -70}px) rotate(${mousePos.x * 12}deg)` }}
       >
-        <div className="bg-white/50 dark:bg-slate-900/50 p-6 rounded-3xl backdrop-blur-xl border border-white/20 dark:border-slate-800/50 shadow-2xl">
+        <div className="bg-white/60 dark:bg-slate-900/60 p-7 rounded-3xl backdrop-blur-2xl border border-white/40 dark:border-slate-800/60 shadow-2xl">
           <Code2 size={64} strokeWidth={1.5} />
         </div>
       </div>
       <div 
-        className="absolute bottom-[25%] right-[12%] hidden lg:block text-indigo-600/20 dark:text-indigo-400/30 animate-float transition-transform duration-1000 ease-out"
-        style={{ animationDelay: '1.2s', transform: `translate(${mousePos.x * -90}px, ${mousePos.y * -90}px) rotate(${mousePos.y * -15}deg)` }}
+        className="absolute bottom-[25%] right-[12%] hidden lg:block text-indigo-600/30 dark:text-indigo-400/40 animate-float transition-transform duration-1000 ease-out"
+        style={{ animationDelay: '1.2s', transform: `translate(${mousePos.x * -110}px, ${mousePos.y * -110}px) rotate(${mousePos.y * -18}deg)` }}
       >
-        <div className="bg-white/50 dark:bg-slate-900/50 p-6 rounded-3xl backdrop-blur-xl border border-white/20 dark:border-slate-800/50 shadow-2xl">
+        <div className="bg-white/60 dark:bg-slate-900/60 p-7 rounded-3xl backdrop-blur-2xl border border-white/40 dark:border-slate-800/60 shadow-2xl">
           <Cpu size={80} strokeWidth={1.5} />
         </div>
       </div>
@@ -144,12 +144,12 @@ export const Hero: React.FC = () => {
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          {/* Main Tagline with Pronounced Stagger and Glow */}
-          <h1 className="text-glow text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.85] tracking-tighter mb-10 flex flex-wrap gap-x-4">
+          {/* Main Tagline with Enhanced Legibility Effects */}
+          <h1 className="text-glow text-outline-thin text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.85] tracking-tighter mb-10 flex flex-wrap gap-x-4">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-300 drop-shadow-md'} inline-block animate-in fade-in slide-in-from-bottom-12 duration-1000 transform-gpu`}
+                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-300'} inline-block animate-in fade-in slide-in-from-bottom-12 duration-1000 transform-gpu`}
                 style={{ animationDelay: `${i * 150}ms`, scale: isVisible ? '1' : '0.8' }}
               >
                 {word}
@@ -159,7 +159,7 @@ export const Hero: React.FC = () => {
 
           <div className="relative mb-14 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-[1000ms]">
             <div className="absolute -left-4 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.4)]" />
-            <p className="text-glow text-xl md:text-3xl text-slate-900 dark:text-slate-100 font-bold max-w-3xl leading-[1.3] pl-8 drop-shadow-sm">
+            <p className="text-glow text-outline-thin text-xl md:text-3xl text-slate-900 dark:text-slate-100 font-bold max-w-3xl leading-[1.3] pl-8 drop-shadow-md">
               We architect high-performance digital systems for global disruptors. <br className="hidden md:block" />
               From strategic consultation to industrial-grade deployment.
             </p>
@@ -170,12 +170,19 @@ export const Hero: React.FC = () => {
               variant="primary" 
               size="lg" 
               onClick={scrollToContact} 
-              className="group w-full sm:w-auto hover:ring-4 hover:ring-blue-500/20 transition-all shadow-2xl"
+              className="group w-full sm:w-auto hover:ring-8 hover:ring-blue-500/10 transition-all shadow-2xl relative z-20"
+              aria-label="Start your project with OITS Dhaka"
             >
-              Start Project Inquiry <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" size={24} />
+              Start Your Project <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" size={24} />
             </Button>
-            <Button variant="outline" size="lg" onClick={scrollToServices} className="w-full sm:w-auto">
-              Our Capability Matrix
+            <Button 
+              variant="outline" 
+              size="lg" 
+              onClick={scrollToServices} 
+              className="w-full sm:w-auto relative z-20"
+              aria-label="Explore our full capability matrix"
+            >
+              Our Capabilities
             </Button>
           </div>
 
@@ -187,7 +194,7 @@ export const Hero: React.FC = () => {
                { val: "24/7", label: "Support", color: "bg-yellow-500" }
              ].map((stat, i) => (
                <div key={i} className="group cursor-default">
-                  <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">{stat.val}</p>
+                  <p className="text-glow text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">{stat.val}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <div className={`w-6 h-0.5 ${stat.color} rounded-full group-hover:w-10 transition-all`} />
                     <p className="text-[11px] text-slate-700 dark:text-slate-300 uppercase tracking-[0.2em] font-black">{stat.label}</p>

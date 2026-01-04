@@ -88,7 +88,7 @@ export const Services: React.FC = () => {
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               <div className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-125 group-hover:shadow-blue-500/40">
-                <div className="transition-all duration-500 group-hover:animate-subtle-bounce group-hover:rotate-12">
+                <div className="transition-all duration-500 group-hover:animate-subtle-bounce group-hover:rotate-12 group-hover:animate-slow-pulse">
                   {iconMap[service.icon]}
                 </div>
               </div>
@@ -122,7 +122,14 @@ export const Services: React.FC = () => {
           <div className="bg-white dark:bg-slate-900 rounded-[4rem] shadow-2xl dark:shadow-none border border-slate-200 dark:border-slate-800 overflow-hidden transition-all duration-500">
              <div className="flex overflow-x-auto no-scrollbar border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-6 gap-6" role="tablist">
                 {TECH_DOMAINS.map((domain) => (
-                  <button key={domain.id} onClick={() => setActiveTab(domain.id)} role="tab" aria-selected={activeTab === domain.id} className={`flex items-center gap-4 px-10 py-5 rounded-3xl text-xs font-black transition-all duration-300 whitespace-nowrap active:scale-95 ${activeTab === domain.id ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-2xl ring-2 ring-blue-500/20' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50'}`}>
+                  <button 
+                    key={domain.id} 
+                    onClick={() => setActiveTab(domain.id)} 
+                    role="tab" 
+                    aria-selected={activeTab === domain.id} 
+                    aria-label={`View ${domain.label} technologies`}
+                    className={`flex items-center gap-4 px-10 py-5 rounded-3xl text-xs font-black transition-all duration-300 whitespace-nowrap active:scale-95 ${activeTab === domain.id ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-2xl ring-2 ring-blue-500/20' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50'}`}
+                  >
                     {domainIcons[domain.id]} {domain.label}
                   </button>
                 ))}

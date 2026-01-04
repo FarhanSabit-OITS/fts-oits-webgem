@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Terminal, Sun, Moon } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS } from '../constants';
@@ -46,13 +45,14 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           ? 'bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 py-3 shadow-lg' 
           : 'bg-transparent py-5'
       }`}
+      aria-label="Main site header"
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <a 
           href="#" 
           className="flex items-center gap-2 group" 
           onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
-          aria-label={`${COMPANY_NAME} home - scroll to top`}
+          aria-label={`${COMPANY_NAME} home - scroll to top of page`}
         >
           <div className="w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-slate-900 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
             <Terminal size={20} />
@@ -67,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
               key={item.label} 
               href={item.href}
               onClick={(e) => handleNavClick(e, item.href)}
-              aria-label={`Navigate to ${item.label}`}
+              aria-label={`Jump to ${item.label} section`}
               className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
             >
               {item.label}
@@ -78,14 +78,14 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
              <button
               onClick={toggleTheme}
               className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:rotate-12"
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
              >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
              </button>
           </div>
 
           <div className="ml-2">
-            <Button variant="primary" size="sm" onClick={scrollToContact} aria-label="Request a demonstration of our services">
+            <Button variant="primary" size="sm" onClick={scrollToContact} aria-label="Request a demonstration of our software services">
               Request Demo
             </Button>
           </div>
@@ -96,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
@@ -104,8 +104,9 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           <button 
             className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Close main menu" : "Open main menu"}
+            aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation-menu"
           >
             {isMobileMenuOpen ? <X /> : <Menu />}
           </button>
@@ -114,20 +115,23 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 md:hidden p-6 shadow-2xl animate-in slide-in-from-top-2 duration-300">
-          <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
+        <div 
+          id="mobile-navigation-menu"
+          className="absolute top-full left-0 right-0 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 md:hidden p-6 shadow-2xl animate-in slide-in-from-top-2 duration-300"
+        >
+          <nav className="flex flex-col gap-2" aria-label="Mobile navigation menu">
             {NAV_ITEMS.map((item) => (
               <a 
                 key={item.label} 
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
-                aria-label={`Navigate to ${item.label}`}
+                aria-label={`Jump to ${item.label} section`}
                 className="px-4 py-3 rounded-lg text-lg font-medium text-slate-800 dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-95"
               >
                 {item.label}
               </a>
             ))}
-            <Button className="w-full mt-4" onClick={scrollToContact} aria-label="Request a demo via contact form">
+            <Button className="w-full mt-4" onClick={scrollToContact} aria-label="Request a demo and contact us">
               Request Demo
             </Button>
           </nav>
