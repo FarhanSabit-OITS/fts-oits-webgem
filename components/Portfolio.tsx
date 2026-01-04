@@ -27,27 +27,16 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
-  const [isMuted, setIsMuted] = useState(false);
-  const [captionsEnabled, setCaptionsEnabled] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [showControls, setShowControls] = useState(true);
-  const controlsTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const updateTime = () => setCurrentTime(video.currentTime);
-    const updateDuration = () => setDuration(video.duration);
     const onEnded = () => setIsPlaying(false);
     const onLoadedData = () => setIsVideoLoaded(true);
     const onPlaying = () => { setIsVideoLoaded(true); setIsPlaying(true); };
     const onPause = () => setIsPlaying(false);
 
-    video.addEventListener('timeupdate', updateTime);
-    video.addEventListener('loadedmetadata', updateDuration);
     video.addEventListener('ended', onEnded);
     video.addEventListener('loadeddata', onLoadedData);
     video.addEventListener('playing', onPlaying);
@@ -55,8 +44,6 @@ const CustomVideoPlayer: React.FC<CustomVideoPlayerProps> = ({ src, captionsUrl,
     video.play().catch(err => console.error("Autoplay failed:", err));
 
     return () => {
-      video.removeEventListener('timeupdate', updateTime);
-      video.removeEventListener('loadedmetadata', updateDuration);
       video.removeEventListener('ended', onEnded);
       video.removeEventListener('loadeddata', onLoadedData);
       video.removeEventListener('playing', onPlaying);
@@ -156,7 +143,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, autoPlay = false, 
 };
 
 // --- Project Card Component ---
-const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Project, autoPlay: boolean) => void }> = ({ project, index, onSelect }) => {
+const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Project, autoPlay: boolean) => void; onTagClick: (tag: string) => void }> = ({ project, index, onSelect, onTagClick }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -174,18 +161,36 @@ const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Pro
     >
       <div className="relative aspect-video overflow-hidden cursor-pointer" onClick={() => onSelect(project, false)}>
         <img src={project.imageUrl} alt={project.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-        <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="flex gap-3 transform translate-y-4 group-hover:translate-y-0 transition-transform">
-            <button className="p-3 bg-white text-slate-900 rounded-full hover:bg-blue-600 hover:text-white transition-colors"><ArrowUpRight size={20} /></button>
-            {project.demoVideoUrl && <button onClick={(e) => { e.stopPropagation(); onSelect(project, true); }} className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"><MonitorPlay size={20} /></button>}
+        
+        {/* Description Overlay on Hover */}
+        <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-center text-white">
+          <p className="text-sm line-clamp-4 leading-relaxed font-medium mb-4">{project.description}</p>
+          <div className="flex gap-3">
+             <button className="px-4 py-2 bg-white text-slate-900 rounded-full text-xs font-bold hover:bg-blue-600 hover:text-white transition-colors">Case Study</button>
+             {project.demoVideoUrl && (
+               <button onClick={(e) => { e.stopPropagation(); onSelect(project, true); }} className="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-bold hover:bg-blue-700 transition-colors flex items-center gap-2">
+                 <Play size={12} fill="currentColor" /> Play Demo
+               </button>
+             )}
           </div>
         </div>
       </div>
       <div className="p-6">
         <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-2 block">{project.category}</span>
-        <h4 className="text-xl font-bold mb-2 group-hover:text-blue-600 transition-colors">{project.title}</h4>
-        <div className="flex flex-wrap gap-1">
-          {project.technologies?.slice(0, 3).map(t => <span key={t} className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">{t}</span>)}
+        <h4 className="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors cursor-pointer" onClick={() => onSelect(project, false)}>{project.title}</h4>
+        <div className="flex flex-wrap gap-1.5">
+          {project.technologies?.slice(0, 4).map(t => (
+            <button 
+              key={t} 
+              onClick={(e) => { e.stopPropagation(); onTagClick(t); }}
+              className="text-[10px] bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 px-2 py-0.5 rounded transition-colors"
+            >
+              {t}
+            </button>
+          ))}
+          {project.technologies && project.technologies.length > 4 && (
+            <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-500">+{project.technologies.length - 4}</span>
+          )}
         </div>
       </div>
     </div>
@@ -199,6 +204,7 @@ export const Portfolio: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<{ project: Project; autoPlay: boolean } | null>(null);
   const [isFilterAnimating, setIsFilterAnimating] = useState(false);
 
+  // Initialize from LocalStorage
   useEffect(() => {
     const savedCat = localStorage.getItem('portfolio_cat') || ALL_CATEGORY;
     const savedTag = localStorage.getItem('portfolio_tag') || ALL_TAG;
@@ -207,6 +213,7 @@ export const Portfolio: React.FC = () => {
   }, []);
 
   const handleSetCategory = (cat: string) => {
+    if (activeCategory === cat) return;
     setIsFilterAnimating(true);
     setTimeout(() => {
       setActiveCategory(cat);
@@ -216,6 +223,7 @@ export const Portfolio: React.FC = () => {
   };
 
   const handleSetTag = (tag: string) => {
+    if (activeTag === tag) return;
     setIsFilterAnimating(true);
     setTimeout(() => {
       setActiveTag(tag);
@@ -240,32 +248,58 @@ export const Portfolio: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-3">Portfolio</h2>
           <h3 className="text-4xl font-bold mb-6">Our Success Stories</h3>
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
+          
+          <div className="flex flex-wrap justify-center gap-2 mb-6">
             {categories.map(c => (
-              <button key={c} onClick={() => handleSetCategory(c)} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory === c ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>{c}</button>
+              <button 
+                key={c} 
+                onClick={() => handleSetCategory(c)} 
+                className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all transform active:scale-95 ${activeCategory === c ? 'bg-blue-600 text-white shadow-lg' : 'bg-white dark:bg-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'}`}
+              >
+                {c}
+              </button>
             ))}
           </div>
-          <div className="flex flex-wrap justify-center gap-2 overflow-x-auto no-scrollbar pb-4">
+          <div className="flex flex-wrap justify-center gap-2 overflow-x-auto no-scrollbar pb-4 max-w-3xl mx-auto">
             {tags.map(t => (
-              <button key={t} onClick={() => handleSetTag(t)} className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${activeTag === t ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200'}`}>{t}</button>
+              <button 
+                key={t} 
+                onClick={() => handleSetTag(t)} 
+                className={`px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-tight transition-all active:scale-90 ${activeTag === t ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'}`}
+              >
+                {t}
+              </button>
             ))}
           </div>
         </div>
 
-        <div className={`transition-all duration-300 transform ${isFilterAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+        <div className={`transition-all duration-300 transform ${isFilterAnimating ? 'opacity-0 scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'}`}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((p, i) => <ProjectCard key={p.id} project={p} index={i} onSelect={(p, a) => setSelectedProject({ project: p, autoPlay: a })} />)}
+            {filteredProjects.map((p, i) => (
+              <ProjectCard 
+                key={p.id} 
+                project={p} 
+                index={i} 
+                onTagClick={handleSetTag} 
+                onSelect={(p, a) => setSelectedProject({ project: p, autoPlay: a })} 
+              />
+            ))}
           </div>
           {filteredProjects.length === 0 && (
-            <div className="text-center py-24 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+            <div className="text-center py-24 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 animate-in fade-in duration-500">
                <SearchX size={48} className="mx-auto text-slate-300 mb-4" />
                <p className="text-xl font-bold mb-4">No projects found matching these filters.</p>
-               <Button onClick={resetFilters}>Reset All Filters</Button>
+               <Button onClick={resetFilters} variant="outline">Reset All Filters</Button>
             </div>
           )}
         </div>
       </div>
-      <ProjectModal project={selectedProject?.project || null} autoPlay={selectedProject?.autoPlay} onClose={() => setSelectedProject(null)} onProjectSelect={(p) => setSelectedProject({ project: p, autoPlay: false })} />
+      <ProjectModal 
+        project={selectedProject?.project || null} 
+        autoPlay={selectedProject?.autoPlay} 
+        onClose={() => setSelectedProject(null)} 
+        onProjectSelect={(p) => setSelectedProject({ project: p, autoPlay: false })} 
+      />
     </section>
   );
 };

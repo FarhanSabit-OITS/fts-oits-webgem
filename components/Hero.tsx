@@ -30,10 +30,10 @@ export const Hero: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 40,
-        y: (e.clientY / window.innerHeight - 0.5) * 40,
-      });
+      // Normalize to -0.5 to 0.5
+      const x = (e.clientX / window.innerWidth) - 0.5;
+      const y = (e.clientY / window.innerHeight) - 0.5;
+      setMousePos({ x, y });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove);
@@ -110,10 +110,10 @@ export const Hero: React.FC = () => {
     <section ref={heroRef} id={SectionId.HOME} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[95vh] flex items-center">
       <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 blur-md scale-110 will-change-transform"
+          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 blur-md scale-110 will-change-transform transition-transform duration-500 ease-out"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            transform: `translateY(${scrollY * 0.2}px) translateX(${mousePos.x * 0.1}px) translateY(${mousePos.y * 0.1}px) scale(1.1)`
+            transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20 + scrollY * 0.2}px) scale(1.1)`
           }}
           aria-hidden="true"
         />
@@ -122,11 +122,11 @@ export const Hero: React.FC = () => {
 
         <div 
           className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-[100px] opacity-60 animate-float will-change-transform" 
-          style={{ transform: `translate(${mousePos.x * -0.5}px, ${mousePos.y * -0.5}px)` }}
+          style={{ transform: `translate(${mousePos.x * -60}px, ${mousePos.y * -60}px)` }}
         />
         <div 
           className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-400/10 rounded-full blur-[120px] opacity-60 will-change-transform" 
-          style={{ transform: `translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px)` }}
+          style={{ transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 40}px)` }}
         />
       </div>
 
@@ -164,13 +164,13 @@ export const Hero: React.FC = () => {
           </div>
 
           <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-1000 delay-500 ease-out transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
-            <div className="relative" style={{ transform: `perspective(1000px) rotateY(${mousePos.x * -0.1}deg) rotateX(${mousePos.y * 0.1}deg)` }}>
+            <div className="relative" style={{ transform: `perspective(1000px) rotateY(${mousePos.x * -15}deg) rotateX(${mousePos.y * 15}deg)` }}>
               <div className="absolute top-4 -right-4 w-full h-full bg-slate-200/50 dark:bg-slate-700/30 rounded-2xl -rotate-2 backdrop-blur-sm" aria-hidden="true"></div>
               <div className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden aspect-[4/3] group">
-                <img src="https://picsum.photos/800/600?random=10" alt="Software Preview" loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 glass-panel rounded-xl shadow-lg transform transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                <img src="https://picsum.photos/800/600?random=10" alt="Software Preview" loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <div className="absolute bottom-6 left-6 right-6 p-4 glass-panel rounded-xl shadow-lg transform transition-all duration-700 translate-y-2 group-hover:translate-y-0">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300"><Play size={16} fill="currentColor" /></div>
+                    <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 animate-pulse"><Play size={16} fill="currentColor" /></div>
                     <div>
                       <p className="text-sm font-bold text-slate-900 dark:text-white">Project Performance</p>
                       <p className="text-xs text-slate-500 dark:text-slate-300">Real-time Analytics</p>

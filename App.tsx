@@ -61,7 +61,7 @@ function App() {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -129,12 +129,12 @@ function App() {
       {/* Scroll to Top Button */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-24 right-6 z-[90] p-3 rounded-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-2xl border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:scale-110 active:scale-95 ${
+        className={`fixed bottom-24 right-6 z-[90] p-3.5 rounded-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-2xl border border-slate-200 dark:border-slate-700 transition-all duration-500 hover:scale-110 hover:-translate-y-1 active:scale-90 group ${
           showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
         }`}
         aria-label="Scroll to top of page"
       >
-        <ArrowUp size={24} />
+        <ArrowUp size={24} className="group-hover:animate-bounce" />
       </button>
     </div>
   );

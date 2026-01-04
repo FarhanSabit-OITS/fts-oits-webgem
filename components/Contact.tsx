@@ -69,9 +69,13 @@ export const Contact: React.FC = () => {
                   <p className="text-sm text-slate-400 mb-1">Email Us</p>
                   <div className="flex items-center gap-3">
                     <p className="text-lg font-medium text-slate-100">{CONTACT_EMAIL}</p>
-                    <button onClick={handleCopyEmail} className="p-1.5 hover:bg-slate-700 rounded-md transition-colors group relative" aria-label="Copy email address">
-                      {isCopied ? <Check size={16} className="text-green-500" /> : <Copy size={16} className="text-slate-400 group-hover:text-white" />}
-                      <span className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] bg-slate-800 rounded transition-opacity ${isCopied ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>Copied!</span>
+                    <button 
+                      onClick={handleCopyEmail} 
+                      className={`p-1.5 rounded-md transition-all relative flex items-center justify-center ${isCopied ? 'bg-green-500 text-white' : 'hover:bg-slate-700 text-slate-400 hover:text-white'}`} 
+                      aria-label="Copy email address"
+                    >
+                      {isCopied ? <Check size={16} className="animate-in zoom-in-50 duration-200" /> : <Copy size={16} />}
+                      <span className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-[10px] bg-slate-800 rounded shadow-xl transition-all ${isCopied ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}>Copied!</span>
                     </button>
                   </div>
                 </div>
@@ -87,7 +91,8 @@ export const Contact: React.FC = () => {
              {status === 'success' ? (
                 <div className="h-full flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-500 py-12">
                    <div className="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 mb-6"><CheckCircle2 size={40} /></div>
-                   <h4 className="text-2xl font-bold mb-2">Message Sent!</h4>
+                   <h4 className="text-2xl font-bold mb-2 text-white">Message Sent!</h4>
+                   <p className="text-slate-400 mb-8">Thank you for reaching out. We'll be in touch very soon.</p>
                    <Button variant="outline" onClick={() => setStatus('idle')} className="text-white border-slate-700 hover:bg-slate-700">Send another message</Button>
                 </div>
              ) : (
@@ -107,7 +112,11 @@ export const Contact: React.FC = () => {
                    {errors.message && <p className="text-red-400 text-xs mt-1 flex items-center gap-1"><AlertCircle size={12} /> {errors.message}</p>}
                  </div>
                  <Button type="submit" variant="primary" size="lg" className="w-full bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-900/40 active:scale-95 transition-all" disabled={status === 'sending'}>
-                   {status === 'sending' ? 'Sending...' : <span className="flex items-center">Send Message <Send className="ml-2 w-4 h-4" /></span>}
+                   {status === 'sending' ? (
+                     <div className="flex items-center gap-2">
+                       <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div> Sending...
+                     </div>
+                   ) : <span className="flex items-center">Send Message <Send className="ml-2 w-4 h-4" /></span>}
                  </Button>
                </form>
              )}
