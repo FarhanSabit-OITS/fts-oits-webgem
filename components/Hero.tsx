@@ -96,13 +96,14 @@ export const Hero: React.FC = () => {
     <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
       <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
 
+      {/* Background Animation Fix (Reliable Public URL) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-30 dark:opacity-20">
         <div 
           className="w-full h-full max-w-[1400px] max-h-[1400px] scale-125 md:scale-100 transition-transform duration-1000 ease-out"
           style={{ transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20}px)` }}
         >
           <dotlottie-player
-            src="https://lottie.host/8210332f-a912-4467-938b-d7486e9e4f2b/X5tXb8D5Xw.json"
+            src="https://lottie.host/64731853-6239-4977-84f9-25f05a18a8f0/U3xT2WvK8M.json"
             background="transparent"
             speed="0.6"
             style={{ width: '100%', height: '100%' }}
@@ -118,6 +119,7 @@ export const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 dark:to-slate-950/95" />
       </div>
 
+      {/* More Interactive Parallax Floating Icons */}
       <div 
         className="absolute top-[18%] left-[8%] hidden lg:block text-blue-600/20 dark:text-blue-400/30 animate-float transition-transform duration-700 ease-out"
         style={{ transform: `translate(${mousePos.x * -60}px, ${mousePos.y * -60}px) rotate(${mousePos.x * 10}deg)` }}
@@ -142,6 +144,7 @@ export const Hero: React.FC = () => {
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
+          {/* Main Tagline with Pronounced Stagger and Glow */}
           <h1 className="text-glow text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.85] tracking-tighter mb-10 flex flex-wrap gap-x-4">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
