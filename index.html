@@ -91,20 +91,19 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-      /* Improved visibility utilities */
+      /* Enhanced visibility utilities */
       .text-glow {
-        text-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       }
       .dark .text-glow {
-        text-shadow: 0 0 40px rgba(56, 189, 248, 0.4);
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(37, 99, 235, 0.2);
       }
-      .text-outline {
-        text-shadow: -1px -1px 0 rgba(0,0,0,0.1), 1px -1px 0 rgba(0,0,0,0.1), -1px 1px 0 rgba(0,0,0,0.1), 1px 1px 0 rgba(0,0,0,0.1);
+      .text-outline-thin {
+        text-shadow: -1px -1px 0 rgba(255,255,255,0.1), 1px -1px 0 rgba(255,255,255,0.1), -1px 1px 0 rgba(255,255,255,0.1), 1px 1px 0 rgba(255,255,255,0.1);
       }
-      .dark .text-outline {
-        text-shadow: -1px -1px 0 rgba(255,255,255,0.05), 1px -1px 0 rgba(255,255,255,0.05), -1px 1px 0 rgba(255,255,255,0.05), 1px 1px 0 rgba(255,255,255,0.05);
+      .dark .text-outline-thin {
+        text-shadow: -1px -1px 0 rgba(0,0,0,0.3), 1px -1px 0 rgba(0,0,0,0.3), -1px 1px 0 rgba(0,0,0,0.3), 1px 1px 0 rgba(0,0,0,0.3);
       }
-      /* Fix for bg-clip-text rendering issues in some browsers */
       .bg-clip-text {
         -webkit-background-clip: text;
         background-clip: text;
