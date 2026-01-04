@@ -163,15 +163,15 @@ const ProjectCard: React.FC<{ project: Project; index: number; onSelect: (p: Pro
     <div ref={ref} className={`group bg-white dark:bg-slate-900 rounded-[3rem] overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-700 ease-out hover:-translate-y-4 hover:shadow-[0_50px_100px_-30px_rgba(0,0,0,0.15)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`} style={{ transitionDelay: `${(index % PROJECTS_PER_PAGE) * 80}ms` }}>
       <div className="relative aspect-video overflow-hidden cursor-pointer" onClick={() => onSelect(project, 'full')}>
         <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out p-10 flex flex-col justify-center text-white pointer-events-none group-hover:pointer-events-auto">
+        <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-lg opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out p-10 flex flex-col justify-center items-center text-center text-white pointer-events-none group-hover:pointer-events-auto">
           <p className="text-sm md:text-base line-clamp-3 leading-relaxed font-bold mb-10 opacity-0 group-hover:opacity-100 transition-all delay-150 duration-500 text-blue-50">
             {project.description}
           </p>
-          <div className="grid grid-cols-2 gap-4 opacity-0 group-hover:opacity-100 transition-all delay-250 duration-500">
-             <button className="px-4 py-4 bg-white text-slate-900 rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl ring-2 ring-white/10" onClick={(e) => { e.stopPropagation(); onSelect(project, 'full'); }}>Case Study <ArrowUpRight size={14} /></button>
-             <button className="px-4 py-4 bg-slate-800 text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl ring-2 ring-white/10" onClick={(e) => { e.stopPropagation(); onSelect(project, 'quick'); }}>Quick View <Eye size={14} /></button>
+          <div className="grid grid-cols-2 gap-4 w-full opacity-0 group-hover:opacity-100 transition-all delay-250 duration-500">
+             <button className="px-4 py-4 bg-white text-slate-950 rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl ring-2 ring-white/30" onClick={(e) => { e.stopPropagation(); onSelect(project, 'full'); }}>Case Study <ArrowUpRight size={14} /></button>
+             <button className="px-4 py-4 bg-slate-800 text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl ring-2 ring-white/30" onClick={(e) => { e.stopPropagation(); onSelect(project, 'quick'); }}>Quick View <Eye size={14} /></button>
              {project.demoVideoUrl && (
-               <button onClick={(e) => { e.stopPropagation(); onSelect(project, 'video'); }} className="col-span-2 px-6 py-4 bg-blue-600 text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl shadow-blue-500/20">
+               <button onClick={(e) => { e.stopPropagation(); onSelect(project, 'video'); }} className="col-span-2 px-6 py-4 bg-blue-600 text-white rounded-[1.25rem] text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-2xl shadow-blue-500/30 ring-2 ring-white/20">
                  <Play size={14} fill="currentColor" /> Play Demo
                </button>
              )}
@@ -237,7 +237,12 @@ export const Portfolio: React.FC = () => {
 
   const resetFilters = () => {
     setIsFilterAnimating(true);
-    setTimeout(() => { setActiveCategory(ALL_CATEGORY); setActiveTag(ALL_TAG); setActiveStatus(ALL_STATUS); setTimeout(() => setIsFilterAnimating(false), 500); }, 400);
+    setTimeout(() => { 
+      setActiveCategory(ALL_CATEGORY); 
+      setActiveTag(ALL_TAG); 
+      setActiveStatus(ALL_STATUS); 
+      setTimeout(() => setIsFilterAnimating(false), 500); 
+    }, 400);
   };
 
   const filteredProjects = PROJECTS.filter(p => (activeCategory === ALL_CATEGORY || p.category === activeCategory) && (activeTag === ALL_TAG || p.technologies?.includes(activeTag)) && (activeStatus === ALL_STATUS || p.status === activeStatus));
@@ -261,7 +266,7 @@ export const Portfolio: React.FC = () => {
           <div className="flex flex-col gap-10 items-center">
             <div className="flex flex-wrap justify-center gap-4">
               {categories.map(c => (
-                <button key={c} onClick={() => handleFilterChange(setActiveCategory, c)} className={`px-8 md:px-10 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all border-2 flex items-center gap-3 ${activeCategory === c ? 'bg-blue-600 border-blue-600 text-white shadow-2xl shadow-blue-500/40 ring-4 ring-blue-500/10' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 hover:border-blue-400/50'}`}>
+                <button key={c} onClick={() => handleFilterChange(setActiveCategory, c)} className={`px-8 md:px-10 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all border-2 flex items-center gap-3 active:scale-95 ${activeCategory === c ? 'bg-blue-600 border-blue-600 text-white shadow-2xl shadow-blue-500/40 ring-4 ring-blue-500/10' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 hover:border-blue-400/50'}`}>
                   {c} <span className={`text-[9px] px-2 py-0.5 rounded-full ${activeCategory === c ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>{getCount('cat', c)}</span>
                 </button>
               ))}
@@ -270,10 +275,12 @@ export const Portfolio: React.FC = () => {
               <div className="flex items-center gap-3 bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto no-scrollbar">
                 <div className="px-4 text-[9px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 whitespace-nowrap"><Filter size={12} /> Status</div>
                 {statuses.map(s => (
-                  <button key={s} onClick={() => handleFilterChange(setActiveStatus, s)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap flex items-center gap-2 ${activeStatus === s ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'}`}>{s === ALL_STATUS ? 'All' : s} <span className="opacity-60 text-[8px]">({getCount('stat', s)})</span></button>
+                  <button key={s} onClick={() => handleFilterChange(setActiveStatus, s)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap flex items-center gap-2 active:scale-95 ${activeStatus === s ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'}`}>{s === ALL_STATUS ? 'All' : s} <span className="opacity-60 text-[8px]">({getCount('stat', s)})</span></button>
                 ))}
               </div>
-              <button onClick={resetFilters} className="px-6 py-4 rounded-2xl bg-white dark:bg-slate-800 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 border-2 border-slate-200 dark:border-slate-800 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 font-black uppercase text-[11px] tracking-widest shadow-sm group"><RefreshCw size={14} className={`group-hover:rotate-180 transition-transform duration-700 ${isFilterAnimating ? 'animate-spin' : ''}`} /> Reset Filters</button>
+              <button onClick={resetFilters} className="px-6 py-4 rounded-2xl bg-white dark:bg-slate-800 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 border-2 border-slate-200 dark:border-slate-800 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 font-black uppercase text-[11px] tracking-widest shadow-sm group">
+                <RefreshCw size={14} className={`group-hover:rotate-180 transition-transform duration-700 ${isFilterAnimating ? 'animate-spin' : ''}`} /> Reset Filters
+              </button>
             </div>
           </div>
         </div>

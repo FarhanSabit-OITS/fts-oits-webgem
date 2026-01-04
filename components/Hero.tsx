@@ -56,12 +56,10 @@ export const Hero: React.FC = () => {
         this.size = Math.random() * 1.5 + 0.2;
         this.speedX = Math.random() * 0.1 - 0.05;
         this.speedY = Math.random() * 0.1 - 0.05;
-        // Theme-responsive color palette
         this.color = isDarkMode ? '56, 189, 248' : '37, 99, 235'; 
         this.alpha = Math.random() * 0.3 + 0.1;
       }
       update(mX: number, mY: number) {
-        // Particles move slightly away from mouse
         this.x += this.speedX + (mX * 0.3);
         this.y += this.speedY + (mY * 0.3);
         
@@ -121,7 +119,7 @@ export const Hero: React.FC = () => {
           loop 
           muted 
           playsInline 
-          className="absolute inset-0 w-full h-full object-cover opacity-15 dark:opacity-5 transition-opacity duration-1000 scale-105"
+          className="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-5 transition-opacity duration-1000 scale-105"
           style={{ transform: `scale(1.05) translate(${mousePos.x * 25}px, ${mousePos.y * 25}px)` }}
           poster="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=2070"
         >
@@ -192,13 +190,15 @@ export const Hero: React.FC = () => {
                   {word}&nbsp;
                 </span>
               ))}
+              <span className={`inline-block transition-all duration-[1200ms] delay-[1400ms] ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+                High-performance software engineering combined with award-winning design thinking.
+              </span>
             </p>
 
-            {/* CTA Group with high prominence */}
             <div className={`flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start transition-all duration-[1000ms] delay-[1800ms] ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <Button 
                 size="lg" variant="primary" 
-                className="group h-20 px-14 rounded-3xl font-black text-xl shadow-2xl shadow-blue-500/30 hover:scale-[1.1] active:scale-95 transition-all duration-500 z-50" 
+                className="group h-20 px-14 rounded-3xl font-black text-xl shadow-2xl shadow-blue-500/40 hover:scale-[1.1] active:scale-95 transition-all duration-500 z-50" 
                 onClick={scrollToContact}
               >
                 Launch Project
@@ -215,53 +215,22 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Visual Area: Interactive SVG Transformation */}
+          {/* Right Visual Area: High Quality Laptop/Coding Image with Interaction */}
           <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-[1800ms] delay-[400ms] ease-out transform ${isVisible ? 'opacity-100 translate-x-0 rotate-0 scale-100' : 'opacity-0 translate-x-32 rotate-6 scale-90'}`}>
              <div className="relative group" style={{ perspective: '2500px' }}>
                 <div 
-                  className="relative bg-white/5 dark:bg-slate-800/10 backdrop-blur-3xl border-2 border-white/20 dark:border-slate-700/50 rounded-[6rem] shadow-[0_80px_120px_-40px_rgba(0,0,0,0.25)] aspect-[1/1] transform-gpu transition-all duration-700 hover:scale-[1.03] flex items-center justify-center overflow-hidden z-10"
-                  style={{ transform: `rotateY(${mousePos.x * -25}deg) rotateX(${mousePos.y * 25}deg)` }}
+                  className="relative bg-white dark:bg-slate-800 border-4 border-white dark:border-slate-700 rounded-[4rem] shadow-[0_80px_120px_-40px_rgba(0,0,0,0.25)] overflow-hidden aspect-[4/3] transform-gpu transition-all duration-700 hover:scale-[1.03] z-10"
+                  style={{ transform: `rotateY(${mousePos.x * -20}deg) rotateX(${mousePos.y * 20}deg)` }}
                 >
-                  {/* Digital Transformation SVG (Sophisticated Animation) */}
-                  <svg viewBox="0 0 400 400" className="w-3/4 h-3/4 overflow-visible drop-shadow-2xl">
-                    <defs>
-                      <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#3b82f6" stopOpacity="1" />
-                        <stop offset="100%" stopColor="#818cf8" stopOpacity="1" />
-                      </linearGradient>
-                      <filter id="glow">
-                        <feGaussianBlur stdDeviation="6" result="blur" />
-                        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                      </filter>
-                    </defs>
-                    
-                    {/* Pulsing Circuit Paths */}
-                    <g className="animate-float" style={{ animationDuration: '10s' }}>
-                      <circle cx="200" cy="200" r="150" fill="none" stroke="url(#primaryGrad)" strokeWidth="0.5" strokeDasharray="10 20" className="animate-[spin_60s_linear_infinite]" opacity="0.3" />
-                      <circle cx="200" cy="200" r="100" fill="none" stroke="url(#primaryGrad)" strokeWidth="1" strokeDasharray="5 15" className="animate-[spin_30s_linear_infinite_reverse]" opacity="0.4" />
-                      
-                      <g className="animate-pulse" style={{ animationDuration: '4s' }}>
-                         <rect x="160" y="160" width="80" height="80" rx="20" fill="url(#primaryGrad)" fillOpacity="0.15" filter="url(#glow)" stroke="white" strokeWidth="2" strokeOpacity="0.5" />
-                         <path d="M180 200 L195 215 L225 185" fill="none" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" filter="url(#glow)" />
-                      </g>
-                    </g>
-
-                    {/* Drifting Floating Nodes */}
-                    {[0, 72, 144, 216, 288].map((angle, i) => {
-                      const r = 135;
-                      const x = 200 + r * Math.cos((angle * Math.PI) / 180);
-                      const y = 200 + r * Math.sin((angle * Math.PI) / 180);
-                      return (
-                        <g key={i} className="animate-float" style={{ animationDelay: `${i * 0.5}s`, animationDuration: '7s' }}>
-                          <line x1="200" y1="200" x2={x} y2={y} stroke="white" strokeOpacity="0.1" strokeWidth="1.5" strokeDasharray="6 6" />
-                          <circle cx={x} cy={y} r="8" fill="#3b82f6" className="animate-pulse" style={{ animationDelay: `${i * 0.4}s` }} filter="url(#glow)" />
-                        </g>
-                      );
-                    })}
-                  </svg>
+                   <img 
+                    src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1200" 
+                    alt="Premium Coding Interface" 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-transparent" />
                 </div>
                 
-                {/* Floating Cards with Intense Parallax */}
+                {/* Floating Cards with Pronounced Parallax */}
                 <div 
                   className="absolute -bottom-12 -left-12 md:-left-20 p-8 bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-slate-800 flex items-center gap-6 z-20 transition-transform duration-300 ease-out"
                   style={{ transform: `translate(${mousePos.x * 120}px, ${mousePos.y * 120}px) rotateZ(${mousePos.x * 10}deg)` }}

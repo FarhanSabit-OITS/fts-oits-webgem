@@ -89,7 +89,7 @@ export const PROJECTS: Project[] = [
     id: '1',
     title: 'FinTech Analytics Hub',
     category: 'Enterprise Software',
-    imageUrl: 'https://images.unsplash.com/photo-1611974714851-129082699a0a?auto=format&fit=crop&q=80&w=1200',
+    imageUrl: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&q=80&w=1200',
     description: 'A comprehensive financial analytics dashboard for real-time market tracking and predictive analysis.',
     fullDescription: 'We developed a high-frequency data ingestion engine paired with a real-time visualization layer to help financial analysts make split-second decisions with confidence.',
     problemStatement: 'The client faced significant lag in data processing from global stock exchanges, leading to delayed decision-making and missed opportunities.',
