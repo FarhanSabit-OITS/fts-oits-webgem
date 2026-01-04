@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Globe, Smartphone, PenTool, Cloud, Code2, Server, Database, Layers, Terminal, Users } from 'lucide-react';
 import { SERVICES, TECH_DOMAINS } from '../constants';
@@ -62,8 +61,8 @@ export const Services: React.FC = () => {
           <div className="max-w-2xl relative">
             <h2 className="text-sm font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Our Expertise</h2>
             <h3 
-              className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white leading-tight tracking-tighter transition-transform duration-300 ease-out"
-              style={{ transform: `translate(${mousePos.x * 25}px, ${mousePos.y * 15}px)` }}
+              className="text-4xl md:text-6xl font-black text-slate-950 dark:text-white leading-tight tracking-tighter transition-transform duration-500 ease-out cursor-default hover:text-blue-600 dark:hover:text-blue-400"
+              style={{ transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 20}px)` }}
             >
               Comprehensive solutions for <br/> digital transformation.
             </h3>
@@ -80,7 +79,7 @@ export const Services: React.FC = () => {
               style={{ transitionDelay: `${index * 120}ms` }}
             >
               <div className="w-16 h-16 shrink-0 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 group-hover:rotate-[15deg] group-hover:shadow-blue-500/40">
-                <div className="transition-all duration-500 group-hover:animate-subtle-bounce group-hover:scale-110 group-hover:rotate-12">
+                <div className="transition-all duration-500 group-hover:scale-125 group-hover:animate-slow-pulse">
                   {iconMap[service.icon]}
                 </div>
               </div>
@@ -92,8 +91,8 @@ export const Services: React.FC = () => {
                 {service.features.map((feature, idx) => (
                   <span 
                     key={idx} 
-                    className={`px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 shadow-sm transition-all duration-500 transform scale-90 opacity-0 translate-y-4 group-hover:scale-100 group-hover:opacity-100 group-hover:translate-y-0 group-hover:border-blue-300 dark:group-hover:border-blue-800 group-hover:text-blue-700 dark:group-hover:text-blue-300`}
-                    style={{ transitionDelay: `${idx * 100}ms` }}
+                    className={`px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 shadow-sm transition-all duration-500 transform scale-90 opacity-0 translate-y-4 group-hover:scale-105 group-hover:opacity-100 group-hover:translate-y-0 group-hover:border-blue-300 dark:group-hover:border-blue-800 group-hover:text-blue-700 dark:group-hover:text-blue-300`}
+                    style={{ transitionDelay: `${(idx + 1) * 75}ms` }}
                   >
                     {feature}
                   </span>

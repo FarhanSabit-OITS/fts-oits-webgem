@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, Layers, Code, ShieldCheck, Rocket, ChevronRight } from 'lucide-react';
 import { PROCESS_STEPS } from '../constants';
@@ -78,7 +77,7 @@ export const Process: React.FC = () => {
           ))}
         </div>
         
-        <div className="mt-20 p-8 md:p-12 rounded-[3rem] bg-blue-600 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/30 overflow-hidden relative group">
+        <div className="mt-20 p-8 md:p-12 rounded-[3rem] bg-blue-600 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/30 overflow-hidden relative group transition-all duration-500 hover:shadow-blue-500/50">
            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[marquee_3s_linear_infinite] pointer-events-none" />
            <div className="max-w-xl relative z-10">
              <h4 className="text-3xl font-black mb-3 tracking-tight">Ready to start the discovery?</h4>
@@ -86,7 +85,7 @@ export const Process: React.FC = () => {
            </div>
            <button 
              onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
-             className="relative z-10 px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-lg hover:scale-[1.1] hover:bg-slate-50 active:scale-95 transition-all duration-300 shadow-xl shadow-black/20 group-hover:shadow-white/10"
+             className="relative z-10 px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-lg transition-all duration-500 ease-in-out hover:scale-110 hover:bg-blue-50 hover:text-blue-700 active:scale-95 shadow-xl shadow-black/20 group-hover:shadow-white/20"
            >
              Book Consultation
            </button>

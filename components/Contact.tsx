@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw } from 'lucide-react';
+import { Mail, Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation } from 'lucide-react';
 import { Button } from './ui/Button';
-import { CONTACT_EMAIL } from '../constants';
+import { CONTACT_EMAIL, ADDRESS } from '../constants';
 import { SectionId } from '../types';
 
 export const Contact: React.FC = () => {
@@ -45,11 +44,14 @@ export const Contact: React.FC = () => {
     }, 2000);
   };
 
+  const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.123456789012!2d90.3644321!3d23.7431234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ0JzM1LjIiTiA5MMKwMjEnNTEuOSJF!5e0!3m2!1sen!2sbd!4v1234567890123`;
+  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ADDRESS)}`;
+
   return (
     <section ref={sectionRef} id={SectionId.CONTACT} className="py-24 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-500 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[45%] h-full bg-blue-100/40 dark:bg-blue-900/5 -skew-x-12 transform translate-x-1/4 pointer-events-none" />
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 xl:gap-32 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 xl:gap-32 items-start mb-24">
           <div className="space-y-12">
             <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-600/10 dark:bg-blue-400/10 text-blue-900 dark:text-blue-300 text-[11px] font-black uppercase tracking-[0.25em] mb-8 ring-1 ring-blue-500/30">
@@ -58,11 +60,24 @@ export const Contact: React.FC = () => {
               <h3 className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tighter text-slate-950 dark:text-white">Let's architect <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 animate-pulse">your legacy.</span></h3>
             </div>
             <p className="text-slate-700 dark:text-slate-300 text-xl font-medium max-w-lg">Ready to modernize your infrastructure? Connect with our senior engineers today.</p>
-            <div className="flex flex-wrap items-center gap-4 pt-6">
-              <p className="text-2xl md:text-3xl font-black text-slate-950 dark:text-slate-100 tracking-tight">{CONTACT_EMAIL}</p>
-              <button onClick={handleCopyEmail} className={`p-4 rounded-2xl transition-all border-2 ${isCopied ? 'bg-green-600 border-green-600 text-white shadow-2xl scale-110' : 'bg-white dark:bg-slate-900 text-slate-400 hover:text-blue-600 border-slate-200 dark:border-slate-800'}`}>
-                {isCopied ? <Check size={22} className="animate-in zoom-in spin-in-45 duration-500" /> : <Copy size={22} />}
-              </button>
+            
+            <div className="space-y-6">
+              <div className="flex flex-wrap items-center gap-4">
+                <p className="text-2xl md:text-3xl font-black text-slate-950 dark:text-slate-100 tracking-tight">{CONTACT_EMAIL}</p>
+                <button onClick={handleCopyEmail} className={`p-4 rounded-2xl transition-all border-2 ${isCopied ? 'bg-green-600 border-green-600 text-white shadow-2xl scale-110' : 'bg-white dark:bg-slate-900 text-slate-400 hover:text-blue-600 border-slate-200 dark:border-slate-800'}`}>
+                  {isCopied ? <Check size={22} className="animate-in zoom-in spin-in-45 duration-500" /> : <Copy size={22} />}
+                </button>
+              </div>
+              
+              <div className="flex items-start gap-4 p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
+                 <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 shrink-0">
+                    <MapPin size={24} />
+                 </div>
+                 <div>
+                    <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Our Studio</p>
+                    <p className="font-bold text-slate-900 dark:text-slate-100 leading-relaxed">{ADDRESS}</p>
+                 </div>
+              </div>
             </div>
           </div>
 
@@ -107,6 +122,37 @@ export const Contact: React.FC = () => {
                   </div>
                 </form>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Map Section */}
+        <div className={`transition-all duration-1000 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+          <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-4 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden group">
+            <div className="relative aspect-[21/9] w-full rounded-[2.5rem] overflow-hidden grayscale contrast-125 dark:grayscale-0 dark:contrast-100 transition-all duration-700 group-hover:grayscale-0 group-hover:contrast-100">
+              <iframe
+                title="Office Location"
+                src={mapUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0"
+              />
+              <div className="absolute bottom-8 right-8 z-20">
+                <a 
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-8 py-4 bg-slate-950 dark:bg-blue-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-110 active:scale-95 transition-all group/btn"
+                >
+                  <Navigation size={20} className="group-hover/btn:animate-subtle-bounce" />
+                  Get Directions
+                </a>
+              </div>
+              <div className="absolute inset-0 pointer-events-none border-[12px] border-white dark:border-slate-900 rounded-[2.5rem] z-10" />
             </div>
           </div>
         </div>
