@@ -14,19 +14,19 @@ export const Button: React.FC<ButtonProps> = ({
   children, 
   ...props 
 }) => {
-  const baseStyles = "inline-flex items-center justify-center rounded-lg font-bold transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]";
+  const baseStyles = "inline-flex items-center justify-center rounded-lg font-black tracking-tight transition-all duration-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96] overflow-hidden relative";
   
   const variants = {
-    primary: "bg-slate-900 text-white hover:bg-slate-800 hover:scale-[1.05] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] dark:bg-blue-600 dark:hover:bg-blue-500 dark:hover:shadow-[0_20px_40px_-10px_rgba(37,99,235,0.4)] dark:focus:ring-blue-500",
-    secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200 hover:scale-[1.02] dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700",
-    outline: "border-2 border-slate-200 bg-transparent hover:bg-slate-950 hover:text-white hover:border-slate-950 hover:scale-[1.05] dark:border-slate-700 dark:text-slate-100 dark:hover:bg-white dark:hover:text-slate-950 dark:hover:border-white",
-    ghost: "hover:bg-slate-100 text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 hover:scale-[1.02]",
+    primary: "bg-slate-950 text-white hover:bg-slate-800 hover:scale-[1.08] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] dark:bg-blue-600 dark:hover:bg-blue-500 dark:hover:shadow-[0_25px_50px_-12px_rgba(37,99,235,0.6)]",
+    secondary: "bg-slate-100 text-slate-950 hover:bg-slate-200 hover:scale-[1.05] dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700",
+    outline: "border-2 border-slate-300 bg-white/50 backdrop-blur-sm text-slate-950 hover:bg-slate-950 hover:text-white hover:border-slate-950 hover:scale-[1.08] dark:border-slate-700 dark:text-white dark:bg-transparent dark:hover:bg-white dark:hover:text-slate-950 dark:hover:border-white shadow-sm hover:shadow-xl",
+    ghost: "hover:bg-slate-100 text-slate-800 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 hover:scale-[1.05]",
   };
 
   const sizes = {
-    sm: "h-9 px-4 text-xs",
-    md: "h-11 px-8 text-sm",
-    lg: "h-14 px-10 text-base",
+    sm: "h-11 px-6 text-sm",
+    md: "h-14 px-10 text-base",
+    lg: "h-20 px-14 text-xl",
   };
 
   return (
@@ -34,7 +34,7 @@ export const Button: React.FC<ButtonProps> = ({
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
-      {children}
+      <span className="relative z-10">{children}</span>
     </button>
   );
 };
