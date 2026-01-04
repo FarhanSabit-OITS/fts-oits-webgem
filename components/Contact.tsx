@@ -75,14 +75,14 @@ export const Contact: React.FC = () => {
 
             <div className="space-y-12 pt-6">
               <div className={`flex items-start gap-8 transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`} style={{ transitionDelay: '300ms' }}>
-                <div className="p-5 bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-100 dark:border-slate-700 shadow-2xl shadow-blue-500/5"><Mail className="w-8 h-8 text-blue-600 dark:text-blue-400" /></div>
+                <div className="p-5 bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 shadow-2xl shadow-blue-500/5"><Mail className="w-8 h-8 text-blue-600 dark:text-blue-400" /></div>
                 <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Primary Inbox</p>
                   <div className="flex items-center gap-5">
                     <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">{CONTACT_EMAIL}</p>
                     <button 
                       onClick={handleCopyEmail} 
-                      className={`p-3 rounded-2xl transition-all relative flex items-center justify-center shadow-md border-2 ${isCopied ? 'bg-green-500 border-green-500 text-white scale-110 shadow-green-500/20' : 'bg-slate-50 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-200 dark:border-slate-600'}`} 
+                      className={`p-3 rounded-2xl transition-all relative flex items-center justify-center shadow-md border-2 ${isCopied ? 'bg-green-500 border-green-500 text-white scale-110 shadow-green-500/20' : 'bg-slate-50 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-900 dark:hover:text-white border-slate-300 dark:border-slate-600'}`} 
                       aria-label="Copy business email"
                     >
                       {isCopied ? <Check size={20} className="animate-in zoom-in-50 duration-300" /> : <Copy size={20} />}
@@ -93,7 +93,7 @@ export const Contact: React.FC = () => {
               </div>
               
               <div className={`flex items-start gap-8 transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`} style={{ transitionDelay: '450ms' }}>
-                <div className="p-5 bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-100 dark:border-slate-700 shadow-2xl shadow-blue-500/5"><MapPin className="w-8 h-8 text-blue-600 dark:text-blue-400" /></div>
+                <div className="p-5 bg-white dark:bg-slate-800 rounded-3xl border-2 border-slate-200 dark:border-slate-700 shadow-2xl shadow-blue-500/5"><MapPin className="w-8 h-8 text-blue-600 dark:text-blue-400" /></div>
                 <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Studio Location</p>
                   <p className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 leading-tight tracking-tight">{ADDRESS}</p>
@@ -103,10 +103,14 @@ export const Contact: React.FC = () => {
           </div>
 
           <div className={`relative transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            {/* Subtle glow behind form */}
-            <div className="absolute inset-0 bg-blue-600 rounded-[3.5rem] rotate-1 scale-[1.02] opacity-5 blur-3xl pointer-events-none" />
+            {/* Form Overlay for Submitting State */}
+            {status === 'sending' && (
+              <div className="absolute inset-0 z-20 bg-white/20 dark:bg-slate-900/20 backdrop-blur-[1px] rounded-[3.5rem] flex items-center justify-center animate-in fade-in duration-300 pointer-events-none">
+                <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
             
-            <div className={`bg-white dark:bg-slate-900 p-10 md:p-16 rounded-[3.5rem] border-2 border-slate-100 dark:border-slate-800 shadow-[0_50px_100px_-30px_rgba(0,0,0,0.1)] dark:shadow-none transition-all duration-500 ${status === 'sending' ? 'scale-[0.985] blur-[0.5px]' : 'scale-100'}`}>
+            <div className={`bg-white dark:bg-slate-900 p-10 md:p-16 rounded-[3.5rem] border-2 border-slate-200 dark:border-slate-800 shadow-[0_50px_100px_-30px_rgba(0,0,0,0.1)] dark:shadow-none transition-all duration-500 ${status === 'sending' ? 'scale-[0.985] blur-[0.5px]' : 'scale-100'}`}>
               {status === 'success' ? (
                   <div className="h-full flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-700 py-20">
                     <div className="w-28 h-28 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-10 shadow-2xl shadow-green-500/20 relative">
@@ -121,39 +125,39 @@ export const Contact: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-10" noValidate>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-3 relative group">
-                      <label htmlFor="contact-name" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors">Full Name</label>
+                      <label htmlFor="contact-name" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Full Name</label>
                       <input 
-                          type="text" id="contact-name" aria-invalid={!!errors.name} 
-                          className={`w-full bg-slate-50 dark:bg-slate-800 border-2 ${errors.name ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-100 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 transition-all font-bold placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
+                          type="text" id="contact-name" name="name" aria-invalid={!!errors.name} 
+                          className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.name ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-200 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300 font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
                           placeholder="Your Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} 
                         />
-                      {errors.name && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2.5 flex items-center gap-2 font-black animate-in slide-in-from-top-2 duration-300"><AlertCircle size={14} /> {errors.name}</p>}
+                      {errors.name && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2.5 flex items-center gap-2 font-black animate-in slide-in-from-top-1 fade-in duration-300"><AlertCircle size={14} /> {errors.name}</p>}
                     </div>
                     <div className="space-y-3 relative group">
-                      <label htmlFor="contact-email" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors">Business Email</label>
+                      <label htmlFor="contact-email" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Business Email</label>
                       <input 
-                          type="email" id="contact-email" aria-invalid={!!errors.email} 
-                          className={`w-full bg-slate-50 dark:bg-slate-800 border-2 ${errors.email ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-100 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 transition-all font-bold placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
+                          type="email" id="contact-email" name="email" aria-invalid={!!errors.email} 
+                          className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.email ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-200 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300 font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
                           placeholder="name@company.com" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} 
                         />
-                      {errors.email && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2.5 flex items-center gap-2 font-black animate-in slide-in-from-top-2 duration-300"><AlertCircle size={14} /> {errors.email}</p>}
+                      {errors.email && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2.5 flex items-center gap-2 font-black animate-in slide-in-from-top-1 fade-in duration-300"><AlertCircle size={14} /> {errors.email}</p>}
                     </div>
                   </div>
                   
                   <div className="space-y-3 relative group">
-                    <label htmlFor="contact-message" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors">Tell us about your project</label>
+                    <label htmlFor="contact-message" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Tell us about your project</label>
                     <textarea 
-                        id="contact-message" aria-invalid={!!errors.message} rows={5} 
-                        className={`w-full bg-slate-50 dark:bg-slate-800 border-2 ${errors.message ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-100 dark:border-slate-700'} rounded-[2.5rem] px-7 py-6 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 transition-all resize-none font-bold placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
+                        id="contact-message" name="message" aria-invalid={!!errors.message} rows={5} 
+                        className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.message ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-200 dark:border-slate-700'} rounded-[2.5rem] px-7 py-6 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300 resize-none font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
                         placeholder="Project scope, goals, and challenges..." value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} 
                       />
-                    {errors.message && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2.5 flex items-center gap-2 font-black animate-in slide-in-from-top-2 duration-300"><AlertCircle size={14} /> {errors.message}</p>}
+                    {errors.message && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2.5 flex items-center gap-2 font-black animate-in slide-in-from-top-1 fade-in duration-300"><AlertCircle size={14} /> {errors.message}</p>}
                   </div>
 
                   <div className="relative pt-4">
                     <Button 
                       type="submit" variant="primary" size="lg" 
-                      className={`w-full bg-slate-900 dark:bg-blue-600 hover:bg-black dark:hover:bg-blue-700 text-white rounded-[2rem] shadow-2xl transition-all font-black text-xl h-20 border-none group transform active:scale-[0.97] ${status === 'sending' ? 'cursor-wait opacity-80' : ''}`} 
+                      className={`w-full bg-slate-950 dark:bg-blue-600 hover:bg-black dark:hover:bg-blue-700 text-white rounded-[2rem] shadow-2xl transition-all duration-300 font-black text-xl h-20 border-none group transform active:scale-[0.97] ${status === 'sending' ? 'cursor-wait opacity-80' : ''}`} 
                       disabled={status === 'sending'}
                     >
                       {status === 'sending' ? (
@@ -164,7 +168,7 @@ export const Contact: React.FC = () => {
                       ) : (
                         <span className="flex items-center gap-4">
                           Submit Project Idea
-                          <Send size={24} className="transform rotate-12 transition-transform group-hover:translate-x-1.5 group-hover:-translate-y-1.5" />
+                          <Send size={24} className="transform rotate-12 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:-translate-y-1.5" />
                         </span>
                       )}
                     </Button>

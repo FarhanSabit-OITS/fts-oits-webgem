@@ -9,35 +9,24 @@ export const Hero: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
-  const heroRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (heroRef.current) observer.observe(heroRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
+    // Trigger animations immediately on mount for Hero section
+    const timer = setTimeout(() => setIsVisible(true), 50);
+    
     const handleScroll = () => setScrollY(window.scrollY);
     const handleMouseMove = (e: MouseEvent) => {
-      // Normalize to -0.5 to 0.5
       const x = (e.clientX / window.innerWidth) - 0.5;
       const y = (e.clientY / window.innerHeight) - 0.5;
       setMousePos({ x, y });
     };
+    
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove);
+    
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
     };
@@ -107,13 +96,13 @@ export const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section ref={heroRef} id={SectionId.HOME} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[95vh] flex items-center">
+    <section id={SectionId.HOME} className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[95vh] flex items-center">
       <div className="absolute top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 blur-md scale-110 will-change-transform transition-transform duration-500 ease-out"
+          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 blur-md scale-110 will-change-transform transition-transform duration-700 ease-out"
           style={{ 
             backgroundImage: 'url("https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=2070")',
-            transform: `translate(${mousePos.x * 20}px, ${mousePos.y * 20 + scrollY * 0.2}px) scale(1.1)`
+            transform: `translate(${mousePos.x * 30}px, ${mousePos.y * 30 + scrollY * 0.1}px) scale(1.1)`
           }}
           aria-hidden="true"
         />
@@ -133,21 +122,21 @@ export const Hero: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           <div className="flex-1 space-y-8 text-center lg:text-left relative z-10">
-            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wide transition-all duration-1000 delay-100 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide transition-all duration-700 delay-100 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
               Available for new projects
             </div>
             
-            <h1 className={`text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.1] transition-all duration-1000 delay-300 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <h1 className={`text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.1] transition-all duration-700 delay-200 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               We Craft <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Digital Excellence</span>
             </h1>
             
-            <p className={`text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed transition-all duration-1000 delay-500 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            <p className={`text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed transition-all duration-700 delay-300 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
               {TAGLINE}. We build robust software solutions that drive business growth, combining technical expertise with stunning design.
             </p>
 
-            <div className={`flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start transition-all duration-1000 delay-700 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            <div className={`flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start transition-all duration-700 delay-400 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
               <Button 
                 size="lg" variant="primary" aria-label="Request a demo and start your journey"
                 className="group relative overflow-hidden transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-600/40" 
@@ -156,18 +145,18 @@ export const Hero: React.FC = () => {
                 Request a Demo
                 <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
-              <Button variant="outline" size="lg" className="group bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm hover:bg-white/80 dark:hover:bg-slate-800" aria-label="Learn how we work">
+              <Button variant="outline" size="lg" className="group bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm hover:bg-white/80 dark:hover:bg-slate-800 border-slate-300 dark:border-slate-700" aria-label="Learn how we work">
                 <Play className="mr-2 w-4 h-4 fill-slate-900 dark:fill-white" />
                 How We Work
               </Button>
             </div>
           </div>
 
-          <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-1000 delay-500 ease-out transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
-            <div className="relative" style={{ transform: `perspective(1000px) rotateY(${mousePos.x * -15}deg) rotateX(${mousePos.y * 15}deg)` }}>
+          <div className={`flex-1 w-full max-w-xl lg:max-w-none transition-all duration-1000 delay-300 ease-out transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
+            <div className="relative" style={{ transform: `perspective(1000px) rotateY(${mousePos.x * -10}deg) rotateX(${mousePos.y * 10}deg)` }}>
               <div className="absolute top-4 -right-4 w-full h-full bg-slate-200/50 dark:bg-slate-700/30 rounded-2xl -rotate-2 backdrop-blur-sm" aria-hidden="true"></div>
               <div className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden aspect-[4/3] group">
-                <img src="https://picsum.photos/800/600?random=10" alt="Software Preview" loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <img src="https://picsum.photos/800/600?random=10" alt="Software Preview" loading="eager" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                 <div className="absolute bottom-6 left-6 right-6 p-4 glass-panel rounded-xl shadow-lg transform transition-all duration-700 translate-y-2 group-hover:translate-y-0">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 animate-pulse"><Play size={16} fill="currentColor" /></div>
