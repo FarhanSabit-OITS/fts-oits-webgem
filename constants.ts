@@ -90,93 +90,101 @@ export const PROJECTS: Project[] = [
     title: 'FinTech Analytics Hub',
     category: 'Enterprise Software',
     imageUrl: 'https://images.unsplash.com/photo-1551288049-bbbda5366fd9?auto=format&fit=crop&q=80&w=1000',
-    description: 'A comprehensive financial analytics dashboard for real-time market tracking.',
+    description: 'A comprehensive financial analytics dashboard for real-time market tracking and predictive analysis.',
+    fullDescription: 'We developed a high-frequency data ingestion engine paired with a real-time visualization layer to help financial analysts make split-second decisions with confidence.',
+    problemStatement: 'The client faced significant lag in data processing from global stock exchanges, leading to delayed decision-making and missed opportunities.',
+    technicalApproach: 'Implemented a microservices architecture using Node.js for high-concurrency ingestion and React with D3.js for granular, low-latency data rendering.',
+    results: 'Reduced data latency from 5 seconds to under 200ms and increased user retention by 45% within the first quarter.',
     technologies: ['React', 'D3.js', 'Node.js', 'PostgreSQL'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    duration: '4-5 Months'
+    duration: '4-5 Months',
+    status: 'Completed'
   },
   {
     id: '2',
     title: 'Luma Healthcare App',
     category: 'Mobile Application',
     imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1000',
-    description: 'A HIPAA-compliant telemedicine platform with secure video conferencing.',
+    description: 'A HIPAA-compliant telemedicine platform with secure video conferencing and integrated EHR sync.',
+    fullDescription: 'Luma bridges the gap between patients and providers by offering a seamless, secure, and intuitive digital clinic experience accessible from any device.',
+    problemStatement: 'Rural patients struggled with access to specialists, and existing telemedicine tools were non-compliant with strict HIPAA privacy regulations.',
+    technicalApproach: 'Utilized Flutter for cross-platform efficiency and WebRTC for peer-to-peer encrypted video, backed by a Firebase infrastructure for real-time updates.',
+    results: 'Successfully facilitated over 50,000 virtual consultations in the first 6 months with 99.9% uptime for video calls.',
     technologies: ['Flutter', 'Firebase', 'WebRTC'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    duration: '3-4 Months'
+    duration: '3-4 Months',
+    status: 'Maintenance'
   },
   {
     id: '3',
     title: 'Global Logistics Engine',
     category: 'Supply Chain',
     imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1000',
-    description: 'AI-driven logistics platform managing complex global supply chains.',
+    description: 'AI-driven logistics platform managing complex global supply chains with real-time tracking.',
+    fullDescription: 'An enterprise-grade ERP specialized in global freight, leveraging machine learning to predict shipping delays and optimize routing.',
+    problemStatement: 'Manual tracking of thousands of containers across various carriers led to a 15% error rate in estimated arrival times.',
+    technicalApproach: 'Integrated Python-based ML models on AWS SageMaker to analyze historical traffic and weather patterns for smarter predictive routing.',
+    results: 'Improved ETD/ETA accuracy by 35% and reduced operational overhead by $1.2M annually through automation.',
     technologies: ['Next.js', 'Python', 'AWS SageMaker'],
     demoVideoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    duration: '6 Months'
+    duration: '6 Months',
+    status: 'In Progress'
   },
   {
     id: '4',
     title: 'Retail POS System',
     category: 'Enterprise Software',
     imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1000',
-    description: 'Cloud-based Point of Sale system for multi-location retail businesses.',
+    description: 'Cloud-based Point of Sale system with offline-first capabilities for multi-location retail.',
+    fullDescription: 'A robust retail management suite that synchronizes inventory across hundreds of locations while maintaining high speed at checkout.',
+    problemStatement: 'Existing POS systems were slow during peak hours and completely non-functional during internet outages.',
+    technicalApproach: 'Built a local-first architecture using Vue.js and IndexedDB, with a Go-based backend for high-speed central synchronization and Redis for caching.',
+    results: 'Zero downtime recorded during peak holiday seasons and a 20% increase in transaction speed.',
     technologies: ['Vue.js', 'Go', 'Redis'],
-    duration: '4 Months'
+    duration: '4 Months',
+    status: 'Completed'
   },
   {
     id: '5',
     title: 'EduTrack LMS',
     category: 'Web Application',
     imageUrl: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1000',
-    description: 'Scalable learning management system for higher education institutions.',
+    description: 'Scalable learning management system supporting interactive courses and advanced grading analytics.',
+    fullDescription: 'EduTrack redefines the digital classroom with modular course builders and real-time student engagement tracking.',
+    problemStatement: 'Universities needed a system that could handle sudden spikes in traffic during exam periods without compromising user experience.',
+    technicalApproach: 'Leveraged NestJS with horizontal scaling on Kubernetes to ensure high availability and PostgreSQL for robust academic record management.',
+    results: 'Successfully hosted 10,000+ simultaneous users during final exam weeks with zero performance degradation.',
     technologies: ['React', 'NestJS', 'PostgreSQL'],
-    duration: '5-6 Months'
+    duration: '5-6 Months',
+    status: 'Completed'
   },
   {
     id: '6',
     title: 'TravelGo Mobile',
     category: 'Mobile Application',
     imageUrl: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=1000',
-    description: 'Personalized travel companion with offline maps and real-time booking.',
+    description: 'Personalized travel companion with offline maps, real-time booking, and social trip sharing.',
+    fullDescription: 'A travel app focused on discovery, allowing users to plan, book, and share their itineraries in a single elegant interface.',
+    problemStatement: 'Travelers often find it difficult to coordinate group trips and access plans in areas with poor internet connectivity.',
+    technicalApproach: 'Built with React Native for high-performance cross-platform UI and GraphQL for efficient, low-bandwidth data fetching.',
+    results: 'Top-rated travel app on both App Store and Play Store within 3 months of launch, with 100k+ active users.',
     technologies: ['React Native', 'TypeScript', 'GraphQL'],
-    duration: '3 Months'
+    duration: '3 Months',
+    status: 'In Progress'
   },
   {
     id: '7',
     title: 'SecurePay Gateway',
     category: 'SaaS Platform',
     imageUrl: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1000',
-    description: 'High-security payment orchestration layer for global merchants.',
+    description: 'High-security payment orchestration layer with fraud detection and multi-currency support.',
+    fullDescription: 'SecurePay provides developers with a robust API to manage complex global payments while ensuring total PCI-DSS compliance.',
+    problemStatement: 'E-commerce platforms were losing significant revenue due to high transaction failure rates in cross-border payments.',
+    technicalApproach: 'Implemented a multi-gateway routing algorithm in Node.js to dynamically choose the best path for every transaction.',
+    results: 'Increased international payment success rate by 18% and reduced fraud incidents by 60%.',
     technologies: ['Node.js', 'Kubernetes', 'AWS'],
-    duration: '6-8 Months'
-  },
-  {
-    id: '8',
-    title: 'Wellness Tracker',
-    category: 'Mobile Application',
-    imageUrl: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=1000',
-    description: 'Health and wellness tracking app with wearable integration.',
-    technologies: ['Flutter', 'HealthKit', 'Firebase'],
-    duration: '4 Months'
-  },
-  {
-    id: '9',
-    title: 'ProAuto Insurance',
-    category: 'Enterprise Software',
-    imageUrl: 'https://images.unsplash.com/photo-1554224155-1696413565d3?auto=format&fit=crop&q=80&w=1000',
-    description: 'End-to-end insurance claim processing and policy management.',
-    technologies: ['Angular', 'Java', 'Oracle'],
-    duration: '9 Months'
-  },
-  {
-    id: '10',
-    title: 'Foodie Delivery',
-    category: 'SaaS Platform',
-    imageUrl: 'https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&q=80&w=1000',
-    description: 'Multi-vendor food delivery platform with real-time driver tracking.',
-    technologies: ['Next.js', 'Prisma', 'Socket.io'],
-    duration: '5 Months'
+    duration: '6-8 Months',
+    status: 'Maintenance'
   }
 ];
 

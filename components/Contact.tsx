@@ -42,7 +42,7 @@ export const Contact: React.FC = () => {
     e.preventDefault();
     if (!validate()) return;
     setStatus('sending');
-    // Simulated API call with refined state
+    // Simulated API call with refined state indicators
     setTimeout(() => {
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
@@ -53,7 +53,7 @@ export const Contact: React.FC = () => {
 
   return (
     <section ref={sectionRef} id={SectionId.CONTACT} className="py-24 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-500 relative overflow-hidden">
-      {/* Dynamic Background Design */}
+      {/* Background Polish */}
       <div className="absolute top-0 right-0 w-[45%] h-full bg-blue-100/50 dark:bg-blue-900/10 -skew-x-12 transform translate-x-1/4 pointer-events-none transition-colors duration-500" />
       <div className="absolute top-[30%] left-[-5%] w-[400px] h-[400px] bg-indigo-200/40 dark:bg-indigo-900/10 rounded-full blur-[100px] pointer-events-none transition-colors duration-500" />
       
@@ -103,14 +103,17 @@ export const Contact: React.FC = () => {
           </div>
 
           <div className={`relative transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            {/* Form Overlay for Submitting State */}
+            {/* Submission Overlay */}
             {status === 'sending' && (
-              <div className="absolute inset-0 z-20 bg-white/20 dark:bg-slate-900/20 backdrop-blur-[1px] rounded-[3.5rem] flex items-center justify-center animate-in fade-in duration-300 pointer-events-none">
-                <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              <div className="absolute inset-0 z-20 bg-white/30 dark:bg-slate-900/30 backdrop-blur-[2px] rounded-[3.5rem] flex items-center justify-center animate-in fade-in duration-300">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                  <p className="text-sm font-black text-blue-600 uppercase tracking-widest animate-pulse">Establishing Connection...</p>
+                </div>
               </div>
             )}
             
-            <div className={`bg-white dark:bg-slate-900 p-10 md:p-16 rounded-[3.5rem] border-2 border-slate-200 dark:border-slate-800 shadow-[0_50px_100px_-30px_rgba(0,0,0,0.1)] dark:shadow-none transition-all duration-500 ${status === 'sending' ? 'scale-[0.985] blur-[0.5px]' : 'scale-100'}`}>
+            <div className={`bg-white dark:bg-slate-900 p-10 md:p-16 rounded-[3.5rem] border-2 border-slate-200 dark:border-slate-800 shadow-[0_50px_100px_-30px_rgba(0,0,0,0.1)] dark:shadow-none transition-all duration-500 ${status === 'sending' ? 'scale-[0.98] blur-[0.5px]' : 'scale-100'}`}>
               {status === 'success' ? (
                   <div className="h-full flex flex-col items-center justify-center text-center animate-in zoom-in-95 duration-700 py-20">
                     <div className="w-28 h-28 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-10 shadow-2xl shadow-green-500/20 relative">
@@ -125,7 +128,7 @@ export const Contact: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-10" noValidate>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-3 relative group">
-                      <label htmlFor="contact-name" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Full Name</label>
+                      <label htmlFor="contact-name" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700 dark:text-slate-300 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Full Name</label>
                       <input 
                           type="text" id="contact-name" name="name" aria-invalid={!!errors.name} 
                           className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.name ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-200 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300 font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
@@ -134,7 +137,7 @@ export const Contact: React.FC = () => {
                       {errors.name && <p className="text-red-600 dark:text-red-400 text-[11px] mt-2.5 flex items-center gap-2 font-black animate-in slide-in-from-top-1 fade-in duration-300"><AlertCircle size={14} /> {errors.name}</p>}
                     </div>
                     <div className="space-y-3 relative group">
-                      <label htmlFor="contact-email" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Business Email</label>
+                      <label htmlFor="contact-email" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700 dark:text-slate-300 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Business Email</label>
                       <input 
                           type="email" id="contact-email" name="email" aria-invalid={!!errors.email} 
                           className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.email ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-200 dark:border-slate-700'} rounded-2xl px-7 py-5 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300 font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
@@ -145,7 +148,7 @@ export const Contact: React.FC = () => {
                   </div>
                   
                   <div className="space-y-3 relative group">
-                    <label htmlFor="contact-message" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 dark:text-slate-400 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Tell us about your project</label>
+                    <label htmlFor="contact-message" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700 dark:text-slate-300 ml-1 group-focus-within:text-blue-600 transition-colors duration-300">Tell us about your project</label>
                     <textarea 
                         id="contact-message" name="message" aria-invalid={!!errors.message} rows={5} 
                         className={`w-full bg-slate-50 dark:bg-slate-800/80 border-2 ${errors.message ? 'border-red-500 animate-[shake_0.5s_ease-in-out]' : 'border-slate-200 dark:border-slate-700'} rounded-[2.5rem] px-7 py-6 text-slate-900 dark:text-white focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all duration-300 resize-none font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 shadow-sm focus:shadow-2xl focus:shadow-blue-500/5`} 
@@ -167,7 +170,7 @@ export const Contact: React.FC = () => {
                         </div>
                       ) : (
                         <span className="flex items-center gap-4">
-                          Submit Project Idea
+                          Launch Project Idea
                           <Send size={24} className="transform rotate-12 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:-translate-y-1.5" />
                         </span>
                       )}

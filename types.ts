@@ -14,11 +14,15 @@ export interface Project {
   imageUrl: string;
   description: string;
   fullDescription?: string;
+  problemStatement?: string;
+  technicalApproach?: string;
+  results?: string;
   technologies?: string[];
   link?: string;
   demoVideoUrl?: string;
   captionsUrl?: string;
   duration?: string;
+  status?: 'Completed' | 'In Progress' | 'Maintenance';
 }
 
 export interface Testimonial {
