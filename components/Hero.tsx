@@ -35,7 +35,7 @@ export const Hero: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Canvas Animation - High-performance fallback for Lottie dependencies
+    // Canvas Animation - High-performance fallback system
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
