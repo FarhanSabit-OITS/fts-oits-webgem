@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart, Twitter, Linkedin, Facebook } from 'lucide-react';
-import { PROJECTS } from '../constants';
+// Import COMPANY_NAME from constants
+import { PROJECTS, COMPANY_NAME } from '../constants';
 import { SectionId, Project } from '../types';
 
 const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => void }) => {
@@ -119,38 +121,44 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
 };
 
 const ShareButtons = ({ project }: { project: Project }) => {
-  const shareUrl = encodeURIComponent(window.location.href);
-  const title = encodeURIComponent(`Check out this project: ${project.title}`);
+  const currentUrl = window.location.href;
+  const shareText = `Check out "${project.title}" by ${COMPANY_NAME}`;
+  
+  const shares = [
+    {
+      name: 'Twitter',
+      icon: Twitter,
+      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`,
+      color: 'hover:bg-sky-500'
+    },
+    {
+      name: 'LinkedIn',
+      icon: Linkedin,
+      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`,
+      color: 'hover:bg-blue-700'
+    },
+    {
+      name: 'Facebook',
+      icon: Facebook,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
+      color: 'hover:bg-blue-600'
+    }
+  ];
 
   return (
-    <div className="flex gap-2 mt-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <a 
-        href={`https://twitter.com/intent/tweet?text=${title}&url=${shareUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="p-2 bg-slate-900/80 hover:bg-blue-400 text-white rounded-full transition-all border border-white/20"
-        aria-label="Share project on Twitter"
-      >
-        <Twitter size={14} />
-      </a>
-      <a 
-        href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="p-2 bg-slate-900/80 hover:bg-blue-700 text-white rounded-full transition-all border border-white/20"
-        aria-label="Share project on LinkedIn"
-      >
-        <Linkedin size={14} />
-      </a>
-      <a 
-        href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="p-2 bg-slate-900/80 hover:bg-blue-600 text-white rounded-full transition-all border border-white/20"
-        aria-label="Share project on Facebook"
-      >
-        <Facebook size={14} />
-      </a>
+    <div className="flex items-center gap-2 mt-4 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200">
+      {shares.map((social) => (
+        <a 
+          key={social.name}
+          href={social.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Share ${project.title} on ${social.name}`}
+          className={`p-2.5 bg-slate-900/40 backdrop-blur-md rounded-full text-white/80 hover:text-white transition-all duration-300 border border-white/10 ${social.color} hover:scale-110 active:scale-90`}
+        >
+          <social.icon size={14} />
+        </a>
+      ))}
     </div>
   );
 };
@@ -304,21 +312,27 @@ export const Portfolio: React.FC = () => {
                   src={project.imageUrl} 
                   alt={project.title} 
                   loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[2px]"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[3px]"
                 />
-                <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/70 transition-all duration-500 backdrop-blur-0 group-hover:backdrop-blur-[2px] border-2 border-transparent group-hover:border-blue-500/30 rounded-[2.5rem]" />
+                <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/80 transition-all duration-500 backdrop-blur-0 group-hover:backdrop-blur-[4px] border-2 border-transparent group-hover:border-blue-500/30 rounded-[2.5rem]" />
                 
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                   <div className="transform translate-y-6 group-hover:translate-y-0 transition-all duration-500 delay-75 space-y-4 text-center">
-                     <button 
-                       onClick={(e) => { e.stopPropagation(); handleProjectInteraction(project); }}
-                       className="flex items-center justify-center gap-3 px-8 py-4 bg-white text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-2xl ring-2 ring-white/20"
-                       aria-label={`View details for ${project.title}`}
-                     >
-                       <Eye size={18} /> {project.caseStudyUrl ? 'Open Case Study' : 'View Details'}
-                     </button>
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                   <div className="transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 delay-75 space-y-5 text-center px-4">
+                     <p className="text-white/90 text-sm font-bold leading-relaxed mb-4 line-clamp-2 max-w-xs mx-auto drop-shadow-md">
+                       {project.description}
+                     </p>
                      
-                     <ShareButtons project={project} />
+                     <div className="flex flex-col items-center gap-4">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleProjectInteraction(project); }}
+                          className="flex items-center justify-center gap-3 px-8 py-3.5 bg-white text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-2xl ring-2 ring-white/20 border-none outline-none"
+                          aria-label={`View details for ${project.title}`}
+                        >
+                          <Eye size={18} /> {project.caseStudyUrl ? 'Open Case Study' : 'View Details'}
+                        </button>
+                        
+                        <ShareButtons project={project} />
+                     </div>
                    </div>
                 </div>
 
