@@ -88,7 +88,7 @@ export const Services: React.FC = () => {
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               <div className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-125 group-hover:shadow-blue-500/40 group-hover:rotate-6">
-                <div className="transition-all duration-500 group-hover:animate-subtle-bounce group-hover:rotate-12">
+                <div className="transition-all duration-500 group-hover:rotate-12 transform-gpu">
                   {iconMap[service.icon]}
                 </div>
               </div>

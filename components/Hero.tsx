@@ -190,7 +190,7 @@ export const Hero: React.FC = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl">
-          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50/90 dark:bg-blue-900/40 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-blue-100 dark:border-blue-800/50 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50/90 dark:bg-blue-900/40 backdrop-blur-sm text-blue-700 dark:text-blue-300 text-xs font-black uppercase tracking-widest mb-10 shadow-sm border border-blue-100 dark:border-blue-800/50 animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)]">
             <Terminal size={18} className="animate-pulse" />
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
@@ -199,7 +199,7 @@ export const Hero: React.FC = () => {
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-300 drop-shadow-sm'} inline-block animate-in fade-in slide-in-from-bottom-12 duration-1000 transform-gpu`}
+                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-300 drop-shadow-sm'} inline-block animate-in fade-in slide-in-from-bottom-12 duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] transform-gpu`}
                 style={{ animationDelay: `${i * 120}ms`, scale: isVisible ? '1' : '0.9' }}
               >
                 {word}
@@ -207,7 +207,7 @@ export const Hero: React.FC = () => {
             ))}
           </h1>
 
-          <div className="relative mb-14 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-[800ms]">
+          <div className="relative mb-14 animate-in fade-in slide-in-from-bottom-10 duration-[1200ms] delay-[800ms] ease-[cubic-bezier(0.23,1,0.32,1)]">
             <div className="absolute -left-6 top-1 bottom-1 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full" />
             <p className="text-xl md:text-3xl text-slate-800 dark:text-slate-200 font-bold max-w-3xl leading-[1.35] pl-8 drop-shadow-sm">
               We architect high-performance digital systems for global disruptors. <br className="hidden md:block" />
@@ -215,7 +215,7 @@ export const Hero: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-[1100ms]">
+          <div className="flex flex-col sm:flex-row items-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-[1200ms] delay-[1100ms] ease-[cubic-bezier(0.23,1,0.32,1)]">
             <Button 
               variant="primary" 
               size="lg" 
@@ -236,14 +236,14 @@ export const Hero: React.FC = () => {
             </Button>
           </div>
 
-          <div className="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-12 animate-in fade-in duration-1000 delay-[1300ms]">
+          <div className="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-12 animate-in fade-in duration-[1500ms] delay-[1300ms]">
              {[
                { val: "150+", label: "Deliveries", color: "bg-blue-600" },
                { val: "50+", label: "Engineers", color: "bg-indigo-600" },
                { val: "98%", label: "Satisfaction", color: "bg-green-600" },
                { val: "24/7", label: "Support", color: "bg-yellow-500" }
              ].map((stat, i) => (
-               <div key={i} className="group cursor-default animate-in fade-in slide-in-from-bottom-8 duration-700" style={{ animationDelay: `${1400 + (i * 150)}ms` }}>
+               <div key={i} className="group cursor-default animate-in fade-in slide-in-from-bottom-8 duration-[1000ms]" style={{ animationDelay: `${1400 + (i * 150)}ms` }}>
                   <p className="text-glow text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">{stat.val}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <div className={`w-8 h-1 ${stat.color} rounded-full group-hover:w-12 transition-all duration-300`} />
