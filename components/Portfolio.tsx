@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ExternalLink, Play, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Sparkles, Target, Settings, BarChart } from 'lucide-react';
+import { ExternalLink, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { SectionId, Project } from '../types';
 
@@ -11,12 +11,10 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
       }
     };
 
-    // Prevent scrolling on the body when modal is open
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      // Restore scrolling when modal is closed
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -25,15 +23,14 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
   if (!project) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 animate-in fade-in duration-300" role="dialog" aria-modal="true">
-      {/* Backdrop with blur and dimming */}
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 animate-in fade-in duration-500 ease-out" role="dialog" aria-modal="true">
       <div 
-        className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" 
+        className="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity duration-500 ease-out" 
         onClick={onClose}
         aria-hidden="true"
       />
       
-      <div className="relative bg-white dark:bg-slate-900 w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-[3rem] shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-200 dark:border-slate-800 no-scrollbar">
+      <div className="relative bg-white dark:bg-slate-900 w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-[3rem] shadow-2xl animate-in zoom-in-90 duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] border border-slate-200 dark:border-slate-800 no-scrollbar">
         <button 
           onClick={onClose} 
           aria-label="Close project modal" 
@@ -131,7 +128,6 @@ export const Portfolio: React.FC = () => {
   const categories = ['All', ...new Set(PROJECTS.map(p => p.category))];
   const statuses = ['All', 'Completed', 'In Progress', 'Maintenance'];
   
-  // Calculate counts based on current filters
   const getCategoryCount = (cat: string) => {
     return PROJECTS.filter(p => (cat === 'All' || p.category === cat) && (statusFilter === 'All' || p.status === statusFilter)).length;
   };
@@ -164,6 +160,14 @@ export const Portfolio: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
+  const handleProjectInteraction = (project: Project) => {
+    if (project.caseStudyUrl) {
+      window.open(project.caseStudyUrl, '_blank');
+    } else {
+      setSelectedProject(project);
+    }
+  };
+
   return (
     <section ref={sectionRef} id={SectionId.PORTFOLIO} className="py-32 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 relative overflow-hidden">
       <div className="container mx-auto px-6">
@@ -174,7 +178,6 @@ export const Portfolio: React.FC = () => {
           </div>
           
           <div className="flex flex-col gap-6 w-full lg:w-auto">
-            {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
               <span className="w-full text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center gap-2">
                 <Filter size={12} /> Categories
@@ -199,7 +202,6 @@ export const Portfolio: React.FC = () => {
               ))}
             </div>
 
-            {/* Status Filter */}
             <div className="flex flex-wrap gap-2">
               <span className="w-full text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center gap-2">
                 <CheckCircle size={12} /> Project Status
@@ -243,7 +245,7 @@ export const Portfolio: React.FC = () => {
               className={`group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 transition-all duration-500 ease-out hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2 dark:hover:shadow-blue-900/10 transform-gpu ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-24 scale-95'}`}
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <div className="aspect-video overflow-hidden relative cursor-pointer" onClick={() => setSelectedProject(project)}>
+              <div className="aspect-video overflow-hidden relative cursor-pointer" onClick={() => handleProjectInteraction(project)}>
                 <img 
                   src={project.imageUrl} 
                   alt={project.title} 
@@ -255,10 +257,11 @@ export const Portfolio: React.FC = () => {
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                    <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">
                      <button 
+                       onClick={(e) => { e.stopPropagation(); handleProjectInteraction(project); }}
                        className="flex items-center gap-2 px-6 py-3 bg-white text-slate-950 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-xl"
                        aria-label={`View details for ${project.title}`}
                      >
-                       <Eye size={16} /> View Details
+                       <Eye size={16} /> {project.caseStudyUrl ? 'Open Case Study' : 'View Details'}
                      </button>
                    </div>
                 </div>
@@ -272,7 +275,12 @@ export const Portfolio: React.FC = () => {
 
               <div className="p-10">
                 <div className="flex justify-between items-start mb-6">
-                  <h4 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-pointer" onClick={() => setSelectedProject(project)}>{project.title}</h4>
+                  <h4 
+                    className="text-2xl font-black text-slate-950 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-pointer" 
+                    onClick={() => handleProjectInteraction(project)}
+                  >
+                    {project.title}
+                  </h4>
                   <div className="flex flex-col items-end gap-2">
                     {project.status === 'Completed' ? (
                       <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 dark:bg-green-900/20 rounded-full border border-green-100 dark:border-green-800/50">
@@ -310,7 +318,7 @@ export const Portfolio: React.FC = () => {
                     <Clock size={14} /> {project.duration || '3-4 Months'}
                   </div>
                   <button 
-                    onClick={() => setSelectedProject(project)}
+                    onClick={() => handleProjectInteraction(project)}
                     className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-[0.2em] hover:translate-x-1.5 transition-transform flex items-center gap-2 group/cta" 
                     aria-label={`View comprehensive case study for ${project.title}`}
                   >

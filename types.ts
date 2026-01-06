@@ -19,6 +19,7 @@ export interface Project {
   results?: string;
   technologies?: string[];
   link?: string;
+  caseStudyUrl?: string;
   demoVideoUrl?: string;
   captionsUrl?: string;
   duration?: string;
