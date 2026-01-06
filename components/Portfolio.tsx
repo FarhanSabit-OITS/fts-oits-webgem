@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ExternalLink, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart } from 'lucide-react';
+import { ExternalLink, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart, Twitter, Linkedin, Facebook } from 'lucide-react';
 import { PROJECTS } from '../constants';
 import { SectionId, Project } from '../types';
 
@@ -118,6 +118,43 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
   );
 };
 
+const ShareButtons = ({ project }: { project: Project }) => {
+  const shareUrl = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent(`Check out this project: ${project.title}`);
+
+  return (
+    <div className="flex gap-2 mt-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <a 
+        href={`https://twitter.com/intent/tweet?text=${title}&url=${shareUrl}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-2 bg-slate-900/80 hover:bg-blue-400 text-white rounded-full transition-all border border-white/20"
+        aria-label="Share project on Twitter"
+      >
+        <Twitter size={14} />
+      </a>
+      <a 
+        href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-2 bg-slate-900/80 hover:bg-blue-700 text-white rounded-full transition-all border border-white/20"
+        aria-label="Share project on LinkedIn"
+      >
+        <Linkedin size={14} />
+      </a>
+      <a 
+        href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="p-2 bg-slate-900/80 hover:bg-blue-600 text-white rounded-full transition-all border border-white/20"
+        aria-label="Share project on Facebook"
+      >
+        <Facebook size={14} />
+      </a>
+    </div>
+  );
+};
+
 export const Portfolio: React.FC = () => {
   const [filter, setFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -168,6 +205,15 @@ export const Portfolio: React.FC = () => {
     }
   };
 
+  const [activeAnimate, setActiveAnimate] = useState<string | null>(null);
+
+  const applyFilter = (type: 'cat' | 'stat', val: string) => {
+    setActiveAnimate(val);
+    if (type === 'cat') setFilter(val);
+    else setStatusFilter(val);
+    setTimeout(() => setActiveAnimate(null), 300);
+  };
+
   return (
     <section ref={sectionRef} id={SectionId.PORTFOLIO} className="py-32 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 relative overflow-hidden">
       <div className="container mx-auto px-6">
@@ -178,6 +224,7 @@ export const Portfolio: React.FC = () => {
           </div>
           
           <div className="flex flex-col gap-6 w-full lg:w-auto">
+            {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
               <span className="w-full text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center gap-2">
                 <Filter size={12} /> Categories
@@ -185,23 +232,27 @@ export const Portfolio: React.FC = () => {
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setFilter(cat)}
-                  aria-label={`Filter by ${cat} category`}
+                  onClick={() => applyFilter('cat', cat)}
+                  aria-label={`Filter by ${cat} category. ${getCategoryCount(cat)} projects available.`}
                   aria-pressed={filter === cat}
-                  className={`group px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-300 flex items-center gap-2 active:scale-95 ${
+                  className={`group px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 flex items-center gap-2 active:scale-95 transform-gpu ${
                     filter === cat 
                       ? 'bg-slate-950 text-white dark:bg-blue-600 shadow-xl ring-2 ring-slate-950 dark:ring-blue-600 ring-offset-2 dark:ring-offset-slate-950 scale-105' 
                       : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-slate-800 hover:scale-105 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
+                  } ${activeAnimate === cat ? 'animate-[subtle-bounce_0.3s_ease-in-out]' : ''}`}
                 >
                   {cat}
-                  <span className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center transition-colors ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
+                  <span 
+                    aria-label={`${getCategoryCount(cat)} items`}
+                    className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center transition-colors font-black ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}
+                  >
                     {getCategoryCount(cat)}
                   </span>
                 </button>
               ))}
             </div>
 
+            {/* Status Filter */}
             <div className="flex flex-wrap gap-2">
               <span className="w-full text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center gap-2">
                 <CheckCircle size={12} /> Project Status
@@ -209,17 +260,20 @@ export const Portfolio: React.FC = () => {
               {statuses.map((stat) => (
                 <button
                   key={stat}
-                  onClick={() => setStatusFilter(stat)}
-                  aria-label={`Filter by ${stat} status`}
+                  onClick={() => applyFilter('stat', stat)}
+                  aria-label={`Filter by ${stat} status. ${getStatusCount(stat)} projects available.`}
                   aria-pressed={statusFilter === stat}
-                  className={`group px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-300 flex items-center gap-2 active:scale-95 ${
+                  className={`group px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 flex items-center gap-2 active:scale-95 transform-gpu ${
                     statusFilter === stat 
                       ? 'bg-blue-600 text-white shadow-xl ring-2 ring-blue-600 ring-offset-2 dark:ring-offset-slate-950 scale-105' 
                       : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-slate-800 hover:scale-105 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
+                  } ${activeAnimate === stat ? 'animate-[subtle-bounce_0.3s_ease-in-out]' : ''}`}
                 >
                   {stat}
-                  <span className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center transition-colors ${statusFilter === stat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
+                  <span 
+                    aria-label={`${getStatusCount(stat)} items`}
+                    className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center transition-colors font-black ${statusFilter === stat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}
+                  >
                     {getStatusCount(stat)}
                   </span>
                 </button>
@@ -242,7 +296,7 @@ export const Portfolio: React.FC = () => {
           {filteredProjects.length > 0 ? filteredProjects.map((project, index) => (
             <div 
               key={project.id}
-              className={`group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 transition-all duration-500 ease-out hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2 dark:hover:shadow-blue-900/10 transform-gpu ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-24 scale-95'}`}
+              className={`group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 transition-all duration-500 ease-out hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2 dark:hover:shadow-blue-900/20 transform-gpu ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-24 scale-95'}`}
               style={{ transitionDelay: `${index * 80}ms` }}
             >
               <div className="aspect-video overflow-hidden relative cursor-pointer" onClick={() => handleProjectInteraction(project)}>
@@ -250,24 +304,26 @@ export const Portfolio: React.FC = () => {
                   src={project.imageUrl} 
                   alt={project.title} 
                   loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[1px]"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[2px]"
                 />
-                <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/70 transition-colors duration-500" />
+                <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/70 transition-all duration-500 backdrop-blur-0 group-hover:backdrop-blur-[2px] border-2 border-transparent group-hover:border-blue-500/30 rounded-[2.5rem]" />
                 
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                   <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">
+                   <div className="transform translate-y-6 group-hover:translate-y-0 transition-all duration-500 delay-75 space-y-4 text-center">
                      <button 
                        onClick={(e) => { e.stopPropagation(); handleProjectInteraction(project); }}
-                       className="flex items-center gap-2 px-6 py-3 bg-white text-slate-950 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-xl"
+                       className="flex items-center justify-center gap-3 px-8 py-4 bg-white text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-2xl ring-2 ring-white/20"
                        aria-label={`View details for ${project.title}`}
                      >
-                       <Eye size={16} /> {project.caseStudyUrl ? 'Open Case Study' : 'View Details'}
+                       <Eye size={18} /> {project.caseStudyUrl ? 'Open Case Study' : 'View Details'}
                      </button>
+                     
+                     <ShareButtons project={project} />
                    </div>
                 </div>
 
-                <div className="absolute top-4 left-4">
-                  <span className="px-4 py-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 shadow-xl border border-white/20">
+                <div className="absolute top-6 left-6">
+                  <span className="px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 shadow-xl border border-white/10">
                     {project.category}
                   </span>
                 </div>
@@ -301,9 +357,14 @@ export const Portfolio: React.FC = () => {
                       key={tech} 
                       className="relative group/tech"
                     >
-                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
+                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
                         <Tag size={10} /> {tech}
                       </span>
+                      {/* Tooltip */}
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-950 text-white text-[10px] font-black uppercase rounded-lg opacity-0 group-hover/tech:opacity-100 transition-all pointer-events-none whitespace-nowrap shadow-2xl border border-slate-800 z-20 translate-y-1 group-hover/tech:translate-y-0">
+                        {tech}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-950"></div>
+                      </div>
                     </div>
                   ))}
                   {(project.technologies?.length || 0) > 3 && (
@@ -314,12 +375,12 @@ export const Portfolio: React.FC = () => {
                 </div>
 
                 <div className="flex items-center justify-between pt-8 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-wider">
+                  <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-wider">
                     <Clock size={14} /> {project.duration || '3-4 Months'}
                   </div>
                   <button 
                     onClick={() => handleProjectInteraction(project)}
-                    className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-[0.2em] hover:translate-x-1.5 transition-transform flex items-center gap-2 group/cta" 
+                    className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-[0.2em] hover:translate-x-2 transition-transform flex items-center gap-2 group/cta" 
                     aria-label={`View comprehensive case study for ${project.title}`}
                   >
                     Case Study <ChevronRight size={14} className="group-hover/cta:translate-x-1 transition-transform" />
@@ -330,7 +391,7 @@ export const Portfolio: React.FC = () => {
           )) : (
             <div className="col-span-full flex flex-col items-center justify-center py-32 text-slate-400 animate-in fade-in zoom-in duration-500">
                <RotateCcw size={48} className="opacity-20 mb-8" />
-               <p className="text-xl font-bold text-slate-900 dark:text-white mb-2">No matching engineering artifacts.</p>
+               <p className="text-xl font-bold text-slate-900 dark:text-white mb-2 text-glow">No matching engineering artifacts.</p>
                <button onClick={resetFilters} aria-label="Clear filters and show all projects" className="mt-8 px-10 py-4 bg-slate-950 dark:bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-110 active:scale-95 transition-all shadow-2xl">Clear all filters</button>
             </div>
           )}

@@ -73,10 +73,7 @@ export const Hero: React.FC = () => {
           this.x += this.speedX;
           this.y += this.speedY;
 
-          // Parallax Y is offset by scroll
           const drawY = this.y - scrollOffset * 0.15;
-
-          // Mouse proximity force
           const dx = mouseData.x - this.x;
           const dy = mouseData.y - drawY;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -88,7 +85,6 @@ export const Hero: React.FC = () => {
             this.y -= (dy / distance) * force * 1.5;
           }
 
-          // Boundary wrap
           if (this.x > width) this.x = 0;
           if (this.x < 0) this.x = width;
           if (this.y > height + scrollOffset * 0.15) this.y = scrollOffset * 0.15;
@@ -124,7 +120,6 @@ export const Hero: React.FC = () => {
           p.draw(ctx, scrollY, isDark);
         });
 
-        // Constellation Lines
         const connectDistance = 150;
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
@@ -168,7 +163,6 @@ export const Hero: React.FC = () => {
   return (
     <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-500">
       
-      {/* High-Performance Native Canvas Background */}
       <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-60 dark:opacity-40" />
 
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -177,7 +171,6 @@ export const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white/95 dark:via-slate-950/40 dark:to-slate-950/95" />
       </div>
 
-      {/* Decorative Interactive Icons with enhanced Parallax */}
       <div 
         className="absolute top-[15%] left-[5%] hidden lg:block text-blue-600/20 dark:text-blue-400/20 transition-transform duration-300 ease-out will-change-transform"
         style={{ transform: `translate3d(${mousePos.x * -40}px, ${mousePos.y * -40}px, 0) rotate(${mousePos.x * 12}deg)` }}
@@ -202,7 +195,7 @@ export const Hero: React.FC = () => {
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          <h1 className="text-glow text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.85] tracking-tighter mb-10 flex flex-wrap gap-x-4">
+          <h1 className="text-glow text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.85] tracking-tighter mb-10 flex flex-wrap gap-x-4 drop-shadow-md">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
@@ -222,12 +215,12 @@ export const Hero: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-[1000ms]">
+          <div className="flex flex-col sm:flex-row items-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-[1100ms]">
             <Button 
               variant="primary" 
               size="lg" 
               onClick={scrollToContact} 
-              className="group w-full sm:w-auto shadow-2xl relative z-20"
+              className="group w-full sm:w-auto shadow-2xl relative z-20 font-black tracking-widest border-2 border-white/10 dark:border-blue-500/30"
               aria-label="Start your project with OITS Dhaka"
             >
               Start Your Project <ArrowRight className="ml-3 group-hover:translate-x-2 transition-transform" size={24} />
@@ -236,21 +229,21 @@ export const Hero: React.FC = () => {
               variant="outline" 
               size="lg" 
               onClick={scrollToServices} 
-              className="w-full sm:w-auto relative z-20 font-black"
+              className="w-full sm:w-auto relative z-20 font-black tracking-widest bg-white/20 backdrop-blur-md dark:bg-slate-900/40 border-slate-300 dark:border-slate-700 text-slate-950 dark:text-white hover:border-blue-600 dark:hover:border-blue-400"
               aria-label="Explore our full capability matrix"
             >
               Our Capabilities
             </Button>
           </div>
 
-          <div className="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-12 animate-in fade-in duration-1000 delay-[1200ms]">
+          <div className="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-12 animate-in fade-in duration-1000 delay-[1300ms]">
              {[
                { val: "150+", label: "Deliveries", color: "bg-blue-600" },
                { val: "50+", label: "Engineers", color: "bg-indigo-600" },
                { val: "98%", label: "Satisfaction", color: "bg-green-600" },
                { val: "24/7", label: "Support", color: "bg-yellow-500" }
              ].map((stat, i) => (
-               <div key={i} className="group cursor-default animate-in fade-in slide-in-from-bottom-8 duration-700" style={{ animationDelay: `${1300 + (i * 150)}ms` }}>
+               <div key={i} className="group cursor-default animate-in fade-in slide-in-from-bottom-8 duration-700" style={{ animationDelay: `${1400 + (i * 150)}ms` }}>
                   <p className="text-glow text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">{stat.val}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <div className={`w-8 h-1 ${stat.color} rounded-full group-hover:w-12 transition-all duration-300`} />
