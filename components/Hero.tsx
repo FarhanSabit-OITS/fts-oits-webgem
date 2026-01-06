@@ -250,7 +250,7 @@ export const Hero: React.FC = () => {
                { val: "98%", label: "Satisfaction", color: "bg-green-600" },
                { val: "24/7", label: "Support", color: "bg-yellow-500" }
              ].map((stat, i) => (
-               <div key={i} className="group cursor-default">
+               <div key={i} className="group cursor-default animate-in fade-in slide-in-from-bottom-8 duration-700" style={{ animationDelay: `${1300 + (i * 150)}ms` }}>
                   <p className="text-glow text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors drop-shadow-sm">{stat.val}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <div className={`w-8 h-1 ${stat.color} rounded-full group-hover:w-12 transition-all duration-300`} />

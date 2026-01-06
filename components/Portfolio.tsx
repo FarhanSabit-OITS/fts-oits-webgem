@@ -131,6 +131,7 @@ export const Portfolio: React.FC = () => {
   const categories = ['All', ...new Set(PROJECTS.map(p => p.category))];
   const statuses = ['All', 'Completed', 'In Progress', 'Maintenance'];
   
+  // Calculate counts based on current filters
   const getCategoryCount = (cat: string) => {
     return PROJECTS.filter(p => (cat === 'All' || p.category === cat) && (statusFilter === 'All' || p.status === statusFilter)).length;
   };
@@ -191,7 +192,7 @@ export const Portfolio: React.FC = () => {
                   }`}
                 >
                   {cat}
-                  <span className={`px-2 py-0.5 rounded-md text-[9px] transition-colors ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
+                  <span className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center transition-colors ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
                     {getCategoryCount(cat)}
                   </span>
                 </button>
@@ -216,7 +217,7 @@ export const Portfolio: React.FC = () => {
                   }`}
                 >
                   {stat}
-                  <span className={`px-2 py-0.5 rounded-md text-[9px] transition-colors ${statusFilter === stat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400'}`}>
+                  <span className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center transition-colors ${statusFilter === stat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
                     {getStatusCount(stat)}
                   </span>
                 </button>

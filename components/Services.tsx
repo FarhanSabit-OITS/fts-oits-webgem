@@ -87,8 +87,8 @@ export const Services: React.FC = () => {
               className={`group relative bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[3.5rem] p-12 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/40 hover:border-blue-500/30 ${isVisible ? 'opacity-100 translate-y-0 rotate-0 scale-100' : 'opacity-0 translate-y-32 rotate-[-12deg] scale-90'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              <div className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-125 group-hover:shadow-blue-500/40">
-                <div className="transition-all duration-500 group-hover:animate-subtle-bounce group-hover:rotate-12 group-hover:animate-slow-pulse">
+              <div className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-125 group-hover:shadow-blue-500/40 group-hover:rotate-6">
+                <div className="transition-all duration-500 group-hover:animate-subtle-bounce">
                   {iconMap[service.icon]}
                 </div>
               </div>
@@ -103,7 +103,7 @@ export const Services: React.FC = () => {
                   <span 
                     key={idx} 
                     className={`px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 shadow-sm transition-all duration-500 transform scale-75 opacity-0 translate-y-4 group-hover:scale-100 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 transform-gpu`}
-                    style={{ transitionDelay: `${(idx + 1) * 100}ms` }}
+                    style={{ transitionDelay: `${(idx + 1) * 80}ms` }}
                   >
                     {feature}
                   </span>
