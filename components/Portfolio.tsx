@@ -3,6 +3,124 @@ import { ExternalLink, Play, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, Ch
 import { PROJECTS } from '../constants';
 import { SectionId, Project } from '../types';
 
+const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => void }) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    // Prevent scrolling on the body when modal is open
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      // Restore scrolling when modal is closed
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
+  if (!project) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 animate-in fade-in duration-300" role="dialog" aria-modal="true">
+      {/* Backdrop with blur and dimming */}
+      <div 
+        className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" 
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      
+      <div className="relative bg-white dark:bg-slate-900 w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-[3rem] shadow-2xl animate-in zoom-in-95 duration-300 border border-slate-200 dark:border-slate-800 no-scrollbar">
+        <button 
+          onClick={onClose} 
+          aria-label="Close project modal" 
+          className="absolute top-6 right-6 z-20 p-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-500 hover:text-red-500 rounded-full transition-all hover:rotate-90 hover:scale-110 border border-slate-200 dark:border-slate-700 shadow-lg"
+        >
+          <X size={24} />
+        </button>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="h-full min-h-[300px] lg:min-h-[600px] relative group">
+            <img 
+              src={project.imageUrl} 
+              alt={`${project.title} project showcase`} 
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent lg:bg-gradient-to-r" />
+          </div>
+          
+          <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <span className="px-4 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-100 dark:border-blue-800/50">{project.category}</span>
+              <span className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full border ${
+                project.status === 'Completed' 
+                  ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800' 
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700'
+              }`}>
+                {project.status}
+              </span>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white mb-8 tracking-tighter leading-[1.1]">{project.title}</h2>
+            
+            <div className="space-y-10">
+              <section>
+                <div className="flex items-center gap-3 mb-3 text-blue-600 dark:text-blue-400">
+                  <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                    <Target size={18} />
+                  </div>
+                  <h3 className="text-xs font-black uppercase tracking-widest">The Challenge</h3>
+                </div>
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{project.problemStatement || project.description}</p>
+              </section>
+
+              <section>
+                <div className="flex items-center gap-3 mb-3 text-indigo-600 dark:text-indigo-400">
+                  <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                    <Settings size={18} />
+                  </div>
+                  <h3 className="text-xs font-black uppercase tracking-widest">Our Solution</h3>
+                </div>
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{project.technicalApproach || "Utilizing cutting-edge cloud architecture for maximum scalability."}</p>
+              </section>
+
+              <section>
+                <div className="flex items-center gap-3 mb-3 text-green-600 dark:text-green-400">
+                  <div className="p-2 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                    <BarChart size={18} />
+                  </div>
+                  <h3 className="text-xs font-black uppercase tracking-widest">Impact</h3>
+                </div>
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-bold">{project.results || "Significant performance improvements and operational efficiency."}</p>
+              </section>
+
+              <div className="flex flex-wrap gap-2 pt-4">
+                {project.technologies?.map(tech => (
+                  <span key={tech} className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-[10px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-default">{tech}</span>
+                ))}
+              </div>
+              
+              <div className="pt-8 mt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-4">
+                {project.link && (
+                  <a href={project.link} target="_blank" rel="noopener noreferrer" aria-label={`Visit live demo for ${project.title}`} className="flex items-center gap-3 px-8 py-4 bg-slate-950 dark:bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl hover:shadow-2xl">
+                    <ExternalLink size={18} /> Visit Project
+                  </a>
+                )}
+                <button onClick={onClose} className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:border-slate-200 dark:hover:border-slate-600">
+                  Close Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const Portfolio: React.FC = () => {
   const [filter, setFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -44,77 +162,6 @@ export const Portfolio: React.FC = () => {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
-
-  const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => void }) => {
-    if (!project) return null;
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-10 animate-in fade-in duration-300">
-        <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl" onClick={onClose} />
-        <div className="relative bg-white dark:bg-slate-900 w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-[3rem] shadow-2xl animate-in zoom-in-95 duration-300">
-          <button onClick={onClose} aria-label="Close project modal" className="absolute top-8 right-8 z-10 p-4 bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-red-500 rounded-full transition-all hover:rotate-90">
-            <X size={24} />
-          </button>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="h-full min-h-[400px]">
-              <img src={project.imageUrl} alt={`${project.title} project showcase`} className="w-full h-full object-cover" />
-            </div>
-            <div className="p-10 md:p-16">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="px-4 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest rounded-full">{project.category}</span>
-                <span className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-full">{project.status}</span>
-              </div>
-              
-              <h2 className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white mb-8 tracking-tighter">{project.title}</h2>
-              
-              <div className="space-y-12">
-                <section>
-                  <div className="flex items-center gap-3 mb-4 text-blue-600">
-                    <Target size={20} />
-                    <h3 className="text-sm font-black uppercase tracking-widest">Problem Statement</h3>
-                  </div>
-                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{project.problemStatement || project.description}</p>
-                </section>
-
-                <section>
-                  <div className="flex items-center gap-3 mb-4 text-indigo-600">
-                    <Settings size={20} />
-                    <h3 className="text-sm font-black uppercase tracking-widest">Technical Approach</h3>
-                  </div>
-                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{project.technicalApproach || "Our engineering team utilized a multi-layered microservices architecture to ensure scalability and reliability."}</p>
-                </section>
-
-                <section>
-                  <div className="flex items-center gap-3 mb-4 text-green-600">
-                    <BarChart size={20} />
-                    <h3 className="text-sm font-black uppercase tracking-widest">Quantifiable Results</h3>
-                  </div>
-                  <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium font-bold">{project.results || "Achieved 99.9% uptime and a significant reduction in operational overhead within the first 3 months."}</p>
-                </section>
-
-                <div className="flex flex-wrap gap-3">
-                  {project.technologies?.map(tech => (
-                    <span key={tech} className="px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{tech}</span>
-                  ))}
-                </div>
-                
-                <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-4">
-                  {project.link && (
-                    <a href={project.link} target="_blank" rel="noopener noreferrer" aria-label={`Visit live demo for ${project.title}`} className="flex items-center gap-3 px-8 py-4 bg-slate-950 dark:bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
-                      <ExternalLink size={18} /> Visit Project
-                    </a>
-                  )}
-                  <button onClick={onClose} aria-label="Close modal" className="px-8 py-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
-                    Close Details
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <section ref={sectionRef} id={SectionId.PORTFOLIO} className="py-32 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 relative overflow-hidden">
@@ -192,35 +239,29 @@ export const Portfolio: React.FC = () => {
           {filteredProjects.length > 0 ? filteredProjects.map((project, index) => (
             <div 
               key={project.id}
-              className={`group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 transition-all duration-1000 ease-out hover:shadow-2xl hover:-translate-y-4 transform-gpu ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-24 scale-95'}`}
+              className={`group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 transition-all duration-500 ease-out hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2 dark:hover:shadow-blue-900/10 transform-gpu ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-24 scale-95'}`}
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <div className="aspect-video overflow-hidden relative">
+              <div className="aspect-video overflow-hidden relative cursor-pointer" onClick={() => setSelectedProject(project)}>
                 <img 
                   src={project.imageUrl} 
                   alt={project.title} 
                   loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 group-hover:blur-[2px]"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[1px]"
                 />
-                <div className="absolute inset-0 bg-slate-950/80 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center p-10 text-center backdrop-blur-[6px]">
-                  <p className="text-white/90 text-sm font-medium mb-8 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100 leading-relaxed max-w-[280px]">
-                    {project.description}
-                  </p>
-                  <div className="flex gap-4 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-200">
-                    <button 
-                      onClick={() => setSelectedProject(project)}
-                      aria-label={`Quick view details for ${project.title}`}
-                      className="flex items-center gap-2 px-6 py-3 bg-white text-slate-950 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-xl"
-                    >
-                      <Eye size={16} /> Quick View
-                    </button>
-                    {project.link && (
-                      <a href={project.link} target="_blank" rel="noopener noreferrer" aria-label={`View live demo for ${project.title}`} className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-xl">
-                        <ExternalLink size={16} /> Live Demo
-                      </a>
-                    )}
-                  </div>
+                <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/70 transition-colors duration-500" />
+                
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                   <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">
+                     <button 
+                       className="flex items-center gap-2 px-6 py-3 bg-white text-slate-950 rounded-xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-xl"
+                       aria-label={`View details for ${project.title}`}
+                     >
+                       <Eye size={16} /> View Details
+                     </button>
+                   </div>
                 </div>
+
                 <div className="absolute top-4 left-4">
                   <span className="px-4 py-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 shadow-xl border border-white/20">
                     {project.category}
@@ -230,7 +271,7 @@ export const Portfolio: React.FC = () => {
 
               <div className="p-10">
                 <div className="flex justify-between items-start mb-6">
-                  <h4 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{project.title}</h4>
+                  <h4 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-pointer" onClick={() => setSelectedProject(project)}>{project.title}</h4>
                   <div className="flex flex-col items-end gap-2">
                     {project.status === 'Completed' ? (
                       <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 dark:bg-green-900/20 rounded-full border border-green-100 dark:border-green-800/50">
@@ -246,17 +287,21 @@ export const Portfolio: React.FC = () => {
                 </div>
                 
                 <div className="flex flex-wrap gap-2.5 mb-8">
-                  {project.technologies?.map(tech => (
+                  {project.technologies?.slice(0, 3).map(tech => (
                     <div 
                       key={tech} 
                       className="relative group/tech"
-                      title={`Built with ${tech}`}
                     >
-                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 group-hover/tech:bg-blue-600 group-hover/tech:text-white group-hover/tech:border-blue-600 transition-all cursor-help">
+                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
                         <Tag size={10} /> {tech}
                       </span>
                     </div>
                   ))}
+                  {(project.technologies?.length || 0) > 3 && (
+                     <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center px-2 py-1.5">
+                       +{ (project.technologies?.length || 0) - 3 } more
+                     </span>
+                  )}
                 </div>
 
                 <div className="flex items-center justify-between pt-8 border-t border-slate-100 dark:border-slate-800">
@@ -283,7 +328,6 @@ export const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      {/* Case Study Modal Overlay */}
       {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
     </section>
   );
