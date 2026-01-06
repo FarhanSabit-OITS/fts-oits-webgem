@@ -66,7 +66,7 @@ export const Services: React.FC = () => {
               {expertiseTitle.split(' ').map((word, i) => (
                 <span 
                   key={i} 
-                  className="mr-3 transition-all duration-500 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110 inline-block transform-gpu"
+                  className="mr-3 transition-all duration-500 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110 inline-block transform-gpu will-change-transform"
                   style={{ 
                     transform: isVisible ? `translate(${mousePos.x * (15 + i * 2)}px, ${mousePos.y * (10 + i * 1.5)}px)` : 'none'
                   }}
@@ -84,7 +84,7 @@ export const Services: React.FC = () => {
             <div 
               key={service.id} 
               id={`service-card-${service.id}`}
-              className={`group relative bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[3.5rem] p-12 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/40 hover:border-blue-500/30 ${isVisible ? 'opacity-100 translate-y-0 rotate-0 scale-100' : 'opacity-0 translate-y-32 rotate-[-12deg] scale-90'}`}
+              className={`group relative bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[3.5rem] p-12 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/40 hover:border-blue-500/30 transform-gpu ${isVisible ? 'opacity-100 translate-y-0 rotate-0 scale-100' : 'opacity-0 translate-y-32 rotate-[-10deg] scale-90'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
               <div className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-125 group-hover:shadow-blue-500/40 group-hover:rotate-6">
@@ -102,7 +102,7 @@ export const Services: React.FC = () => {
                 {service.features.map((feature, idx) => (
                   <span 
                     key={idx} 
-                    className={`px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 shadow-sm transition-all duration-500 transform scale-75 opacity-0 translate-y-4 group-hover:scale-100 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 transform-gpu`}
+                    className={`px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 shadow-sm transition-all duration-500 transform scale-50 opacity-0 translate-y-6 group-hover:scale-100 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-blue-600 hover:text-white hover:border-blue-600 dark:hover:bg-blue-600 transform-gpu`}
                     style={{ transitionDelay: `${(idx + 1) * 80}ms` }}
                   >
                     {feature}
@@ -128,7 +128,7 @@ export const Services: React.FC = () => {
                     role="tab" 
                     aria-selected={activeTab === domain.id} 
                     aria-label={`View ${domain.label} technologies`}
-                    className={`flex items-center gap-4 px-10 py-5 rounded-3xl text-xs font-black transition-all duration-300 whitespace-nowrap active:scale-95 ${activeTab === domain.id ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-2xl ring-2 ring-blue-500/20' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50'}`}
+                    className={`flex items-center gap-4 px-10 py-5 rounded-3xl text-xs font-black transition-all duration-300 whitespace-nowrap active:scale-95 transform-gpu ${activeTab === domain.id ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-2xl ring-2 ring-blue-500/20' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50'}`}
                   >
                     {domainIcons[domain.id]} {domain.label}
                   </button>
@@ -138,7 +138,7 @@ export const Services: React.FC = () => {
                 {TECH_DOMAINS.map((domain) => (
                   <div key={domain.id} className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 transition-all duration-700 ${activeTab === domain.id ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-8 absolute inset-0 pointer-events-none'}`} style={{ display: activeTab === domain.id ? 'grid' : 'none' }}>
                     {domain.skills.map((skill) => (
-                      <div key={skill} className="flex items-center gap-6 p-8 rounded-[2rem] bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-500 group cursor-default hover:bg-blue-600 hover:text-white hover:scale-105 hover:-translate-y-2 transform-gpu">
+                      <div key={skill} className="flex items-center gap-6 p-8 rounded-[2rem] bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 transition-all duration-500 group cursor-default hover:bg-blue-600 hover:text-white hover:scale-105 hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/20 dark:hover:shadow-blue-900/30 transform-gpu will-change-transform">
                          <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-blue-600 transition-all shadow-md group-hover:scale-110 group-hover:rotate-12"><Terminal size={24} /></div>
                          <span className="font-black text-slate-800 dark:text-slate-200 group-hover:text-white text-lg tracking-tight transition-colors duration-300">{skill}</span>
                       </div>
