@@ -1,7 +1,5 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart, Twitter, Linkedin, Facebook } from 'lucide-react';
-// Import COMPANY_NAME from constants
 import { PROJECTS, COMPANY_NAME } from '../constants';
 import { SectionId, Project } from '../types';
 
@@ -129,24 +127,24 @@ const ShareButtons = ({ project }: { project: Project }) => {
       name: 'Twitter',
       icon: Twitter,
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`,
-      color: 'hover:bg-sky-500'
+      color: 'hover:bg-sky-500 hover:border-sky-400'
     },
     {
       name: 'LinkedIn',
       icon: Linkedin,
       url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`,
-      color: 'hover:bg-blue-700'
+      color: 'hover:bg-blue-700 hover:border-blue-500'
     },
     {
       name: 'Facebook',
       icon: Facebook,
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
-      color: 'hover:bg-blue-600'
+      color: 'hover:bg-blue-600 hover:border-blue-400'
     }
   ];
 
   return (
-    <div className="flex items-center gap-3 mt-6 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200">
+    <div className="flex items-center gap-4 mt-6 animate-in fade-in slide-in-from-bottom-2 duration-500 delay-200 pointer-events-auto">
       {shares.map((social) => (
         <a 
           key={social.name}
@@ -154,10 +152,10 @@ const ShareButtons = ({ project }: { project: Project }) => {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Share ${project.title} on ${social.name}`}
-          className={`p-3 bg-white/10 backdrop-blur-md rounded-full text-white hover:text-white transition-all duration-300 border border-white/20 ${social.color} hover:scale-110 active:scale-95 hover:border-white/40 shadow-lg`}
+          className={`group flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-md rounded-full text-white transition-all duration-300 border border-white/20 ${social.color} hover:scale-110 active:scale-95 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] z-50`}
           onClick={(e) => e.stopPropagation()}
         >
-          <social.icon size={16} />
+          <social.icon size={20} className="drop-shadow-md" />
         </a>
       ))}
     </div>
@@ -315,18 +313,20 @@ export const Portfolio: React.FC = () => {
                   loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[3px]"
                 />
-                <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-slate-900/90 transition-all duration-500 backdrop-blur-0 group-hover:backdrop-blur-sm border-2 border-transparent group-hover:border-white/10 rounded-[2.5rem]" />
                 
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out">
-                   <div className="transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 delay-100 space-y-5 text-center px-4 w-full">
-                     <p className="text-white text-sm font-bold leading-relaxed mb-6 line-clamp-2 drop-shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-200">
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/80 transition-all duration-500 backdrop-blur-[0px] group-hover:backdrop-blur-md border-2 border-transparent group-hover:border-white/10 rounded-[2.5rem]" />
+                
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out z-10">
+                   <div className="transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 delay-100 space-y-6 text-center px-4 w-full">
+                     <p className="text-white text-base font-bold leading-relaxed line-clamp-2 drop-shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-200">
                        {project.description}
                      </p>
                      
-                     <div className="flex flex-col items-center gap-4">
+                     <div className="flex flex-col items-center gap-5">
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleProjectInteraction(project); }}
-                          className="flex items-center justify-center gap-3 px-8 py-3.5 bg-white text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-2xl ring-2 ring-white/20 border-none outline-none"
+                          className="flex items-center justify-center gap-3 px-8 py-3.5 bg-white text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-2xl ring-2 ring-white/20 border-none outline-none z-50 pointer-events-auto"
                           aria-label={`View details for ${project.title}`}
                         >
                           <Eye size={18} /> {project.caseStudyUrl ? 'Open Case Study' : 'View Details'}
@@ -395,25 +395,28 @@ export const Portfolio: React.FC = () => {
                   </div>
                   <button 
                     onClick={() => handleProjectInteraction(project)}
-                    className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-[0.2em] hover:translate-x-2 transition-transform flex items-center gap-2 group/cta" 
-                    aria-label={`View comprehensive case study for ${project.title}`}
+                    className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-widest hover:underline flex items-center gap-1"
                   >
-                    Case Study <ChevronRight size={14} className="group-hover/cta:translate-x-1 transition-transform" />
+                    View Details <ChevronRight size={14} />
                   </button>
                 </div>
               </div>
             </div>
           )) : (
-            <div className="col-span-full flex flex-col items-center justify-center py-32 text-slate-400 animate-in fade-in zoom-in duration-500">
-               <RotateCcw size={48} className="opacity-20 mb-8" />
-               <p className="text-xl font-bold text-slate-900 dark:text-white mb-2 text-glow">No matching engineering artifacts.</p>
-               <button onClick={resetFilters} aria-label="Clear filters and show all projects" className="mt-8 px-10 py-4 bg-slate-950 dark:bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-110 active:scale-95 transition-all shadow-2xl">Clear all filters</button>
+            <div className="col-span-full py-20 text-center animate-in fade-in duration-500">
+              <div className="inline-block p-6 rounded-full bg-slate-50 dark:bg-slate-800 mb-4 animate-pulse">
+                <Filter size={48} className="text-slate-300 dark:text-slate-600" />
+              </div>
+              <p className="text-slate-500 dark:text-slate-400 text-lg font-bold">No projects found with current filters.</p>
+              <button onClick={resetFilters} className="mt-4 text-blue-600 dark:text-blue-400 font-bold hover:underline">Clear Filters</button>
             </div>
           )}
         </div>
       </div>
 
-      {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
+      {selectedProject && (
+        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      )}
     </section>
   );
 };

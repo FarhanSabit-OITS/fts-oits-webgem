@@ -23,9 +23,10 @@ export const Hero: React.FC = () => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     
     const handleMouseMove = (e: MouseEvent) => {
+      // Increased sensitivity for deeper immersion
       setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 2,
-        y: (e.clientY / window.innerHeight - 0.5) * 2,
+        x: (e.clientX / window.innerWidth - 0.5) * 4,
+        y: (e.clientY / window.innerHeight - 0.5) * 4,
       });
     };
 
@@ -43,7 +44,7 @@ export const Hero: React.FC = () => {
       {/* Lottie Background Animation */}
       <div className="absolute inset-0 z-0 overflow-hidden opacity-80 dark:opacity-60 pointer-events-none">
          <DotLottiePlayer
-            src="https://lottie.host/4db68bbd-31f6-4cd8-84eb-189de081159a/12406859.json"
+            src="https://assets5.lottiefiles.com/packages/lf20_tno6cg2w.json"
             background="transparent"
             speed="0.5"
             style={{ width: '100%', height: '100%' }}
@@ -52,21 +53,21 @@ export const Hero: React.FC = () => {
         ></DotLottiePlayer>
       </div>
 
-      {/* Readability Gradient Overlay - Enhanced for better text contrast */}
+      {/* Readability Gradient Overlay */}
       <div className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50/95 via-slate-50/90 to-slate-50/20 dark:from-slate-950/95 dark:via-slate-950/90 dark:to-slate-950/30 pointer-events-none" />
 
-      {/* Decorative Parallax Icons - Enhanced Depth */}
+      {/* Decorative Parallax Icons - Enhanced Depth & Interactivity */}
       <div 
-        className="absolute top-[20%] left-[5%] hidden xl:block text-blue-600 dark:text-blue-400 opacity-20 transition-all duration-700 ease-out will-change-transform z-0"
-        style={{ transform: `translate3d(${mousePos.x * -40}px, ${mousePos.y * -40}px, 0) rotate(${mousePos.x * 10}deg)` }}
+        className="absolute top-[20%] left-[5%] hidden xl:block text-blue-600 dark:text-blue-400 opacity-20 transition-all duration-300 ease-out will-change-transform z-0"
+        style={{ transform: `translate3d(${mousePos.x * -15}px, ${mousePos.y * -15}px, 0) rotate(${mousePos.x * 2}deg)` }}
       >
         <div className="bg-white/40 dark:bg-slate-800/40 p-6 rounded-3xl backdrop-blur-xl border border-white/30 dark:border-slate-700/30 shadow-2xl">
           <Code2 size={64} strokeWidth={1} />
         </div>
       </div>
       <div 
-        className="absolute bottom-[20%] right-[5%] hidden xl:block text-indigo-600 dark:text-indigo-400 opacity-20 transition-all duration-700 ease-out will-change-transform z-0"
-        style={{ transform: `translate3d(${mousePos.x * -60}px, ${mousePos.y * -60}px, 0) rotate(${mousePos.y * -15}deg)` }}
+        className="absolute bottom-[20%] right-[5%] hidden xl:block text-indigo-600 dark:text-indigo-400 opacity-20 transition-all duration-300 ease-out will-change-transform z-0"
+        style={{ transform: `translate3d(${mousePos.x * -25}px, ${mousePos.y * -25}px, 0) rotate(${mousePos.y * -3}deg)` }}
       >
         <div className="bg-white/40 dark:bg-slate-800/40 p-8 rounded-3xl backdrop-blur-xl border border-white/30 dark:border-slate-700/30 shadow-2xl">
           <Cpu size={80} strokeWidth={1} />
@@ -81,17 +82,16 @@ export const Hero: React.FC = () => {
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          {/* Animated Tagline with Pronounced Stagger and Enhanced Visibility */}
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-xl text-glow">
+          {/* Animated Tagline with Pronounced Stagger */}
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-xl text-glow perspective-1000">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400'} inline-block transition-all duration-[1200ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu`}
+                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
                 style={{ 
-                  transitionDelay: `${100 + i * 200}ms`,
+                  transitionDelay: `${150 + i * 150}ms`,
                   opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.8)',
-                  // Additional shadow for gradient text to ensure it pops against any background
+                  transform: isVisible ? 'translateY(0) scale(1) rotateX(0)' : 'translateY(40px) scale(0.9) rotateX(10deg)',
                   filter: i >= 2 ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))' : 'none'
                 }}
               >
@@ -100,10 +100,10 @@ export const Hero: React.FC = () => {
             ))}
           </h1>
 
-          {/* Description - Added backdrop-blur logic for absolute readability */}
+          {/* Description */}
           <div 
-            className={`relative mb-14 transition-all duration-[1500ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-            style={{ transitionDelay: '900ms' }}
+            className={`relative mb-14 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+            style={{ transitionDelay: '800ms' }}
           >
             <div className="absolute -left-8 top-2 bottom-2 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full opacity-80" />
             <p className="text-2xl md:text-3xl lg:text-4xl text-slate-900 dark:text-slate-100 font-bold max-w-3xl leading-snug pl-8 drop-shadow-lg text-glow">
@@ -112,10 +112,10 @@ export const Hero: React.FC = () => {
             </p>
           </div>
 
-          {/* Buttons with High Contrast for Dynamic Background */}
+          {/* Buttons */}
           <div 
-            className={`flex flex-col sm:flex-row items-center gap-6 transition-all duration-[1400ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
-            style={{ transitionDelay: '1200ms' }}
+            className={`flex flex-col sm:flex-row items-center gap-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
+            style={{ transitionDelay: '1000ms' }}
           >
             <Button 
               variant="primary" 
@@ -137,10 +137,10 @@ export const Hero: React.FC = () => {
             </Button>
           </div>
 
-          {/* Stats Grid - Enhanced contrast */}
+          {/* Stats Grid */}
           <div 
-            className={`mt-24 pt-12 border-t border-slate-200 dark:border-slate-800/60 grid grid-cols-2 md:grid-cols-4 gap-12 transition-all duration-[1800ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-            style={{ transitionDelay: '1400ms' }}
+            className={`mt-24 pt-12 border-t border-slate-200 dark:border-slate-800/60 grid grid-cols-2 md:grid-cols-4 gap-12 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+            style={{ transitionDelay: '1200ms' }}
           >
              {[
                { val: "150+", label: "Deliveries", color: "bg-blue-600" },
@@ -152,7 +152,7 @@ export const Hero: React.FC = () => {
                  key={i} 
                  className="group cursor-default transition-all duration-1000 transform-gpu ease-out"
                  style={{ 
-                   transitionDelay: `${1500 + (i * 150)}ms`,
+                   transitionDelay: `${1300 + (i * 100)}ms`,
                    transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
                    opacity: isVisible ? 1 : 0
                  }}
