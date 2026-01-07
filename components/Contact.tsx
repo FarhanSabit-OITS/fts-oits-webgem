@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
@@ -86,6 +87,21 @@ export const Contact: React.FC = () => {
                     <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">HQ Studio</p>
                     <p className="font-bold text-slate-900 dark:text-slate-100 leading-relaxed text-lg">{ADDRESS}</p>
                  </div>
+              </div>
+
+              {/* Embedded Map */}
+              <div className="w-full h-64 md:h-80 rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-800 shadow-xl mt-6">
+                <iframe 
+                  src={mapUrl} 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="OITS Dhaka Location"
+                  className="grayscale hover:grayscale-0 transition-all duration-700"
+                />
               </div>
             </div>
           </div>

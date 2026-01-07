@@ -1,6 +1,7 @@
+
 import React from 'react';
-import { Terminal, Github, Linkedin, Twitter, Facebook, Sun, Moon } from 'lucide-react';
-import { COMPANY_NAME, NAV_ITEMS, SERVICES } from '../constants';
+import { Terminal, Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin } from 'lucide-react';
+import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS } from '../constants';
 import { SectionId } from '../types';
 
 interface FooterProps {
@@ -60,6 +61,17 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
             <p className="text-sm leading-relaxed text-slate-400">
               Empowering businesses through innovative software solutions. Your digital transformation partner.
             </p>
+            
+            <a 
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-start gap-3 text-sm text-slate-400 hover:text-white transition-colors group"
+            >
+              <MapPin size={18} className="mt-0.5 text-blue-500 group-hover:text-blue-400" />
+              <span>{ADDRESS}</span>
+            </a>
+
             <div className="flex gap-2">
               <SocialLink href="#" icon={Github} label="GitHub" />
               <SocialLink href="#" icon={Linkedin} label="LinkedIn" />
