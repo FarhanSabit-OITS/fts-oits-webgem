@@ -52,8 +52,8 @@ export const Hero: React.FC = () => {
         ></DotLottiePlayer>
       </div>
 
-      {/* Readability Gradient Overlay */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-r from-white/95 via-white/80 to-white/10 dark:from-slate-950/95 dark:via-slate-950/80 dark:to-slate-950/20 pointer-events-none" />
+      {/* Readability Gradient Overlay - Enhanced for better text contrast */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50/95 via-slate-50/90 to-slate-50/20 dark:from-slate-950/95 dark:via-slate-950/90 dark:to-slate-950/30 pointer-events-none" />
 
       {/* Decorative Parallax Icons - Enhanced Depth */}
       <div 
@@ -81,17 +81,18 @@ export const Hero: React.FC = () => {
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          {/* Animated Tagline with Pronounced Stagger */}
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-sm">
+          {/* Animated Tagline with Pronounced Stagger and Enhanced Visibility */}
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-xl text-glow">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400'} inline-block transition-all duration-[1200ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu`}
+                className={`${i < 2 ? 'text-slate-950 dark:text-white' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400'} inline-block transition-all duration-[1200ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] transform-gpu`}
                 style={{ 
                   transitionDelay: `${100 + i * 200}ms`,
                   opacity: isVisible ? 1 : 0,
                   transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(50px) scale(0.8)',
-                  textShadow: isVisible && i >= 2 ? '0 0 30px rgba(59, 130, 246, 0.3)' : 'none'
+                  // Additional shadow for gradient text to ensure it pops against any background
+                  filter: i >= 2 ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.2))' : 'none'
                 }}
               >
                 {word}
@@ -99,19 +100,19 @@ export const Hero: React.FC = () => {
             ))}
           </h1>
 
-          {/* Description */}
+          {/* Description - Added backdrop-blur logic for absolute readability */}
           <div 
             className={`relative mb-14 transition-all duration-[1500ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
             style={{ transitionDelay: '900ms' }}
           >
             <div className="absolute -left-8 top-2 bottom-2 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full opacity-80" />
-            <p className="text-2xl md:text-3xl lg:text-4xl text-slate-800 dark:text-slate-200 font-bold max-w-3xl leading-snug pl-8 drop-shadow-md text-glow">
+            <p className="text-2xl md:text-3xl lg:text-4xl text-slate-900 dark:text-slate-100 font-bold max-w-3xl leading-snug pl-8 drop-shadow-lg text-glow">
               We architect high-performance digital systems for global disruptors. <br className="hidden md:block" />
               From strategic consultation to industrial-grade deployment.
             </p>
           </div>
 
-          {/* Buttons with Enhanced Contrast */}
+          {/* Buttons with High Contrast for Dynamic Background */}
           <div 
             className={`flex flex-col sm:flex-row items-center gap-6 transition-all duration-[1400ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
             style={{ transitionDelay: '1200ms' }}
@@ -120,7 +121,7 @@ export const Hero: React.FC = () => {
               variant="primary" 
               size="lg" 
               onClick={scrollToContact} 
-              className="w-full sm:w-auto shadow-2xl shadow-blue-900/20 relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500/50 hover:border-transparent dark:hover:border-transparent ring-2 ring-white/20 dark:ring-slate-900/20"
+              className="w-full sm:w-auto shadow-2xl shadow-blue-900/30 relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500 hover:border-slate-800 dark:hover:border-blue-400 ring-2 ring-white/30 dark:ring-blue-900/50"
               aria-label="Start your project with OITS Dhaka"
             >
               Start Your Project <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={24} />
@@ -129,14 +130,14 @@ export const Hero: React.FC = () => {
               variant="outline" 
               size="lg" 
               onClick={scrollToServices} 
-              className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white hover:bg-white dark:hover:bg-slate-800 hover:border-blue-600 dark:hover:border-blue-400 hover:shadow-lg transition-all"
+              className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-white dark:hover:bg-slate-800 hover:border-blue-600 dark:hover:border-blue-400 hover:shadow-xl transition-all"
               aria-label="Explore our full capability matrix"
             >
               Our Capabilities
             </Button>
           </div>
 
-          {/* Stats Grid */}
+          {/* Stats Grid - Enhanced contrast */}
           <div 
             className={`mt-24 pt-12 border-t border-slate-200 dark:border-slate-800/60 grid grid-cols-2 md:grid-cols-4 gap-12 transition-all duration-[1800ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100' : 'opacity-0'}`}
             style={{ transitionDelay: '1400ms' }}
@@ -156,10 +157,10 @@ export const Hero: React.FC = () => {
                    opacity: isVisible ? 1 : 0
                  }}
                >
-                  <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 drop-shadow-sm text-outline-thin">{stat.val}</p>
+                  <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 drop-shadow-md text-glow">{stat.val}</p>
                   <div className="flex items-center gap-3 mt-3">
                     <div className={`w-10 h-1.5 ${stat.color} rounded-full group-hover:w-16 transition-all duration-500`} />
-                    <p className="text-[12px] text-slate-700 dark:text-slate-400 uppercase tracking-[0.25em] font-black">{stat.label}</p>
+                    <p className="text-[12px] text-slate-700 dark:text-slate-300 uppercase tracking-[0.25em] font-black shadow-black/5">{stat.label}</p>
                   </div>
                </div>
              ))}

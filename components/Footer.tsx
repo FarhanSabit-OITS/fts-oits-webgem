@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Terminal, Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS } from '../constants';
@@ -67,6 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-start gap-3 text-sm text-slate-400 hover:text-white transition-colors group"
+              aria-label="View OITS Dhaka office location on Google Maps"
             >
               <MapPin size={18} className="mt-0.5 text-blue-500 group-hover:text-blue-400" />
               <span>{ADDRESS}</span>
