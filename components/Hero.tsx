@@ -46,7 +46,8 @@ export const Hero: React.FC = () => {
       >
          <picture>
            <source 
-             srcSet="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&fm=webp 1200w, https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=90&w=3000&auto=format&fit=crop&fm=webp 2400w" 
+             srcSet="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=75&w=640&auto=format&fit=crop&fm=webp 640w, https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1200&auto=format&fit=crop&fm=webp 1200w, https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=85&w=2000&auto=format&fit=crop&fm=webp 2000w" 
+             sizes="100vw"
              type="image/webp" 
            />
            <img 
@@ -54,6 +55,8 @@ export const Hero: React.FC = () => {
               alt="Professional software engineer focused on debugging code"
               className="w-full h-full object-cover opacity-100 dark:opacity-40 transition-opacity duration-700 animate-fade-in"
               loading="eager"
+              // @ts-ignore - fetchpriority is a valid experimental attribute
+              fetchpriority="high"
            />
          </picture>
          
