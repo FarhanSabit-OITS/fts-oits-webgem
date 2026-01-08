@@ -6,9 +6,8 @@
     <meta name="description" content="OITS Dhaka - Modern Software Solutions. Transforming ideas into digital reality with expert web and mobile development." />
     <title>OITS Dhaka | Transforming Ideas into Digital Reality</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230f172a%22/><path d=%22M25 35 L45 50 L25 65 M55 65 L75 65%22 stroke=%22%2338bdf8%22 stroke-width=%228%22 stroke-linecap=%22round%22 fill=%22none%22/></svg>" type="image/svg+xml">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -69,46 +68,60 @@
         }
       }
     </script>
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        -webkit-font-smoothing: antialiased;
+    <style type="text/tailwindcss">
+      @layer base {
+        body {
+          font-family: 'Inter', sans-serif;
+          -webkit-font-smoothing: antialiased;
+        }
       }
-      .glass-panel {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-      }
-      .dark .glass-panel {
-        background: rgba(15, 23, 42, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      /* Enhanced visibility utilities */
-      .text-glow {
-        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      }
-      .dark .text-glow {
-        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(37, 99, 235, 0.2);
-      }
-      .text-outline-thin {
-        text-shadow: -1px -1px 0 rgba(255,255,255,0.1), 1px -1px 0 rgba(255,255,255,0.1), -1px 1px 0 rgba(255,255,255,0.1), 1px 1px 0 rgba(255,255,255,0.1);
-      }
-      .dark .text-outline-thin {
-        text-shadow: -1px -1px 0 rgba(0,0,0,0.3), 1px -1px 0 rgba(0,0,0,0.3), -1px 1px 0 rgba(0,0,0,0.3), 1px 1px 0 rgba(0,0,0,0.3);
-      }
-      .bg-clip-text {
-        -webkit-background-clip: text;
-        background-clip: text;
+      @layer utilities {
+        .glass-panel {
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .dark .glass-panel {
+          background: rgba(15, 23, 42, 0.7);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        
+        .text-glow {
+          text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dark .text-glow {
+          text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(37, 99, 235, 0.2);
+        }
+        
+        .text-outline-thin {
+          text-shadow: -1px -1px 0 rgba(255,255,255,0.1), 1px -1px 0 rgba(255,255,255,0.1), -1px 1px 0 rgba(255,255,255,0.1), 1px 1px 0 rgba(255,255,255,0.1);
+        }
+        
+        .dark .text-outline-thin {
+          text-shadow: -1px -1px 0 rgba(0,0,0,0.3), 1px -1px 0 rgba(0,0,0,0.3), -1px 1px 0 rgba(0,0,0,0.3), 1px 1px 0 rgba(0,0,0,0.3);
+        }
+        
+        .bg-clip-text {
+          -webkit-background-clip: text;
+          background-clip: text;
+        }
       }
     </style>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <script type="importmap">
 {
   "imports": {
@@ -124,5 +137,6 @@
 </head>
   <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
