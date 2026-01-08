@@ -12,7 +12,7 @@ const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; labe
   <a 
     href={href} 
     className="group relative p-3 rounded-xl hover:bg-slate-800 transition-all duration-300 flex items-center justify-center border border-transparent hover:border-slate-700"
-    aria-label={`Visit our official ${label} profile`}
+    aria-label={`Visit our official ${label} business profile on social media`}
     target="_blank"
     rel="noopener noreferrer"
   >
@@ -46,12 +46,12 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
   };
 
   return (
-    <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-900" aria-label="Site footer">
+    <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-900" aria-label="Site Footer">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           
           <div className="space-y-6">
-            <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 text-white" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)} aria-label={`${COMPANY_NAME} home - scroll back to top of page`}>
+            <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 text-white" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)} aria-label={`${COMPANY_NAME} home - scroll to top of the page`}>
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center" aria-hidden="true">
                 <Terminal size={16} className="text-white" />
               </div>
@@ -66,13 +66,13 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-start gap-3 text-sm text-slate-400 hover:text-white transition-colors group"
-              aria-label={`View ${COMPANY_NAME} headquarters in Dhaka on Google Maps`}
+              aria-label={`View the official ${COMPANY_NAME} headquarters in Dhaka on Google Maps`}
             >
               <MapPin size={18} className="mt-0.5 text-blue-500 group-hover:text-blue-400" aria-hidden="true" />
               <span className="font-medium">{ADDRESS}</span>
             </a>
 
-            <nav className="flex gap-2" aria-label="Social media profiles">
+            <nav className="flex gap-2" aria-label="Official social media profile links">
               <SocialLink href="#" icon={Github} label="GitHub" />
               <SocialLink href="#" icon={Linkedin} label="LinkedIn" />
               <SocialLink href="#" icon={Twitter} label="Twitter" />
@@ -83,7 +83,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
                <button
                   onClick={toggleTheme}
                   className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-800 hover:border-slate-700"
-                  aria-label={theme === 'dark' ? 'Activate light color theme' : 'Activate dark color theme'}
+                  aria-label={theme === 'dark' ? 'Activate the light color visual theme' : 'Activate the dark color visual theme'}
                >
                   {theme === 'dark' ? <Sun size={14} aria-hidden="true" /> : <Moon size={14} aria-hidden="true" />}
                   <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
@@ -93,14 +93,14 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
 
           <div>
             <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">Company</h4>
-            <nav aria-label="Secondary site links">
+            <nav aria-label="Secondary company and informational links">
               <ul className="space-y-4" role="list">
                 {NAV_ITEMS.map((item) => (
                   <li key={item.label}>
                     <a 
                       href={item.href} 
                       onClick={(e) => handleNavClick(e, item.href)} 
-                      aria-label={`Learn about our ${item.label}`} 
+                      aria-label={`Explore more details about our ${item.label}`} 
                       className="text-sm text-slate-400 hover:text-blue-400 transition-colors font-medium"
                     >
                       {item.label}
@@ -113,14 +113,14 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
 
           <div>
             <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">Services</h4>
-            <nav aria-label="Detailed capability matrix">
+            <nav aria-label="Comprehensive engineering services matrix">
               <ul className="space-y-4" role="list">
                 {SERVICES.map((service) => (
                   <li key={service.id}>
                     <a 
                       href={`#service-card-${service.id}`} 
                       onClick={(e) => handleServiceClick(e, service.id)} 
-                      aria-label={`Read details on ${service.title}`}
+                      aria-label={`Detailed overview of our specialized ${service.title} services`}
                       className="text-sm text-slate-400 hover:text-blue-400 transition-colors font-medium"
                     >
                       {service.title}
@@ -134,9 +134,9 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
           <div>
             <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">Newsletter</h4>
             <p className="text-sm mb-6 text-slate-400 font-medium">Subscribe for the latest tech news and digital strategy updates.</p>
-            <form className="flex gap-2" aria-label="Email newsletter subscription">
+            <form className="flex gap-2" aria-label="Email newsletter subscription form">
               <div className="flex-1">
-                <label htmlFor="newsletter-email-footer" className="sr-only">Enter your business email for newsletter updates</label>
+                <label htmlFor="newsletter-email-footer" className="sr-only">Your business email address for news and updates</label>
                 <input 
                   id="newsletter-email-footer"
                   type="email" 
@@ -149,7 +149,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               <button 
                 type="submit"
                 className="bg-blue-600 text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all active:scale-95 shrink-0" 
-                aria-label="Confirm subscription to OITS newsletter"
+                aria-label="Confirm and subscribe to the OITS Dhaka weekly engineering newsletter"
               >
                 Join
               </button>
@@ -160,9 +160,9 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
         
         <div className="pt-10 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-500 font-medium">
           <p>&copy; {new Date().getFullYear()} {COMPANY_NAME}. Digital Excellence Delivered.</p>
-          <nav className="flex gap-10" aria-label="Legal and privacy links">
-            <a href="#" aria-label="View our privacy policy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" aria-label="View our terms of service" className="hover:text-white transition-colors">Terms of Service</a>
+          <nav className="flex gap-10" aria-label="Legal, regulatory, and privacy policy links">
+            <a href="#" aria-label="Read our official privacy policy documentation" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#" aria-label="Read our official terms and conditions of service" className="hover:text-white transition-colors">Terms of Service</a>
           </nav>
         </div>
       </div>

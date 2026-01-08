@@ -52,7 +52,7 @@ export const Hero: React.FC = () => {
            />
            <img 
               src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop" 
-              alt="Professional software engineer focused on debugging code"
+              alt="Professional software engineer focused on architecting industrial digital systems"
               className="w-full h-full object-cover opacity-100 dark:opacity-40 transition-opacity duration-700 animate-fade-in"
               loading="eager"
               // @ts-ignore - fetchpriority is a valid experimental attribute
@@ -64,9 +64,9 @@ export const Hero: React.FC = () => {
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
       </div>
 
-      {/* Dynamic Overlay with Heavier Opacity for Text Readability */}
+      {/* Heavier Gradient Overlay for Guaranteed Legibility */}
       <div 
-        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/95 to-transparent dark:from-slate-950 dark:via-slate-950/85 dark:to-transparent pointer-events-none animate-gradient-shift" 
+        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/98 to-transparent dark:from-slate-950 dark:via-slate-950/90 dark:to-transparent pointer-events-none animate-gradient-shift" 
         style={{ backgroundSize: '200% 200%' }}
       />
 
@@ -76,7 +76,7 @@ export const Hero: React.FC = () => {
         style={{ transform: `translate3d(${mousePos.x * -30}px, ${mousePos.y * -30}px, 0) rotate(${mousePos.x * 5}deg)` }}
       >
         <div className="bg-white/60 dark:bg-slate-800/60 p-6 rounded-3xl backdrop-blur-xl border border-white/40 dark:border-slate-700/40 shadow-2xl">
-          <Code2 size={64} strokeWidth={1.5} />
+          <Code2 size={64} strokeWidth={1.5} aria-hidden="true" />
         </div>
       </div>
       <div 
@@ -84,7 +84,7 @@ export const Hero: React.FC = () => {
         style={{ transform: `translate3d(${mousePos.x * -50}px, ${mousePos.y * -50}px, 0) rotate(${mousePos.y * -8}deg)` }}
       >
         <div className="bg-white/60 dark:bg-slate-800/60 p-8 rounded-3xl backdrop-blur-xl border border-white/40 dark:border-slate-700/40 shadow-2xl">
-          <Cpu size={80} strokeWidth={1.5} />
+          <Cpu size={80} strokeWidth={1.5} aria-hidden="true" />
         </div>
       </div>
 
@@ -92,11 +92,11 @@ export const Hero: React.FC = () => {
         <div className="max-w-5xl">
           {/* Badge */}
           <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full bg-blue-50/90 dark:bg-blue-900/60 backdrop-blur-md text-blue-800 dark:text-blue-200 text-[11px] font-black uppercase tracking-[0.2em] mb-10 shadow-sm border border-blue-200 dark:border-blue-700 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
-            <Terminal size={18} className="animate-pulse" />
+            <Terminal size={18} className="animate-pulse" aria-hidden="true" />
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          {/* Tagline with Stronger Glow and Outline for 'Digital Mastery' */}
+          {/* Tagline with Corrected Visibility, Glow, and Outline for readability */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-2xl perspective-1000">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
@@ -125,7 +125,7 @@ export const Hero: React.FC = () => {
             </p>
           </div>
 
-          {/* Buttons - Ensured High Contrast backgrounds */}
+          {/* Buttons - Ensured High Contrast backgrounds by removing partial opacity */}
           <div 
             className={`flex flex-col sm:flex-row items-center gap-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
             style={{ transitionDelay: '1000ms' }}
@@ -135,16 +135,16 @@ export const Hero: React.FC = () => {
               size="lg" 
               onClick={scrollToContact} 
               className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500 hover:border-slate-800 dark:hover:border-blue-400 ring-2 ring-white/30 dark:ring-blue-900/50 shadow-xl shadow-blue-900/20"
-              aria-label="Start your project with OITS Dhaka"
+              aria-label="Start your industrial software project with OITS Dhaka"
             >
-              Start Your Project <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={24} />
+              Start Your Project <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={24} aria-hidden="true" />
             </Button>
             <Button 
               variant="outline" 
               size="lg" 
               onClick={scrollToServices} 
-              className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-white dark:hover:bg-slate-800 shadow-lg"
-              aria-label="Explore our full capability matrix"
+              className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white dark:bg-slate-950 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 shadow-lg"
+              aria-label="Explore our comprehensive engineering capability matrix"
             >
               Our Capabilities
             </Button>
@@ -172,7 +172,7 @@ export const Hero: React.FC = () => {
                >
                   <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 drop-shadow-md text-glow">{stat.val}</p>
                   <div className="flex items-center gap-3 mt-3">
-                    <div className={`w-10 h-1.5 ${stat.color} rounded-full group-hover:w-16 transition-all duration-500 shadow-sm`} />
+                    <div className={`w-10 h-1.5 ${stat.color} rounded-full group-hover:w-16 transition-all duration-500 shadow-sm`} aria-hidden="true" />
                     <p className="text-[12px] text-slate-800 dark:text-slate-200 uppercase tracking-[0.25em] font-black shadow-black/5">{stat.label}</p>
                   </div>
                </div>
