@@ -20,9 +20,10 @@ export const Hero: React.FC = () => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     
     const handleMouseMove = (e: MouseEvent) => {
+      // Gentle parallax factor
       setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 4,
-        y: (e.clientY / window.innerHeight - 0.5) * 4,
+        x: (e.clientX / window.innerWidth - 0.5) * 2,
+        y: (e.clientY / window.innerHeight - 0.5) * 2,
       });
     };
 
@@ -36,24 +37,40 @@ export const Hero: React.FC = () => {
   return (
     <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
       
-      {/* Hyper-realistic Background Image: Coder fixing bugs */}
-      <div className="absolute inset-0 z-0">
-         <img 
-            src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop" 
-            alt="Professional software engineer focused on debugging code"
-            className="w-full h-full object-cover opacity-100 dark:opacity-40 transition-opacity duration-700 animate-fade-in"
-         />
+      {/* Optimized Parallax Background Image */}
+      <div 
+        className="absolute inset-0 z-0 transition-transform duration-300 ease-out will-change-transform"
+        style={{ 
+          transform: `scale(1.1) translate3d(${mousePos.x * 10}px, ${mousePos.y * 10}px, 0)` 
+        }}
+      >
+         <picture>
+           <source 
+             srcSet="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop&fm=webp 1200w, https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=90&w=3000&auto=format&fit=crop&fm=webp 2400w" 
+             type="image/webp" 
+           />
+           <img 
+              src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop" 
+              alt="Professional software engineer focused on debugging code"
+              className="w-full h-full object-cover opacity-100 dark:opacity-40 transition-opacity duration-700 animate-fade-in"
+              loading="eager"
+           />
+         </picture>
+         
          {/* Noise Texture for Realism */}
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
       </div>
 
-      {/* Dynamic Overlay for Contrast: Heavier on left for text legibility */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/90 via-50% to-transparent dark:from-slate-950 dark:via-slate-950/80 dark:via-50% dark:to-transparent pointer-events-none" />
+      {/* Dynamic Overlay with Subtle Drift Animation */}
+      <div 
+        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50/95 via-slate-50/80 to-transparent dark:from-slate-950/95 dark:via-slate-950/70 dark:to-transparent pointer-events-none animate-gradient-shift" 
+        style={{ backgroundSize: '200% 200%' }}
+      />
 
-      {/* Decorative Parallax Icons */}
+      {/* Decorative Parallax Icons - Deeper depth */}
       <div 
         className="absolute top-[20%] left-[5%] hidden xl:block text-blue-600 dark:text-blue-400 opacity-20 transition-all duration-300 ease-out will-change-transform z-0"
-        style={{ transform: `translate3d(${mousePos.x * -15}px, ${mousePos.y * -15}px, 0) rotate(${mousePos.x * 2}deg)` }}
+        style={{ transform: `translate3d(${mousePos.x * -30}px, ${mousePos.y * -30}px, 0) rotate(${mousePos.x * 5}deg)` }}
       >
         <div className="bg-white/60 dark:bg-slate-800/60 p-6 rounded-3xl backdrop-blur-xl border border-white/40 dark:border-slate-700/40 shadow-2xl">
           <Code2 size={64} strokeWidth={1.5} />
@@ -61,7 +78,7 @@ export const Hero: React.FC = () => {
       </div>
       <div 
         className="absolute bottom-[20%] right-[5%] hidden xl:block text-indigo-600 dark:text-indigo-400 opacity-20 transition-all duration-300 ease-out will-change-transform z-0"
-        style={{ transform: `translate3d(${mousePos.x * -25}px, ${mousePos.y * -25}px, 0) rotate(${mousePos.y * -3}deg)` }}
+        style={{ transform: `translate3d(${mousePos.x * -50}px, ${mousePos.y * -50}px, 0) rotate(${mousePos.y * -8}deg)` }}
       >
         <div className="bg-white/60 dark:bg-slate-800/60 p-8 rounded-3xl backdrop-blur-xl border border-white/40 dark:border-slate-700/40 shadow-2xl">
           <Cpu size={80} strokeWidth={1.5} />
@@ -76,12 +93,12 @@ export const Hero: React.FC = () => {
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          {/* Tagline with Corrected Visibility and Glow */}
+          {/* Tagline with Corrected Visibility, Glow, and Outline for readability */}
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-2xl text-glow perspective-1000">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-sm' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
+                className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-md text-outline-thin' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
                 style={{ 
                   transitionDelay: `${150 + i * 150}ms`,
                   opacity: isVisible ? 1 : 0,
@@ -93,13 +110,13 @@ export const Hero: React.FC = () => {
             ))}
           </h1>
 
-          {/* Description - Corrected Visibility in Light Mode */}
+          {/* Description - Corrected Visibility with subtle outline */}
           <div 
             className={`relative mb-14 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
             style={{ transitionDelay: '800ms' }}
           >
             <div className="absolute -left-8 top-2 bottom-2 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full opacity-100 shadow-lg" />
-            <p className="text-2xl md:text-3xl lg:text-4xl text-slate-950 dark:text-slate-100 font-bold max-w-3xl leading-snug pl-8 drop-shadow-xl text-glow">
+            <p className="text-2xl md:text-3xl lg:text-4xl text-slate-950 dark:text-slate-100 font-bold max-w-3xl leading-snug pl-8 drop-shadow-xl text-glow text-outline-thin">
               We architect high-performance digital systems for global disruptors. <br className="hidden md:block" />
               From strategic consultation to industrial-grade deployment.
             </p>
@@ -123,7 +140,7 @@ export const Hero: React.FC = () => {
               variant="outline" 
               size="lg" 
               onClick={scrollToServices} 
-              className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-white dark:hover:bg-slate-800 shadow-lg"
+              className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-white dark:hover:bg-slate-800 shadow-lg"
               aria-label="Explore our full capability matrix"
             >
               Our Capabilities
