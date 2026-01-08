@@ -64,9 +64,9 @@ export const Hero: React.FC = () => {
          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
       </div>
 
-      {/* Dynamic Overlay with Subtle Drift Animation */}
+      {/* Dynamic Overlay with Heavier Opacity for Text Readability */}
       <div 
-        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50/95 via-slate-50/80 to-transparent dark:from-slate-950/95 dark:via-slate-950/70 dark:to-transparent pointer-events-none animate-gradient-shift" 
+        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/95 to-transparent dark:from-slate-950 dark:via-slate-950/85 dark:to-transparent pointer-events-none animate-gradient-shift" 
         style={{ backgroundSize: '200% 200%' }}
       />
 
@@ -96,12 +96,12 @@ export const Hero: React.FC = () => {
             <span>Dhaka's Premier Engineering Studio</span>
           </div>
           
-          {/* Tagline with Corrected Visibility, Glow, and Outline for readability */}
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-2xl text-glow perspective-1000">
+          {/* Tagline with Stronger Glow and Outline for 'Digital Mastery' */}
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-2xl perspective-1000">
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-md text-outline-thin' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
+                className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-md text-outline-thin text-glow' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
                 style={{ 
                   transitionDelay: `${150 + i * 150}ms`,
                   opacity: isVisible ? 1 : 0,
@@ -113,7 +113,7 @@ export const Hero: React.FC = () => {
             ))}
           </h1>
 
-          {/* Description - Corrected Visibility with subtle outline */}
+          {/* Description - Corrected Visibility with subtle outline and glow */}
           <div 
             className={`relative mb-14 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
             style={{ transitionDelay: '800ms' }}
@@ -125,7 +125,7 @@ export const Hero: React.FC = () => {
             </p>
           </div>
 
-          {/* Buttons */}
+          {/* Buttons - Ensured High Contrast backgrounds */}
           <div 
             className={`flex flex-col sm:flex-row items-center gap-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
             style={{ transitionDelay: '1000ms' }}

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
@@ -55,7 +54,6 @@ export const Contact: React.FC = () => {
   };
 
   const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.123456789012!2d90.3644321!3d23.7431234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ0JzM1LjIiTiA5MMKwMjEnNTEuOSJF!5e0!3m2!1sen!2sbd!4v1234567890123`;
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ADDRESS)}`;
 
   return (
     <section ref={sectionRef} id={SectionId.CONTACT} className="py-24 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-500 relative overflow-hidden">
@@ -147,13 +145,14 @@ export const Contact: React.FC = () => {
                         name="name" 
                         autoComplete="name"
                         aria-invalid={!!errors.name} 
+                        aria-describedby={errors.name ? 'name-error' : undefined}
                         className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
                         placeholder="John Doe" 
                         value={formData.name} 
                         onChange={(e) => setFormData({...formData, name: e.target.value})} 
                       />
                       {errors.name && (
-                        <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
+                        <p id="name-error" className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
                           <AlertCircle size={14} /> {errors.name}
                         </p>
                       )}
@@ -166,13 +165,14 @@ export const Contact: React.FC = () => {
                         name="email" 
                         autoComplete="email"
                         aria-invalid={!!errors.email} 
+                        aria-describedby={errors.email ? 'email-error' : undefined}
                         className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
                         placeholder="ceo@company.com" 
                         value={formData.email} 
                         onChange={(e) => setFormData({...formData, email: e.target.value})} 
                       />
                       {errors.email && (
-                        <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
+                        <p id="email-error" className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
                           <AlertCircle size={14} /> {errors.email}
                         </p>
                       )}
@@ -184,6 +184,7 @@ export const Contact: React.FC = () => {
                       id="message-input" 
                       name="message" 
                       aria-invalid={!!errors.message} 
+                      aria-describedby={errors.message ? 'message-error' : undefined}
                       rows={5} 
                       className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.message ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-[2.5rem] px-7 py-6 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all resize-none font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
                       placeholder="What are we building?" 
@@ -191,7 +192,7 @@ export const Contact: React.FC = () => {
                       onChange={(e) => setFormData({...formData, message: e.target.value})} 
                     />
                     {errors.message && (
-                      <p className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
+                      <p id="message-error" className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
                         <AlertCircle size={14} /> {errors.message}
                       </p>
                     )}
