@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ExternalLink, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart, Twitter, Linkedin, Facebook } from 'lucide-react';
+import { ExternalLink, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart, Twitter, Linkedin, Facebook, Play, BookOpen } from 'lucide-react';
 import { PROJECTS, COMPANY_NAME } from '../constants';
 import { SectionId, Project } from '../types';
 
@@ -40,13 +40,27 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
         </button>
         
         <div className="grid grid-cols-1 lg:grid-cols-2">
-          <div className="h-full min-h-[300px] lg:min-h-[600px] relative group">
-            <img 
-              src={project.imageUrl} 
-              alt={`${project.title} project showcase`} 
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent lg:bg-gradient-to-r" />
+          <div className="h-full min-h-[300px] lg:min-h-[600px] relative group overflow-hidden bg-black flex items-center justify-center">
+            {project.demoVideoUrl ? (
+              <video 
+                controls 
+                className="w-full h-full object-contain" 
+                poster={project.imageUrl}
+                aria-label={`Demo video for ${project.title}`}
+              >
+                <source src={project.demoVideoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <>
+                <img 
+                  src={project.imageUrl} 
+                  alt={`${project.title} project showcase`} 
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent lg:bg-gradient-to-r" />
+              </>
+            )}
           </div>
           
           <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
@@ -106,9 +120,11 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
                     <ExternalLink size={18} /> Visit Project
                   </a>
                 )}
-                <button onClick={onClose} className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-700 transition-all hover:border-slate-200 dark:hover:border-slate-600">
-                  Close Details
-                </button>
+                {project.caseStudyUrl && (
+                  <a href={project.caseStudyUrl} target="_blank" rel="noopener noreferrer" aria-label={`Read full case study for ${project.title}`} className="flex items-center gap-3 px-8 py-4 bg-blue-50 dark:bg-slate-800 text-blue-700 dark:text-blue-400 border-2 border-blue-100 dark:border-slate-700 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">
+                    <BookOpen size={18} /> Read Case Study
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -117,6 +133,23 @@ const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => v
     </div>
   );
 };
+
+const SkeletonCard = () => (
+  <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm animate-pulse">
+    <div className="aspect-video shimmer-bg animate-shimmer" />
+    <div className="p-10 space-y-4">
+      <div className="h-8 w-3/4 shimmer-bg animate-shimmer rounded-lg" />
+      <div className="flex gap-2">
+        <div className="h-6 w-20 shimmer-bg animate-shimmer rounded-full" />
+        <div className="h-6 w-20 shimmer-bg animate-shimmer rounded-full" />
+      </div>
+      <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-between">
+        <div className="h-4 w-24 shimmer-bg animate-shimmer rounded" />
+        <div className="h-4 w-16 shimmer-bg animate-shimmer rounded" />
+      </div>
+    </div>
+  </div>
+);
 
 const ShareButtons = ({ project }: { project: Project }) => {
   const currentUrl = window.location.href;
@@ -152,10 +185,10 @@ const ShareButtons = ({ project }: { project: Project }) => {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Share ${project.title} on ${social.name}`}
-          className={`group flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-md rounded-full text-white transition-all duration-300 border border-white/20 ${social.color} hover:scale-110 active:scale-95 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] z-50`}
+          className={`group flex items-center justify-center w-10 h-10 bg-white/10 backdrop-blur-md rounded-full text-white transition-all duration-300 border border-white/20 ${social.color} hover:scale-110 active:scale-95 z-50`}
           onClick={(e) => e.stopPropagation()}
         >
-          <social.icon size={20} className="drop-shadow-md" />
+          <social.icon size={16} className="drop-shadow-md" />
         </a>
       ))}
     </div>
@@ -166,60 +199,37 @@ export const Portfolio: React.FC = () => {
   const [filter, setFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
   const [isVisible, setIsVisible] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   const categories = ['All', ...new Set(PROJECTS.map(p => p.category))];
   const statuses = ['All', 'Completed', 'In Progress', 'Maintenance'];
   
-  const getCategoryCount = (cat: string) => {
-    return PROJECTS.filter(p => (cat === 'All' || p.category === cat) && (statusFilter === 'All' || p.status === statusFilter)).length;
-  };
-
-  const getStatusCount = (stat: string) => {
-    return PROJECTS.filter(p => (stat === 'All' || p.status === stat) && (filter === 'All' || p.category === filter)).length;
-  };
+  const getCategoryCount = (cat: string) => PROJECTS.filter(p => (cat === 'All' || p.category === cat) && (statusFilter === 'All' || p.status === statusFilter)).length;
+  const getStatusCount = (stat: string) => PROJECTS.filter(p => (stat === 'All' || p.status === stat) && (filter === 'All' || p.category === filter)).length;
 
   const resetFilters = () => {
+    setIsFiltering(true);
     setFilter('All');
     setStatusFilter('All');
+    setTimeout(() => setIsFiltering(false), 600);
   };
 
-  const filteredProjects = PROJECTS.filter(p => 
-    (filter === 'All' || p.category === filter) && 
-    (statusFilter === 'All' || p.status === statusFilter)
-  );
+  const applyFilter = (type: 'cat' | 'stat', val: string) => {
+    setIsFiltering(true);
+    if (type === 'cat') setFilter(val);
+    else setStatusFilter(val);
+    setTimeout(() => setIsFiltering(false), 600);
+  };
+
+  const filteredProjects = PROJECTS.filter(p => (filter === 'All' || p.category === filter) && (statusFilter === 'All' || p.status === statusFilter));
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
+    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } }, { threshold: 0.1 });
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
-
-  const handleProjectInteraction = (project: Project) => {
-    if (project.caseStudyUrl) {
-      window.open(project.caseStudyUrl, '_blank');
-    } else {
-      setSelectedProject(project);
-    }
-  };
-
-  const [activeAnimate, setActiveAnimate] = useState<string | null>(null);
-
-  const applyFilter = (type: 'cat' | 'stat', val: string) => {
-    setActiveAnimate(val);
-    if (type === 'cat') setFilter(val);
-    else setStatusFilter(val);
-    setTimeout(() => setActiveAnimate(null), 300);
-  };
 
   return (
     <section ref={sectionRef} id={SectionId.PORTFOLIO} className="py-32 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 relative overflow-hidden">
@@ -231,192 +241,105 @@ export const Portfolio: React.FC = () => {
           </div>
           
           <div className="flex flex-col gap-6 w-full lg:w-auto">
-            {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
-              <span className="w-full text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center gap-2">
-                <Filter size={12} /> Categories
-              </span>
+              <span className="w-full text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center gap-2"><Filter size={12} /> Categories</span>
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => applyFilter('cat', cat)}
-                  aria-label={`Filter by ${cat} category. ${getCategoryCount(cat)} projects available.`}
-                  aria-pressed={filter === cat}
-                  className={`group px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 flex items-center gap-2 active:scale-95 transform-gpu ${
-                    filter === cat 
-                      ? 'bg-slate-950 text-white dark:bg-blue-600 shadow-xl ring-2 ring-slate-950 dark:ring-blue-600 ring-offset-2 dark:ring-offset-slate-950 scale-105' 
-                      : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-slate-800 hover:scale-105 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  } ${activeAnimate === cat ? 'animate-[subtle-bounce_0.3s_ease-in-out]' : ''}`}
+                  className={`group px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-300 flex items-center gap-2 active:scale-95 ${filter === cat ? 'bg-slate-950 text-white dark:bg-blue-600 shadow-xl' : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-slate-800'}`}
                 >
                   {cat}
-                  <span 
-                    aria-label={`${getCategoryCount(cat)} items`}
-                    className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center transition-colors font-black ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}
-                  >
-                    {getCategoryCount(cat)}
-                  </span>
+                  <span className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center font-black ${filter === cat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600'}`}>{getCategoryCount(cat)}</span>
                 </button>
               ))}
             </div>
 
-            {/* Status Filter */}
             <div className="flex flex-wrap gap-2">
-              <span className="w-full text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center gap-2">
-                <CheckCircle size={12} /> Project Status
-              </span>
+              <span className="w-full text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 flex items-center gap-2"><CheckCircle size={12} /> Status</span>
               {statuses.map((stat) => (
                 <button
                   key={stat}
                   onClick={() => applyFilter('stat', stat)}
-                  aria-label={`Filter by ${stat} status. ${getStatusCount(stat)} projects available.`}
-                  aria-pressed={statusFilter === stat}
-                  className={`group px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-500 flex items-center gap-2 active:scale-95 transform-gpu ${
-                    statusFilter === stat 
-                      ? 'bg-blue-600 text-white shadow-xl ring-2 ring-blue-600 ring-offset-2 dark:ring-offset-slate-950 scale-105' 
-                      : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-slate-800 hover:scale-105 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  } ${activeAnimate === stat ? 'animate-[subtle-bounce_0.3s_ease-in-out]' : ''}`}
+                  className={`group px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-300 flex items-center gap-2 active:scale-95 ${statusFilter === stat ? 'bg-blue-600 text-white shadow-xl' : 'bg-white dark:bg-slate-900 text-slate-500 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-slate-800'}`}
                 >
                   {stat}
-                  <span 
-                    aria-label={`${getStatusCount(stat)} items`}
-                    className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center transition-colors font-black ${statusFilter === stat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}
-                  >
-                    {getStatusCount(stat)}
-                  </span>
+                  <span className={`px-2 py-0.5 rounded-md text-[9px] min-w-[20px] text-center font-black ${statusFilter === stat ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600'}`}>{getStatusCount(stat)}</span>
                 </button>
               ))}
-              
               {(filter !== 'All' || statusFilter !== 'All') && (
-                <button 
-                  onClick={resetFilters}
-                  aria-label="Clear all active filters"
-                  className="flex items-center gap-2 px-5 py-2.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-100 dark:hover:bg-red-900/40 transition-all animate-in fade-in zoom-in duration-300 active:scale-95 shadow-sm"
-                >
-                  <RotateCcw size={12} /> Reset Filters
-                </button>
+                <button onClick={resetFilters} className="flex items-center gap-2 px-5 py-2.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-100 transition-all"><RotateCcw size={12} /> Clear</button>
               )}
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 min-h-[400px]">
-          {filteredProjects.length > 0 ? filteredProjects.map((project, index) => (
-            <div 
-              key={project.id}
-              className={`group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 transition-all duration-500 ease-out hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-2 dark:hover:shadow-blue-900/20 transform-gpu ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-24 scale-95'}`}
-              style={{ transitionDelay: `${index * 80}ms` }}
-            >
-              <div className="aspect-video overflow-hidden relative cursor-pointer" onClick={() => handleProjectInteraction(project)}>
-                <img 
-                  src={project.imageUrl} 
-                  alt={project.title} 
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[3px]"
-                />
-                
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/80 transition-all duration-500 backdrop-blur-[0px] group-hover:backdrop-blur-md border-2 border-transparent group-hover:border-white/10 rounded-[2.5rem]" />
-                
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out z-10">
-                   <div className="transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 delay-100 space-y-6 text-center px-4 w-full">
-                     <p className="text-white text-base font-bold leading-relaxed line-clamp-2 drop-shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-200">
-                       {project.description}
-                     </p>
-                     
-                     <div className="flex flex-col items-center gap-5">
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); handleProjectInteraction(project); }}
-                          className="flex items-center justify-center gap-3 px-8 py-3.5 bg-white text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-110 active:scale-95 transition-all shadow-2xl ring-2 ring-white/20 border-none outline-none z-50 pointer-events-auto"
-                          aria-label={`View details for ${project.title}`}
-                        >
-                          <Eye size={18} /> {project.caseStudyUrl ? 'Open Case Study' : 'View Details'}
+          {isFiltering ? (
+            Array(3).fill(0).map((_, i) => <SkeletonCard key={i} />)
+          ) : filteredProjects.length > 0 ? (
+            filteredProjects.map((project, index) => (
+              <div 
+                key={project.id}
+                className={`group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden border border-slate-200 dark:border-slate-800 transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] transform-gpu animate-in fade-in slide-in-from-bottom-4`}
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <div className="aspect-video overflow-hidden relative cursor-pointer" onClick={() => setSelectedProject(project)}>
+                  <img src={project.imageUrl} alt={project.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:blur-[2px]" />
+                  <div className="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/80 transition-all duration-500 backdrop-blur-none group-hover:backdrop-blur-sm flex flex-col items-center justify-center p-8 opacity-0 group-hover:opacity-100 z-10">
+                    <div className="transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 delay-100 text-center w-full">
+                      <p className="text-white text-sm font-bold mb-6 drop-shadow-xl">{project.description}</p>
+                      <div className="flex flex-col items-center gap-4">
+                        <button className="flex items-center gap-3 px-8 py-3 bg-white text-slate-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-xl">
+                          <Eye size={16} /> Details {project.demoVideoUrl && <Play size={14} className="ml-1 fill-current" />}
                         </button>
-                        
+                        {project.caseStudyUrl && (
+                          <a 
+                            href={project.caseStudyUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="flex items-center gap-3 px-8 py-3 bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <BookOpen size={16} /> Case Study
+                          </a>
+                        )}
                         <ShareButtons project={project} />
-                     </div>
-                   </div>
-                </div>
-
-                <div className="absolute top-6 left-6 transition-opacity duration-300 group-hover:opacity-0">
-                  <span className="px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 shadow-xl border border-white/10">
-                    {project.category}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-10">
-                <div className="flex justify-between items-start mb-6">
-                  <h4 
-                    className="text-2xl font-black text-slate-950 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-pointer" 
-                    onClick={() => handleProjectInteraction(project)}
-                  >
-                    {project.title}
-                  </h4>
-                  <div className="flex flex-col items-end gap-2">
-                    {project.status === 'Completed' ? (
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 dark:bg-green-900/20 rounded-full border border-green-100 dark:border-green-800/50">
-                        <CheckCircle size={14} className="text-green-600 dark:text-green-400" />
-                        <span className="text-[9px] font-black uppercase text-green-700 dark:text-green-300">Done</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-full border border-blue-100 dark:border-blue-800/50">
-                        <span className="text-[9px] font-black uppercase text-blue-600 dark:text-blue-300">{project.status}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap gap-2.5 mb-8">
-                  {project.technologies?.slice(0, 3).map(tech => (
-                    <div 
-                      key={tech} 
-                      className="relative group/tech"
-                    >
-                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                        <Tag size={10} /> {tech}
-                      </span>
-                      {/* Tooltip */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-950 text-white text-[10px] font-black uppercase rounded-lg opacity-0 group-hover/tech:opacity-100 transition-all pointer-events-none whitespace-nowrap shadow-2xl border border-slate-800 z-20 translate-y-1 group-hover/tech:translate-y-0">
-                        {tech}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-950"></div>
                       </div>
                     </div>
-                  ))}
-                  {(project.technologies?.length || 0) > 3 && (
-                     <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center px-2 py-1.5">
-                       +{ (project.technologies?.length || 0) - 3 } more
-                     </span>
-                  )}
+                  </div>
+                  <div className="absolute top-6 left-6 transition-opacity group-hover:opacity-0">
+                    <span className="px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 shadow-xl border border-white/10">
+                      {project.category}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-8 border-t border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-wider">
-                    <Clock size={14} /> {project.duration || '3-4 Months'}
+                <div className="p-10">
+                  <div className="flex justify-between items-start mb-6">
+                    <h4 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors cursor-pointer" onClick={() => setSelectedProject(project)}>{project.title}</h4>
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 dark:bg-green-900/20 rounded-full border border-green-100 dark:border-green-800/50">
+                      <span className="text-[9px] font-black uppercase text-green-700 dark:text-green-300">{project.status}</span>
+                    </div>
                   </div>
-                  <button 
-                    onClick={() => handleProjectInteraction(project)}
-                    className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-widest hover:underline flex items-center gap-1"
-                  >
-                    View Details <ChevronRight size={14} />
-                  </button>
+                  <div className="flex flex-wrap gap-2.5 mb-8">
+                    {project.technologies?.slice(0, 3).map(tech => (
+                      <span key={tech} className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">{tech}</span>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between pt-8 border-t border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase tracking-wider"><Clock size={14} /> {project.duration || '3-4 Months'}</div>
+                    <button onClick={() => setSelectedProject(project)} className="text-blue-600 dark:text-blue-400 text-xs font-black uppercase tracking-widest hover:underline flex items-center gap-1">View <ChevronRight size={14} /></button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )) : (
-            <div className="col-span-full py-20 text-center animate-in fade-in duration-500">
-              <div className="inline-block p-6 rounded-full bg-slate-50 dark:bg-slate-800 mb-4 animate-pulse">
-                <Filter size={48} className="text-slate-300 dark:text-slate-600" />
-              </div>
-              <p className="text-slate-500 dark:text-slate-400 text-lg font-bold">No projects found with current filters.</p>
-              <button onClick={resetFilters} className="mt-4 text-blue-600 dark:text-blue-400 font-bold hover:underline">Clear Filters</button>
-            </div>
+            ))
+          ) : (
+            <div className="col-span-full py-20 text-center"><p className="text-slate-500 text-lg font-bold">No projects matching your search.</p></div>
           )}
         </div>
       </div>
-
-      {selectedProject && (
-        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
-      )}
+      {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
     </section>
   );
 };

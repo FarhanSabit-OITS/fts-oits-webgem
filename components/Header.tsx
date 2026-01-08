@@ -68,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
               href={item.href}
               onClick={(e) => handleNavClick(e, item.href)}
               aria-label={`Jump to ${item.label} section`}
-              className="px-4 py-2 rounded-full text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
+              className="px-4 py-2 rounded-full text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
             >
               {item.label}
             </a>
@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           <div className="ml-2 pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center gap-2">
              <button
               onClick={toggleTheme}
-              className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:rotate-12"
+              className="p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:rotate-12"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
              >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -95,14 +95,14 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         <div className="flex items-center gap-4 md:hidden">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
           
           <button 
-            className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            className="p-2 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             aria-expanded={isMobileMenuOpen}
