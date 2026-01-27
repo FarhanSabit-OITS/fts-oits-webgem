@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Terminal, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS } from '../constants';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
@@ -38,6 +38,30 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     }
   };
 
+  // Custom Logo Component for reusability within Header
+  const BrandLogo = () => (
+    <div className="flex items-center gap-2.5">
+      <div className="w-10 h-10 flex items-center justify-center" aria-hidden="true">
+        <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-sm">
+          <defs>
+            <linearGradient id="header-logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#1e3a8a" /> {/* Cobalt Dark */}
+              <stop offset="50%" stopColor="#2563eb" /> {/* Cobalt Blue */}
+              <stop offset="100%" stopColor="#3b82f6" /> {/* Blue Light */}
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="url(#header-logo-gradient)" strokeWidth="7" />
+          {/* Stylized 'IT' */}
+          <path d="M38 32 H48 V68 H38 Z" fill="url(#header-logo-gradient)" />
+          <path d="M54 32 H84 V41 H74 V68 H64 V41 H54 Z" fill="url(#header-logo-gradient)" />
+        </svg>
+      </div>
+      <span className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-600 to-blue-500 dark:from-blue-400 dark:via-blue-300 dark:to-blue-200 filter drop-shadow-sm">
+        {COMPANY_NAME}
+      </span>
+    </div>
+  );
+
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
@@ -50,14 +74,11 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
       <div className="container mx-auto px-6 flex items-center justify-between">
         <a 
           href={`#${SectionId.HOME}`}
-          className="flex items-center gap-2 group" 
+          className="group hover:opacity-90 transition-opacity" 
           onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
           aria-label={`${COMPANY_NAME} homepage - scroll to top of the page`}
         >
-          <div className="w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-slate-900 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" aria-hidden="true">
-            <Terminal size={20} />
-          </div>
-          <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">{COMPANY_NAME}</span>
+          <BrandLogo />
         </a>
 
         {/* Desktop Nav */}
