@@ -55,8 +55,8 @@ export const Hero: React.FC = () => {
               alt="Professional software engineer focused on architecting industrial digital systems"
               className="w-full h-full object-cover opacity-100 dark:opacity-40 transition-opacity duration-700 animate-fade-in"
               loading="eager"
-              // @ts-ignore - fetchpriority is a valid experimental attribute
-              fetchpriority="high"
+              // @ts-ignore - fetchPriority is a valid experimental attribute
+              fetchPriority="high"
            />
          </picture>
          
