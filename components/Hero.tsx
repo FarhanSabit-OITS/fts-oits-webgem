@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Terminal, Code2, Cpu } from 'lucide-react';
+import { ArrowRight, Terminal, Code2, Cpu, Globe, Smartphone, Cloud, ChevronRight, ExternalLink } from 'lucide-react';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
-import { TAGLINE } from '../constants';
+import { TAGLINE, SERVICES, PROJECTS } from '../constants';
 
 export const Hero: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
 
   const scrollToContact = () => {
     document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' });
@@ -14,6 +15,10 @@ export const Hero: React.FC = () => {
 
   const scrollToServices = () => {
     document.getElementById(SectionId.SERVICES)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToPortfolio = () => {
+    document.getElementById(SectionId.PORTFOLIO)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -27,15 +32,23 @@ export const Hero: React.FC = () => {
       });
     };
 
+    // Rotate portfolio projects
+    const projectInterval = setInterval(() => {
+      setActiveProjectIndex((prev) => (prev + 1) % Math.min(PROJECTS.length, 4)); // Show top 4
+    }, 5000);
+
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       clearTimeout(timer);
+      clearInterval(projectInterval);
     };
   }, []);
 
+  const activeProject = PROJECTS[activeProjectIndex];
+
   return (
-    <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-24 pb-12 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+    <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
       
       {/* Optimized Parallax Background Image */}
       <div 
@@ -66,118 +79,214 @@ export const Hero: React.FC = () => {
 
       {/* Heavier Gradient Overlay for Guaranteed Legibility */}
       <div 
-        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/95 to-slate-50/40 dark:from-slate-950 dark:via-slate-950/95 dark:to-slate-950/40 pointer-events-none animate-gradient-shift" 
+        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/95 to-slate-50/80 dark:from-slate-950 dark:via-slate-950/95 dark:to-slate-950/80 pointer-events-none animate-gradient-shift" 
         style={{ backgroundSize: '200% 200%' }}
       />
 
       {/* Decorative Parallax Icons - Deeper depth */}
       <div 
-        className="absolute top-[20%] left-[5%] hidden xl:block text-blue-600 dark:text-blue-400 opacity-20 transition-all duration-300 ease-out will-change-transform z-0"
+        className="absolute top-[15%] left-[5%] hidden xl:block text-blue-600 dark:text-blue-400 opacity-20 transition-all duration-300 ease-out will-change-transform z-0"
         style={{ transform: `translate3d(${mousePos.x * -30}px, ${mousePos.y * -30}px, 0) rotate(${mousePos.x * 5}deg)` }}
       >
         <div className="bg-white/60 dark:bg-slate-800/60 p-6 rounded-3xl backdrop-blur-xl border border-white/40 dark:border-slate-700/40 shadow-2xl">
           <Code2 size={64} strokeWidth={1.5} aria-hidden="true" />
         </div>
       </div>
-      <div 
-        className="absolute bottom-[20%] right-[5%] hidden xl:block text-indigo-600 dark:text-indigo-400 opacity-20 transition-all duration-300 ease-out will-change-transform z-0"
-        style={{ transform: `translate3d(${mousePos.x * -50}px, ${mousePos.y * -50}px, 0) rotate(${mousePos.y * -8}deg)` }}
-      >
-        <div className="bg-white/60 dark:bg-slate-800/60 p-8 rounded-3xl backdrop-blur-xl border border-white/40 dark:border-slate-700/40 shadow-2xl">
-          <Cpu size={80} strokeWidth={1.5} aria-hidden="true" />
-        </div>
-      </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-5xl">
-          {/* Badge */}
-          <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full bg-blue-50/90 dark:bg-blue-900/60 backdrop-blur-md text-blue-800 dark:text-blue-200 text-[11px] font-black uppercase tracking-[0.2em] mb-10 shadow-sm border border-blue-200 dark:border-blue-700 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
-            <Terminal size={18} className="animate-pulse" aria-hidden="true" />
-            <span>Dhaka's Premier Engineering Studio</span>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Tagline with Corrected Visibility, Glow, and Outline for readability */}
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-slate-950 dark:text-white leading-[0.9] tracking-tighter mb-12 flex flex-wrap gap-x-5 gap-y-2 drop-shadow-2xl perspective-1000">
-            {TAGLINE.split(' ').map((word, i) => (
-              <span 
+          {/* Left Column: Content */}
+          <div className="lg:col-span-7 max-w-3xl">
+            {/* Badge */}
+            <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full bg-blue-50/90 dark:bg-blue-900/60 backdrop-blur-md text-blue-800 dark:text-blue-200 text-[11px] font-black uppercase tracking-[0.2em] mb-8 shadow-sm border border-blue-200 dark:border-blue-700 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
+              <Terminal size={18} className="animate-pulse" aria-hidden="true" />
+              <span>Dhaka's Premier Engineering Studio</span>
+            </div>
+            
+            {/* Tagline */}
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-950 dark:text-white leading-[0.95] tracking-tighter mb-8 flex flex-wrap gap-x-4 gap-y-2 drop-shadow-2xl perspective-1000">
+              {TAGLINE.split(' ').map((word, i) => (
+                <span 
+                  key={i} 
+                  className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-md text-glow' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
+                  style={{ 
+                    transitionDelay: `${150 + i * 150}ms`,
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0) scale(1) rotateX(0)' : 'translateY(40px) scale(0.9) rotateX(10deg)',
+                  }}
+                >
+                  {word}
+                </span>
+              ))}
+            </h1>
+
+            {/* Description */}
+            <div 
+              className={`relative mb-10 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              style={{ transitionDelay: '800ms' }}
+            >
+              <div className="absolute -left-6 top-2 bottom-2 w-1 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full opacity-100 shadow-lg" />
+              <p className="text-xl md:text-2xl text-slate-950 dark:text-slate-100 font-medium max-w-2xl leading-relaxed pl-6 drop-shadow-xl text-glow">
+                We architect high-performance digital systems for global disruptors. 
+                From strategic consultation to industrial-grade deployment.
+              </p>
+            </div>
+
+            {/* Core Services Showcase */}
+            <div 
+              className={`mb-10 flex flex-wrap gap-3 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              style={{ transitionDelay: '900ms' }}
+            >
+              {SERVICES.slice(0, 4).map((service, i) => (
+                <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 backdrop-blur-sm">
+                  {i === 0 && <Globe size={14} className="text-blue-600 dark:text-blue-400" aria-hidden="true" />}
+                  {i === 1 && <Smartphone size={14} className="text-indigo-600 dark:text-indigo-400" aria-hidden="true" />}
+                  {i === 2 && <Code2 size={14} className="text-purple-600 dark:text-purple-400" aria-hidden="true" />}
+                  {i === 3 && <Cloud size={14} className="text-sky-600 dark:text-sky-400" aria-hidden="true" />}
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">{service.title.split(' ')[0]}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Buttons */}
+            <div 
+              className={`flex flex-col sm:flex-row items-center gap-5 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
+              style={{ transitionDelay: '1000ms' }}
+            >
+              <Button 
+                variant="primary" 
+                size="lg" 
+                onClick={scrollToContact} 
+                className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500 hover:border-slate-800 dark:hover:border-blue-400 ring-2 ring-white/30 dark:ring-blue-900/50 shadow-xl shadow-blue-900/20"
+                aria-label="Get a quote for your project"
+              >
+                Get a Quote <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={20} aria-hidden="true" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={scrollToServices} 
+                className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-white dark:hover:bg-slate-800 shadow-lg"
+                aria-label="Explore our full capability matrix"
+              >
+                Our Capabilities
+              </Button>
+            </div>
+          </div>
+
+          {/* Right Column: Portfolio Preview (Desktop) */}
+          <div className="hidden lg:block lg:col-span-5 relative h-[500px]">
+             <div 
+               className={`absolute inset-0 transition-all duration-[1500ms] ease-out transform-gpu ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
+               style={{ transitionDelay: '1200ms' }}
+             >
+                {/* Dynamic Portfolio Card */}
+                <div className="relative w-full h-full">
+                  {/* Abstract Background Shapes */}
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+
+                  {/* Card Container */}
+                  <div className="relative z-10 w-full bg-white/10 dark:bg-slate-900/40 backdrop-blur-md border border-white/20 dark:border-slate-700/50 rounded-3xl p-6 shadow-2xl transition-all duration-500 hover:shadow-blue-500/10 group">
+                    
+                    {/* Header */}
+                    <div className="flex justify-between items-center mb-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Featured Work</span>
+                      </div>
+                      <button 
+                        onClick={scrollToPortfolio}
+                        className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                        aria-label="View all projects"
+                      >
+                        View All <ChevronRight size={12} aria-hidden="true" />
+                      </button>
+                    </div>
+
+                    {/* Project Image */}
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-slate-200 dark:bg-slate-800">
+                      {PROJECTS.slice(0, 4).map((project, index) => (
+                        <div 
+                          key={project.id}
+                          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === activeProjectIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                        >
+                          <img 
+                            src={project.imageUrl} 
+                            alt={project.title}
+                            className="w-full h-full object-cover transform transition-transform duration-[5000ms] ease-linear scale-100 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+                        </div>
+                      ))}
+                      
+                      {/* Overlay Content */}
+                      <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
+                        <span className="inline-block px-2 py-1 rounded bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider mb-2">
+                          {activeProject.category}
+                        </span>
+                        <h3 className="text-xl font-bold text-white mb-1 leading-tight">
+                          {activeProject.title}
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="flex gap-1 mb-4">
+                      {PROJECTS.slice(0, 4).map((_, idx) => (
+                        <div key={idx} className="h-1 flex-1 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                          <div 
+                            className={`h-full bg-blue-600 transition-all duration-500 ${idx === activeProjectIndex ? 'w-full' : 'w-0'}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Action */}
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-full justify-between group/btn hover:bg-blue-50 dark:hover:bg-blue-900/20 text-slate-700 dark:text-slate-300"
+                      onClick={scrollToPortfolio}
+                      aria-label={`View details for ${activeProject.title}`}
+                    >
+                      <span className="font-semibold">View Case Study</span>
+                      <ExternalLink size={16} className="text-slate-400 group-hover/btn:text-blue-600 transition-colors" aria-hidden="true" />
+                    </Button>
+                  </div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        {/* Stats Grid - Moved to bottom and refined */}
+        <div 
+          className={`mt-16 lg:mt-24 pt-8 border-t border-slate-200 dark:border-slate-800/60 grid grid-cols-2 md:grid-cols-4 gap-8 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+          style={{ transitionDelay: '1300ms' }}
+        >
+            {[
+              { val: "150+", label: "Deliveries", color: "bg-blue-600" },
+              { val: "50+", label: "Engineers", color: "bg-indigo-600" },
+              { val: "98%", label: "Satisfaction", color: "bg-green-600" },
+              { val: "24/7", label: "Support", color: "bg-yellow-500" }
+            ].map((stat, i) => (
+              <div 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-md text-glow' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
+                className="group cursor-default transition-all duration-1000 transform-gpu ease-out"
                 style={{ 
-                  transitionDelay: `${150 + i * 150}ms`,
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0) scale(1) rotateX(0)' : 'translateY(40px) scale(0.9) rotateX(10deg)',
+                  transitionDelay: `${1400 + (i * 100)}ms`,
+                  transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                  opacity: isVisible ? 1 : 0
                 }}
               >
-                {word}
-              </span>
+                <p className="text-3xl md:text-4xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 drop-shadow-md text-glow">{stat.val}</p>
+                <div className="flex items-center gap-3 mt-2">
+                  <div className={`w-8 h-1 ${stat.color} rounded-full group-hover:w-12 transition-all duration-500 shadow-sm`} aria-hidden="true" />
+                  <p className="text-[10px] md:text-xs text-slate-800 dark:text-slate-300 uppercase tracking-[0.2em] font-bold shadow-black/5">{stat.label}</p>
+                </div>
+              </div>
             ))}
-          </h1>
-
-          {/* Description - Corrected Visibility with subtle outline and glow */}
-          <div 
-            className={`relative mb-14 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-            style={{ transitionDelay: '800ms' }}
-          >
-            <div className="absolute -left-8 top-2 bottom-2 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full opacity-100 shadow-lg" />
-            <p className="text-2xl md:text-3xl lg:text-4xl text-slate-950 dark:text-slate-100 font-bold max-w-3xl leading-snug pl-8 drop-shadow-xl text-glow">
-              We architect high-performance digital systems for global disruptors. <br className="hidden md:block" />
-              From strategic consultation to industrial-grade deployment.
-            </p>
-          </div>
-
-          {/* Buttons - Ensured High Contrast backgrounds by removing partial opacity */}
-          <div 
-            className={`flex flex-col sm:flex-row items-center gap-6 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
-            style={{ transitionDelay: '1000ms' }}
-          >
-            <Button 
-              variant="primary" 
-              size="lg" 
-              onClick={scrollToContact} 
-              className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500 hover:border-slate-800 dark:hover:border-blue-400 ring-2 ring-white/30 dark:ring-blue-900/50 shadow-xl shadow-blue-900/20"
-              aria-label="Start your industrial software project with OITS Dhaka"
-            >
-              Start Your Project <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={24} aria-hidden="true" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              onClick={scrollToServices} 
-              className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white dark:bg-slate-950 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 shadow-lg"
-              aria-label="Explore our comprehensive engineering capability matrix"
-            >
-              Our Capabilities
-            </Button>
-          </div>
-
-          {/* Stats Grid */}
-          <div 
-            className={`mt-24 pt-12 border-t border-slate-200 dark:border-slate-800/60 grid grid-cols-2 md:grid-cols-4 gap-12 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-            style={{ transitionDelay: '1200ms' }}
-          >
-             {[
-               { val: "150+", label: "Deliveries", color: "bg-blue-600" },
-               { val: "50+", label: "Engineers", color: "bg-indigo-600" },
-               { val: "98%", label: "Satisfaction", color: "bg-green-600" },
-               { val: "24/7", label: "Support", color: "bg-yellow-500" }
-             ].map((stat, i) => (
-               <div 
-                 key={i} 
-                 className="group cursor-default transition-all duration-1000 transform-gpu ease-out"
-                 style={{ 
-                   transitionDelay: `${1300 + (i * 100)}ms`,
-                   transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                   opacity: isVisible ? 1 : 0
-                 }}
-               >
-                  <p className="text-4xl md:text-5xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 drop-shadow-md text-glow">{stat.val}</p>
-                  <div className="flex items-center gap-3 mt-3">
-                    <div className={`w-10 h-1.5 ${stat.color} rounded-full group-hover:w-16 transition-all duration-500 shadow-sm`} aria-hidden="true" />
-                    <p className="text-[12px] text-slate-800 dark:text-slate-200 uppercase tracking-[0.25em] font-black shadow-black/5">{stat.label}</p>
-                  </div>
-               </div>
-             ))}
-          </div>
         </div>
       </div>
     </section>
