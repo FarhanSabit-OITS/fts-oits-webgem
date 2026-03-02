@@ -31,20 +31,40 @@
     scrollbar-width: none;
   }
   
-  .text-glow {
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-  
-  .dark .text-glow {
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(37, 99, 235, 0.2);
-  }
-  
   .text-outline-thin {
-    text-shadow: -1px -1px 0 rgba(255,255,255,0.1), 1px -1px 0 rgba(255,255,255,0.1), -1px 1px 0 rgba(255,255,255,0.1), 1px 1px 0 rgba(255,255,255,0.1);
+    text-shadow: 
+      1px 1px 0 rgba(255, 255, 255, 0.8),
+      -1px -1px 0 rgba(255, 255, 255, 0.8),
+      1px -1px 0 rgba(255, 255, 255, 0.8),
+      -1px 1px 0 rgba(255, 255, 255, 0.8);
   }
   
   .dark .text-outline-thin {
-    text-shadow: -1px -1px 0 rgba(0,0,0,0.3), 1px -1px 0 rgba(0,0,0,0.3), -1px 1px 0 rgba(0,0,0,0.3), 1px 1px 0 rgba(0,0,0,0.3);
+    text-shadow: 
+      1px 1px 0 rgba(0, 0, 0, 0.8),
+      -1px -1px 0 rgba(0, 0, 0, 0.8),
+      1px -1px 0 rgba(0, 0, 0, 0.8),
+      -1px 1px 0 rgba(0, 0, 0, 0.8);
+  }
+
+  .text-glow {
+    text-shadow: 
+      0 0 30px rgba(255, 255, 255, 0.9), 
+      0 0 15px rgba(255, 255, 255, 0.6),
+      1px 1px 0 rgba(255, 255, 255, 0.8),
+      -1px -1px 0 rgba(255, 255, 255, 0.8),
+      1px -1px 0 rgba(255, 255, 255, 0.8),
+      -1px 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  
+  .dark .text-glow {
+    text-shadow: 
+      0 0 30px rgba(59, 130, 246, 0.6), 
+      0 0 60px rgba(59, 130, 246, 0.3),
+      1px 1px 0 rgba(0, 0, 0, 0.8),
+      -1px -1px 0 rgba(0, 0, 0, 0.8),
+      1px -1px 0 rgba(0, 0, 0, 0.8),
+      -1px 1px 0 rgba(0, 0, 0, 0.8);
   }
   
   .bg-clip-text {

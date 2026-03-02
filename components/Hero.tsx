@@ -66,7 +66,7 @@ export const Hero: React.FC = () => {
 
       {/* Heavier Gradient Overlay for Guaranteed Legibility */}
       <div 
-        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/98 to-transparent dark:from-slate-950 dark:via-slate-950/90 dark:to-transparent pointer-events-none animate-gradient-shift" 
+        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/95 to-slate-50/40 dark:from-slate-950 dark:via-slate-950/95 dark:to-slate-950/40 pointer-events-none animate-gradient-shift" 
         style={{ backgroundSize: '200% 200%' }}
       />
 
@@ -101,7 +101,7 @@ export const Hero: React.FC = () => {
             {TAGLINE.split(' ').map((word, i) => (
               <span 
                 key={i} 
-                className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-md text-outline-thin text-glow' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
+                className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-md text-glow' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
                 style={{ 
                   transitionDelay: `${150 + i * 150}ms`,
                   opacity: isVisible ? 1 : 0,
@@ -119,7 +119,7 @@ export const Hero: React.FC = () => {
             style={{ transitionDelay: '800ms' }}
           >
             <div className="absolute -left-8 top-2 bottom-2 w-1.5 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full opacity-100 shadow-lg" />
-            <p className="text-2xl md:text-3xl lg:text-4xl text-slate-950 dark:text-slate-100 font-bold max-w-3xl leading-snug pl-8 drop-shadow-xl text-glow text-outline-thin">
+            <p className="text-2xl md:text-3xl lg:text-4xl text-slate-950 dark:text-slate-100 font-bold max-w-3xl leading-snug pl-8 drop-shadow-xl text-glow">
               We architect high-performance digital systems for global disruptors. <br className="hidden md:block" />
               From strategic consultation to industrial-grade deployment.
             </p>
