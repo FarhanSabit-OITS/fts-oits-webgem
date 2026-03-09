@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Terminal, Code2, Cpu, Globe, Smartphone, Cloud, ChevronRight, ExternalLink, Quote } from 'lucide-react';
+import { ArrowRight, Terminal, Code2, Cpu, Globe, Smartphone, Cloud, ChevronRight, ChevronLeft, ExternalLink, Quote } from 'lucide-react';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
 import { TAGLINE, SERVICES, PROJECTS, TESTIMONIALS } from '../constants';
@@ -9,6 +9,7 @@ export const Hero: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const scrollToContact = () => {
     document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' });
@@ -42,7 +43,10 @@ export const Hero: React.FC = () => {
 
     // Rotate portfolio projects
     const projectInterval = setInterval(() => {
-      setActiveProjectIndex((prev) => (prev + 1) % Math.min(PROJECTS.length, 4)); // Show top 4
+      setActiveProjectIndex((prev) => {
+        const currentFiltered = activeCategory === 'All' ? PROJECTS : PROJECTS.filter(p => p.category === activeCategory);
+        return (prev + 1) % Math.min(currentFiltered.length, 4);
+      });
     }, 5000);
 
     // Rotate testimonials
@@ -58,9 +62,14 @@ export const Hero: React.FC = () => {
       clearInterval(testimonialInterval);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [activeCategory]);
 
-  const activeProject = PROJECTS[activeProjectIndex];
+  const categories = ['All', ...Array.from(new Set(PROJECTS.map(p => p.category)))].slice(0, 3);
+  const filteredProjects = activeCategory === 'All' ? PROJECTS : PROJECTS.filter(p => p.category === activeCategory);
+  const activeProject = filteredProjects[activeProjectIndex] || filteredProjects[0];
+
+  const nextTestimonial = () => setActiveTestimonialIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+  const prevTestimonial = () => setActiveTestimonialIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
 
   return (
     <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
@@ -150,16 +159,21 @@ export const Hero: React.FC = () => {
 
             {/* Core Services Showcase */}
             <div 
-              className={`mb-8 flex flex-wrap gap-3 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`mb-8 grid grid-cols-2 gap-3 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: '900ms' }}
             >
               {SERVICES.slice(0, 4).map((service, i) => (
-                <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 backdrop-blur-sm">
-                  {i === 0 && <Globe size={14} className="text-blue-600 dark:text-blue-400" aria-hidden="true" />}
-                  {i === 1 && <Smartphone size={14} className="text-indigo-600 dark:text-indigo-400" aria-hidden="true" />}
-                  {i === 2 && <Code2 size={14} className="text-purple-600 dark:text-purple-400" aria-hidden="true" />}
-                  {i === 3 && <Cloud size={14} className="text-sky-600 dark:text-sky-400" aria-hidden="true" />}
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">{service.title.split(' ')[0]}</span>
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/40 dark:bg-slate-800/40 border border-white/50 dark:border-slate-700/50 backdrop-blur-md hover:bg-white/60 dark:hover:bg-slate-800/60 transition-colors group cursor-default shadow-sm">
+                  <div className="p-2 rounded-lg bg-white/50 dark:bg-slate-900/50 group-hover:scale-110 transition-transform duration-300">
+                    {i === 0 && <Globe size={18} className="text-blue-600 dark:text-blue-400" aria-hidden="true" />}
+                    {i === 1 && <Smartphone size={18} className="text-indigo-600 dark:text-indigo-400" aria-hidden="true" />}
+                    {i === 2 && <Code2 size={18} className="text-purple-600 dark:text-purple-400" aria-hidden="true" />}
+                    {i === 3 && <Cloud size={18} className="text-sky-600 dark:text-sky-400" aria-hidden="true" />}
+                  </div>
+                  <div>
+                    <p className="text-xs md:text-sm font-bold text-slate-900 dark:text-white leading-tight">{service.title}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">{service.description}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -169,17 +183,23 @@ export const Hero: React.FC = () => {
               className={`mb-10 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: '950ms' }}
             >
-              <div className="relative p-5 rounded-2xl bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/50 dark:border-slate-700/50 shadow-sm overflow-hidden group">
+              <div className="relative p-6 rounded-2xl bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/50 dark:border-slate-700/50 shadow-sm overflow-hidden group">
                 <Quote size={40} className="absolute -top-2 -right-2 text-blue-500/10 dark:text-blue-400/10 transform -rotate-12 group-hover:scale-110 transition-transform duration-500" />
                 <div className="relative z-10">
-                  <p className="text-sm md:text-base text-slate-800 dark:text-slate-200 italic mb-3 line-clamp-2">
+                  <p className="text-sm md:text-base text-slate-800 dark:text-slate-200 italic mb-4 line-clamp-2 min-h-[2.5rem]">
                     "{TESTIMONIALS[activeTestimonialIndex].content}"
                   </p>
-                  <div className="flex items-center gap-3">
-                    <img src={TESTIMONIALS[activeTestimonialIndex].avatar} alt={TESTIMONIALS[activeTestimonialIndex].name} className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700" />
-                    <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">{TESTIMONIALS[activeTestimonialIndex].name}</p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">{TESTIMONIALS[activeTestimonialIndex].role}, {TESTIMONIALS[activeTestimonialIndex].company}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <img src={TESTIMONIALS[activeTestimonialIndex].avatar} alt={TESTIMONIALS[activeTestimonialIndex].name} className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-700 shadow-sm" />
+                      <div>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{TESTIMONIALS[activeTestimonialIndex].name}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">{TESTIMONIALS[activeTestimonialIndex].role}, {TESTIMONIALS[activeTestimonialIndex].company}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
+                      <button onClick={prevTestimonial} className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-500 dark:text-slate-400" aria-label="Previous testimonial"><ChevronLeft size={16} /></button>
+                      <button onClick={nextTestimonial} className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-500 dark:text-slate-400" aria-label="Next testimonial"><ChevronRight size={16} /></button>
                     </div>
                   </div>
                 </div>
@@ -217,8 +237,9 @@ export const Hero: React.FC = () => {
               style={{ transitionDelay: '1100ms' }}
             >
               <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Building the future of digital. <button onClick={scrollToAbout} className="font-bold text-blue-600 dark:text-blue-400 hover:underline">Learn about OITS Dhaka</button>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-300 text-center">
+                Engineering excellence from Dhaka to the world. <br className="sm:hidden" />
+                <button onClick={scrollToAbout} className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors ml-1">Discover our story &rarr;</button>
               </p>
               <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
             </div>
@@ -254,9 +275,22 @@ export const Hero: React.FC = () => {
                       </button>
                     </div>
 
+                    {/* Category Filter */}
+                    <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-1">
+                      {categories.map(cat => (
+                        <button 
+                          key={cat}
+                          onClick={() => { setActiveCategory(cat); setActiveProjectIndex(0); }}
+                          className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full whitespace-nowrap transition-colors ${activeCategory === cat ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-200/50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-700'}`}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+
                     {/* Project Image */}
                     <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-slate-200 dark:bg-slate-800 group/image">
-                      {PROJECTS.slice(0, 4).map((project, index) => (
+                      {filteredProjects.slice(0, 4).map((project, index) => (
                         <div 
                           key={project.id}
                           className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === activeProjectIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
@@ -273,20 +307,20 @@ export const Hero: React.FC = () => {
                       {/* Overlay Content */}
                       <div className="absolute bottom-0 left-0 right-0 p-5 z-20 transform translate-y-2 group-hover/image:translate-y-0 transition-transform duration-500">
                         <span className="inline-block px-2 py-1 rounded bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-wider mb-2 shadow-lg transform -translate-x-2 opacity-0 group-hover/image:translate-x-0 group-hover/image:opacity-100 transition-all duration-500 delay-100">
-                          {activeProject.category}
+                          {activeProject?.category}
                         </span>
                         <h3 className="text-xl font-bold text-white mb-1 leading-tight drop-shadow-md">
-                          {activeProject.title}
+                          {activeProject?.title}
                         </h3>
                         <p className="text-xs text-slate-300 line-clamp-2 opacity-0 group-hover/image:opacity-100 transition-opacity duration-500 delay-200">
-                          {activeProject.description}
+                          {activeProject?.description}
                         </p>
                       </div>
                     </div>
 
                     {/* Progress Bar */}
                     <div className="flex gap-1 mb-4">
-                      {PROJECTS.slice(0, 4).map((_, idx) => (
+                      {filteredProjects.slice(0, 4).map((_, idx) => (
                         <div key={idx} className="h-1 flex-1 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
                           <div 
                             className={`h-full bg-blue-600 transition-all duration-500 ${idx === activeProjectIndex ? 'w-full' : 'w-0'}`}
@@ -301,7 +335,7 @@ export const Hero: React.FC = () => {
                       size="sm" 
                       className="w-full justify-between group/btn hover:bg-blue-50 dark:hover:bg-blue-900/20 text-slate-700 dark:text-slate-300"
                       onClick={scrollToPortfolio}
-                      aria-label={`View details for ${activeProject.title}`}
+                      aria-label={`View details for ${activeProject?.title}`}
                     >
                       <span className="font-semibold">View Case Study</span>
                       <ExternalLink size={16} className="text-slate-400 group-hover/btn:text-blue-600 transition-colors" aria-hidden="true" />
