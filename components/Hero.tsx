@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Terminal, Code2, Cpu, Globe, Smartphone, Cloud, ChevronRight, ExternalLink } from 'lucide-react';
+import { ArrowRight, Terminal, Code2, Cpu, Globe, Smartphone, Cloud, ChevronRight, ExternalLink, Quote } from 'lucide-react';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
-import { TAGLINE, SERVICES, PROJECTS } from '../constants';
+import { TAGLINE, SERVICES, PROJECTS, TESTIMONIALS } from '../constants';
 
 export const Hero: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
 
   const scrollToContact = () => {
     document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' });
@@ -21,14 +22,21 @@ export const Hero: React.FC = () => {
     document.getElementById(SectionId.PORTFOLIO)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const scrollToAbout = () => {
+    document.getElementById(SectionId.ABOUT)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     
+    let animationFrameId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      // Gentle parallax factor
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 2,
-        y: (e.clientY / window.innerHeight - 0.5) * 2,
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        setMousePos({
+          x: (e.clientX / window.innerWidth - 0.5) * 2,
+          y: (e.clientY / window.innerHeight - 0.5) * 2,
+        });
       });
     };
 
@@ -37,11 +45,18 @@ export const Hero: React.FC = () => {
       setActiveProjectIndex((prev) => (prev + 1) % Math.min(PROJECTS.length, 4)); // Show top 4
     }, 5000);
 
+    // Rotate testimonials
+    const testimonialInterval = setInterval(() => {
+      setActiveTestimonialIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+    }, 6000);
+
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       clearTimeout(timer);
       clearInterval(projectInterval);
+      clearInterval(testimonialInterval);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
@@ -135,7 +150,7 @@ export const Hero: React.FC = () => {
 
             {/* Core Services Showcase */}
             <div 
-              className={`mb-10 flex flex-wrap gap-3 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`mb-8 flex flex-wrap gap-3 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: '900ms' }}
             >
               {SERVICES.slice(0, 4).map((service, i) => (
@@ -147,6 +162,28 @@ export const Hero: React.FC = () => {
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">{service.title.split(' ')[0]}</span>
                 </div>
               ))}
+            </div>
+
+            {/* Testimonial Snippet */}
+            <div 
+              className={`mb-10 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              style={{ transitionDelay: '950ms' }}
+            >
+              <div className="relative p-5 rounded-2xl bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/50 dark:border-slate-700/50 shadow-sm overflow-hidden group">
+                <Quote size={40} className="absolute -top-2 -right-2 text-blue-500/10 dark:text-blue-400/10 transform -rotate-12 group-hover:scale-110 transition-transform duration-500" />
+                <div className="relative z-10">
+                  <p className="text-sm md:text-base text-slate-800 dark:text-slate-200 italic mb-3 line-clamp-2">
+                    "{TESTIMONIALS[activeTestimonialIndex].content}"
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <img src={TESTIMONIALS[activeTestimonialIndex].avatar} alt={TESTIMONIALS[activeTestimonialIndex].name} className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700" />
+                    <div>
+                      <p className="text-xs font-bold text-slate-900 dark:text-white">{TESTIMONIALS[activeTestimonialIndex].name}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">{TESTIMONIALS[activeTestimonialIndex].role}, {TESTIMONIALS[activeTestimonialIndex].company}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Buttons */}
@@ -172,6 +209,18 @@ export const Hero: React.FC = () => {
               >
                 Our Capabilities
               </Button>
+            </div>
+
+            {/* About Us Snippet */}
+            <div 
+              className={`mt-8 flex items-center gap-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
+              style={{ transitionDelay: '1100ms' }}
+            >
+              <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Building the future of digital. <button onClick={scrollToAbout} className="font-bold text-blue-600 dark:text-blue-400 hover:underline">Learn about OITS Dhaka</button>
+              </p>
+              <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
             </div>
           </div>
 
@@ -206,7 +255,7 @@ export const Hero: React.FC = () => {
                     </div>
 
                     {/* Project Image */}
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-slate-200 dark:bg-slate-800">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-slate-200 dark:bg-slate-800 group/image">
                       {PROJECTS.slice(0, 4).map((project, index) => (
                         <div 
                           key={project.id}
@@ -215,20 +264,23 @@ export const Hero: React.FC = () => {
                           <img 
                             src={project.imageUrl} 
                             alt={project.title}
-                            className="w-full h-full object-cover transform transition-transform duration-[5000ms] ease-linear scale-100 group-hover:scale-110"
+                            className="w-full h-full object-cover transform transition-transform duration-[5000ms] ease-linear scale-100 group-hover/image:scale-110"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent opacity-80 group-hover/image:opacity-100 transition-opacity duration-500"></div>
                         </div>
                       ))}
                       
                       {/* Overlay Content */}
-                      <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
-                        <span className="inline-block px-2 py-1 rounded bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider mb-2">
+                      <div className="absolute bottom-0 left-0 right-0 p-5 z-20 transform translate-y-2 group-hover/image:translate-y-0 transition-transform duration-500">
+                        <span className="inline-block px-2 py-1 rounded bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-wider mb-2 shadow-lg transform -translate-x-2 opacity-0 group-hover/image:translate-x-0 group-hover/image:opacity-100 transition-all duration-500 delay-100">
                           {activeProject.category}
                         </span>
-                        <h3 className="text-xl font-bold text-white mb-1 leading-tight">
+                        <h3 className="text-xl font-bold text-white mb-1 leading-tight drop-shadow-md">
                           {activeProject.title}
                         </h3>
+                        <p className="text-xs text-slate-300 line-clamp-2 opacity-0 group-hover/image:opacity-100 transition-opacity duration-500 delay-200">
+                          {activeProject.description}
+                        </p>
                       </div>
                     </div>
 
