@@ -138,9 +138,9 @@ export const PROJECTS: Project[] = [
     description: 'Next-gen cloud POS with offline-first synchronization.',
     fullDescription: 'A robust retail management suite that synchronizes inventory across hundreds of locations while maintaining high speed at checkout.',
     problemStatement: 'Existing POS systems were slow during peak hours and completely non-functional during internet outages.',
-    technicalApproach: 'Built a local-first architecture using Vue.js and IndexedDB, with a Go-based backend for high-speed central synchronization and Redis for caching.',
+    technicalApproach: 'Built a local-first architecture using Vue.js and IndexedDB, with a Rust-based backend for high-speed central synchronization and real-time concurrency.',
     results: 'Zero downtime recorded during peak holiday seasons and a 20% increase in transaction speed.',
-    technologies: ['Vue.js', 'Go', 'Redis'],
+    technologies: ['Vue.js', 'Rust'],
     duration: '4 Months',
     status: 'Completed'
   },
@@ -208,23 +208,57 @@ export const TESTIMONIALS: Testimonial[] = [
 ];
 
 export const TECH_STACK = [
-  "React", "Next.js", "Node.js", "TypeScript", "Python", "AWS", "Docker", "Flutter", "PostgreSQL", "Go", "Kubernetes"
+  "React", "Next.js", "Node.js", "TypeScript", "Python", "AWS", "Docker", "Flutter", "PostgreSQL", "Rust", "Kubernetes"
 ];
 
 export const TECH_DOMAINS: TechDomain[] = [
   {
     id: 'frontend',
     label: 'Frontend',
-    skills: ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind CSS', 'Three.js']
+    skills: [
+      'React',
+      'Next.js',
+      'Vue.js',
+      'TypeScript',
+      'Tailwind CSS',
+      'Three.js'
+    ]
   },
   {
     id: 'backend',
     label: 'Backend',
-    skills: ['Node.js', 'Python', 'Go', 'NestJS', 'PostgreSQL', 'Redis', 'GraphQL']
+    skills: [
+      'Node.js',
+      'Python',
+      'Rust',
+      'NestJS',
+      'PostgreSQL',
+      'GraphQL'
+    ]
   },
   {
     id: 'cloud',
-    label: 'Cloud & DevOps',
-    skills: ['AWS', 'Google Cloud', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD']
+    label: 'Infrastructure',
+    skills: [
+      'AWS',
+      'Google Cloud (GCP)',
+      'Docker',
+      'Kubernetes',
+      'Terraform',
+      'CI/CD'
+    ]
+  },
+  {
+    id: 'specialized',
+    label: 'Specialized',
+    skills: [
+      'AI & Machine Learning',
+      'Internet of Things (IoT)',
+      'AR & VR Solutions',
+      'Blockchain, Web-3 & DApp',
+      'Intelligent Features Augmentation',
+      'Cross-Platform Solutions',
+      'Progressive Web Apps (PWA)'
+    ]
   }
 ];

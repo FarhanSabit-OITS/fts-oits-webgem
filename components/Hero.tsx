@@ -129,7 +129,7 @@ export const Hero: React.FC = () => {
             </div>
             
             {/* Tagline */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-950 dark:text-white leading-[0.95] tracking-tighter mb-8 flex flex-wrap gap-x-4 gap-y-2 drop-shadow-2xl perspective-1000">
+            <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-slate-950 dark:text-white leading-[0.95] tracking-tighter mb-8 flex flex-wrap gap-x-4 gap-y-2 drop-shadow-2xl perspective-1000">
               {TAGLINE.split(' ').map((word, i) => (
                 <span 
                   key={i} 
@@ -151,7 +151,7 @@ export const Hero: React.FC = () => {
               style={{ transitionDelay: '800ms' }}
             >
               <div className="absolute -left-6 top-2 bottom-2 w-1 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full opacity-100 shadow-lg" />
-              <p className="text-xl md:text-2xl text-slate-950 dark:text-slate-100 font-medium max-w-2xl leading-relaxed pl-6 drop-shadow-xl text-glow">
+              <p className="text-lg sm:text-xl md:text-2xl text-slate-950 dark:text-slate-100 font-medium max-w-2xl leading-relaxed pl-6 drop-shadow-xl text-glow">
                 We architect high-performance digital systems for global disruptors. 
                 From strategic consultation to industrial-grade deployment.
               </p>
@@ -159,7 +159,7 @@ export const Hero: React.FC = () => {
 
             {/* Core Services Showcase */}
             <div 
-              className={`mb-8 grid grid-cols-2 gap-3 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`mb-8 grid grid-cols-1 xs:grid-cols-2 gap-3 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: '900ms' }}
             >
               {SERVICES.slice(0, 4).map((service, i) => (
@@ -215,7 +215,7 @@ export const Hero: React.FC = () => {
                 variant="primary" 
                 size="lg" 
                 onClick={scrollToContact} 
-                className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500 hover:border-slate-800 dark:hover:border-blue-400 ring-2 ring-white/30 dark:ring-blue-900/50 shadow-xl shadow-blue-900/20"
+                className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500 hover:border-slate-800 dark:hover:border-blue-400 ring-2 ring-white/30 dark:ring-blue-900/50 shadow-xl shadow-blue-900/20 whitespace-nowrap"
                 aria-label="Get a quote for your project"
               >
                 Get a Quote <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={20} aria-hidden="true" />
@@ -223,11 +223,11 @@ export const Hero: React.FC = () => {
               <Button 
                 variant="outline" 
                 size="lg" 
-                onClick={scrollToServices} 
+                onClick={scrollToContact} 
                 className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-white dark:hover:bg-slate-800 shadow-lg"
-                aria-label="Explore our full capability matrix"
+                aria-label="Request a demo consultation"
               >
-                Our Capabilities
+                Request Demo
               </Button>
             </div>
 

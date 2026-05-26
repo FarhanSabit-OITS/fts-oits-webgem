@@ -77,7 +77,7 @@ export const Process: React.FC = () => {
           ))}
         </div>
         
-        <div className="mt-20 p-8 md:p-12 rounded-[4rem] bg-blue-600 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/30 overflow-hidden relative group transition-all duration-700 hover:shadow-blue-500/60">
+        <div className="mt-20 p-6 sm:p-12 rounded-[2rem] sm:rounded-[3rem] md:rounded-[4rem] bg-blue-600 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/30 overflow-hidden relative group transition-all duration-700 hover:shadow-blue-500/60">
            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[marquee_3s_linear_infinite] pointer-events-none" />
            <div className="max-w-xl relative z-10">
              <h4 className="text-3xl md:text-4xl font-black mb-3 tracking-tight">Ready to start the discovery?</h4>
@@ -85,7 +85,7 @@ export const Process: React.FC = () => {
            </div>
            <button 
              onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
-             className="relative z-10 px-12 py-6 bg-white text-blue-600 rounded-3xl font-black text-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-110 hover:bg-blue-50 hover:text-blue-700 hover:shadow-[0_20px_40px_-10px_rgba(255,255,255,0.4)] active:scale-95 shadow-xl shadow-black/10 flex items-center gap-3 group/btn"
+             className="relative z-10 w-full md:w-auto px-12 py-6 bg-white text-blue-600 rounded-2xl md:rounded-3xl font-black text-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 active:scale-95 shadow-xl shadow-black/10 flex items-center justify-center gap-3 group/btn"
            >
              <Calendar size={24} className="group-hover/btn:rotate-12 transition-transform" />
              Book Consultation

@@ -71,7 +71,7 @@ export const Contact: React.FC = () => {
             
             <div className="space-y-6">
               <div className="flex flex-wrap items-center gap-4">
-                <p className="text-2xl md:text-3xl font-black text-slate-950 dark:text-slate-100 tracking-tight drop-shadow-sm">{CONTACT_EMAIL}</p>
+                <p className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-slate-100 tracking-tight drop-shadow-sm break-all sm:break-words">{CONTACT_EMAIL}</p>
                 <button onClick={handleCopyEmail} className={`p-4 rounded-2xl transition-all border-2 ${isCopied ? 'bg-green-600 border-green-600 text-white shadow-2xl scale-110' : 'bg-white dark:bg-slate-900 text-slate-400 hover:text-blue-600 border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20'}`} aria-label="Copy email address">
                   {isCopied ? <Check size={22} className="animate-in zoom-in duration-500" /> : <Copy size={22} />}
                 </button>
@@ -86,26 +86,26 @@ export const Contact: React.FC = () => {
                     <p className="font-bold text-slate-900 dark:text-slate-100 leading-relaxed text-lg">{ADDRESS}</p>
                  </div>
               </div>
-
-              {/* Embedded Map */}
+ 
+               {/* Embedded Map */}
               <div className="w-full h-64 md:h-80 rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-800 shadow-xl mt-6">
                 <iframe 
-                  src={mapUrl} 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="OITS Dhaka Location"
-                  className="grayscale hover:grayscale-0 transition-all duration-700"
+                   src={mapUrl} 
+                   width="100%" 
+                   height="100%" 
+                   style={{ border: 0 }} 
+                   allowFullScreen 
+                   loading="lazy" 
+                   referrerPolicy="no-referrer-when-downgrade"
+                   title="OITS Dhaka Location"
+                   className="grayscale hover:grayscale-0 transition-all duration-700"
                 />
               </div>
             </div>
           </div>
-
+ 
           <div className={`relative transition-all duration-1000 delay-300 ease-out transform-gpu ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className={`relative bg-white dark:bg-slate-900 p-10 md:p-14 rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-700 overflow-hidden ${status === 'sending' ? 'scale-[0.98]' : 'scale-100'}`}>
+            <div className={`relative bg-white dark:bg-slate-900 p-6 sm:p-10 md:p-14 rounded-[2rem] sm:rounded-[3.5rem] md:rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-700 overflow-hidden ${status === 'sending' ? 'scale-[0.98]' : 'scale-100'}`}>
               
               {status === 'sending' && (
                 <div className="absolute inset-0 z-50 bg-white/70 dark:bg-slate-900/85 backdrop-blur-[6px] flex flex-col items-center justify-center animate-in fade-in duration-500">

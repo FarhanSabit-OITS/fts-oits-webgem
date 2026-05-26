@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, Home } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS } from '../constants';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
@@ -30,18 +30,10 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     }
   };
 
-  const scrollToContact = () => {
-    const contactSection = document.getElementById(SectionId.CONTACT);
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
-  };
-
   // Custom Logo Component for reusability within Header
   const BrandLogo = () => (
-    <div className="flex items-center gap-2.5">
-      <div className="w-10 h-10 flex items-center justify-center" aria-hidden="true">
+    <div className="flex items-center gap-2">
+      <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shrink-0" aria-hidden="true">
         <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-sm">
           <defs>
             <linearGradient id="header-logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -56,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           <path d="M54 32 H84 V41 H74 V68 H64 V41 H54 Z" fill="url(#header-logo-gradient)" />
         </svg>
       </div>
-      <span className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-600 to-blue-500 dark:from-blue-400 dark:via-blue-300 dark:to-blue-200 filter drop-shadow-sm">
+      <span className="text-base xs:text-xl sm:text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-600 to-blue-500 dark:from-blue-400 dark:via-blue-300 dark:to-blue-200 filter drop-shadow-sm">
         {COMPANY_NAME}
       </span>
     </div>
@@ -71,10 +63,10 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
       }`}
       role="banner"
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
+      <div className="container mx-auto px-3 xs:px-4 sm:px-6 flex items-center justify-between">
         <a 
           href={`#${SectionId.HOME}`}
-          className="group hover:opacity-90 transition-opacity" 
+          className="group hover:opacity-90 transition-opacity min-w-0" 
           onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
           aria-label={`${COMPANY_NAME} homepage - scroll to top of the page`}
         >
@@ -82,17 +74,17 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-2" aria-label="Main site navigation">
-          <ul className="flex items-center gap-2" role="list">
+        <nav className="hidden md:flex items-center gap-1 xl:gap-2" aria-label="Main site navigation">
+          <ul className="flex items-center gap-1 xl:gap-2" role="list">
             {NAV_ITEMS.map((item) => (
               <li key={item.label}>
                 <a 
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
                   aria-label={`Jump to ${item.label} section`}
-                  className="px-4 py-2 rounded-full text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
+                  className="px-3 xl:px-4 py-2 rounded-full text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
                 >
-                  {item.label}
+                  {item.label === 'Home' ? <Home size={18} aria-label="Home" /> : item.label}
                 </a>
               </li>
             ))}
@@ -106,12 +98,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
              >
                 {theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
              </button>
-          </div>
-
-          <div className="ml-2">
-            <Button variant="primary" size="sm" onClick={scrollToContact} aria-label="Book a software demo and consultation with OITS Dhaka">
-              Request Demo
-            </Button>
           </div>
         </nav>
 
@@ -161,9 +147,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                 </li>
               ))}
             </ul>
-            <Button className="w-full mt-4" onClick={scrollToContact} aria-label="Book a free consultation and project demo">
-              Request Demo
-            </Button>
           </nav>
         </div>
       )}

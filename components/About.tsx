@@ -172,19 +172,19 @@ export const About: React.FC = () => {
                 className={`group relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-1000 ease-out transform ${isTeamVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
                 style={{ transitionDelay: isTeamVisible ? `${index * 150}ms` : '0ms' }}
               >
-                <div className="aspect-[4/5] overflow-hidden bg-slate-200 dark:bg-slate-700">
+                <div className="aspect-[4/5] overflow-hidden bg-slate-200 dark:bg-slate-700 relative">
                   <img 
                     src={member.image} 
                     alt={member.name}
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent opacity-90 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-lg">
-                    <h4 className="font-bold text-slate-900 dark:text-white text-lg">{member.name}</h4>
-                    <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">{member.role}</p>
+                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 translate-y-0 lg:translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-lg">
+                    <h4 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg">{member.name}</h4>
+                    <p className="text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium">{member.role}</p>
                   </div>
                 </div>
               </div>
