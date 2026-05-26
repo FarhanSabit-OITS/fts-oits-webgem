@@ -213,12 +213,13 @@ To showcase a new development, open `constants.ts` and append an object to `PROJ
 ```
 
 ### Tweaking the AI Assistant Prompt Context
-To re-train the embedded assistant on OITS Dhaka metrics, modify the `systemInstruction` variable in `components/AiAssistant.tsx`:
+To re-train the embedded assistant on OITS Dhaka metrics, modify the `systemInstruction` configuration variable in `components/AiAssistant.tsx`:
 
 ```ts
-systemInstruction: `You are a professional project consultant for OITS Dhaka.
-Your goal is to assist users in detailing their parameters.
-Always maintain high professional integrity.`
+systemInstruction: `You are the Lead Digital Strategy & Engineering Consultant for OITS Dhaka...
+CORPORATE PERSONA & TONE: Professional, reassuring, intellectually authoritative...
+KNOWLEDGE BASE & CAPABILITIES: Enterprise Web Solutions, Native Mobile Apps, Dedicated Teams, Cloud & DevOps...
+PORTFOLIO SHIELDS: FinTech Analytics Hub, Luma Healthcare, Global Logistics Engine, SecurePay Gateway...`
 ```
 
 ### Amending Contact Coordinates
