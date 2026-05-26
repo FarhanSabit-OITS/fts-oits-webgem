@@ -218,7 +218,9 @@ export const Hero: React.FC = () => {
                 className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500 hover:border-slate-800 dark:hover:border-blue-400 ring-2 ring-white/30 dark:ring-blue-900/50 shadow-xl shadow-blue-900/20 whitespace-nowrap"
                 aria-label="Get a quote for your project"
               >
-                Get a Quote <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={20} aria-hidden="true" />
+                <div className="flex flex-row items-center">
+                  Get a Quote <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={20} aria-hidden="true" />
+                </div>
               </Button>
               <Button 
                 variant="outline" 
