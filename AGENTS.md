@@ -10,5 +10,14 @@
     - Buttons: "Get a Quote" text and arrow MUST be on the same horizontal line.
 
 ## Commit Message & GitHub Workflow
-- When a task is completed, you MUST propose a concise, conventional commit message (e.g., `feat: [description]`, `fix: [description]`, `refactor: [description]`).
+- When a task is completed, you MUST propose a detailed, conventional commit message following this exact template:
+  `feat: [concise title describing the main impact]`
+
+  `- Section Header 1 (e.g., Features/UI):`
+  `  - Bullet point detailing the change.`
+  `  - Bullet point detailing the change.`
+  
+  `- Section Header 2 (e.g., Performance/Accessibility):`
+  `  - Bullet point detailing the change.`
+
 - After verification (e.g., `compile_applet`), if the changes look correct, propose pushing the changes to the GitHub repository using the proposed commit message.

@@ -9,6 +9,7 @@ const iconMap: Record<string, React.ReactNode> = {
   PenTool: <PenTool className="w-8 h-8" />,
   Cloud: <Cloud className="w-8 h-8" />,
   Users: <Users className="w-8 h-8" />,
+  Terminal: <Terminal className="w-8 h-8" />,
 };
 
 const domainIcons: Record<string, React.ReactNode> = {

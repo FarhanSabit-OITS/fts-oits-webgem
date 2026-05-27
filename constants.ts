@@ -82,6 +82,20 @@ export const SERVICES: Service[] = [
     icon: 'Cloud',
     features: ['AWS / GCP / Azure', 'DevOps Automation', 'Cybersecurity', 'Database Tuning'],
   },
+  {
+    id: 'tech-frontiers',
+    title: 'Solutions for Technology Frontiers',
+    description: 'Cutting-edge development in AI, ML, AR/VR, Blockchain, and IoT to stay ahead of the curve.',
+    icon: 'Terminal',
+    features: ['Intelligent Features & AI/ML Solutions', 'Immersive Solutions & AR/VR Apps', 'Blockchain & Web-3 (Dapps) Solutions', 'IoT & Edge Computing Solutions'],
+  },
+  {
+    id: 'cross-platform',
+    title: 'Cross-platform Solutions',
+    description: 'Unified experiences across devices using modern cross-platform frameworks.',
+    icon: 'Smartphone',
+    features: ['PWA', 'React Native', 'Flutter', 'WebAssembly'],
+  },
 ];
 
 export const PROJECTS: Project[] = [
