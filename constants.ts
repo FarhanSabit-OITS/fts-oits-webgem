@@ -12,6 +12,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Workflow', href: `#${SectionId.PROCESS}` },
   { label: 'Portfolio', href: `#${SectionId.PORTFOLIO}` },
   { label: 'About', href: `#${SectionId.ABOUT}` },
+  { label: 'Insights', href: `#${SectionId.INSIGHTS}` },
   { label: 'Contact', href: `#${SectionId.CONTACT}` },
 ];
 

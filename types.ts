@@ -68,5 +68,6 @@ export enum SectionId {
   PROCESS = 'process',
   ABOUT = 'about',
   PORTFOLIO = 'portfolio',
+  INSIGHTS = 'insights',
   CONTACT = 'contact',
 }

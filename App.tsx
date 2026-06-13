@@ -7,11 +7,14 @@ import { Services } from './components/Services';
 import { Process } from './components/Process';
 import { About } from './components/About';
 import { Portfolio } from './components/Portfolio';
+import { Insights } from './components/Insights';
 import { Testimonials } from './components/Testimonials';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { AiAssistant } from './components/AiAssistant';
+import { CursorSpotlight } from './components/CursorSpotlight';
 import { SectionId } from './types';
+import { updateDynamicMeta } from './utils/seo';
 import { COMPANY_NAME, TAGLINE } from './constants';
 import { ArrowUp } from 'lucide-react';
 
@@ -35,6 +38,10 @@ const SEO_DATA = {
   [SectionId.PORTFOLIO]: {
     title: `Our Work - ${COMPANY_NAME}`,
     description: "Explore the successful products we've built for global clients."
+  },
+  [SectionId.INSIGHTS]: {
+    title: `Insights & Tech Trends - ${COMPANY_NAME}`,
+    description: "In-depth research and technical articles from our senior development leads in Dhaka."
   },
   [SectionId.CONTACT]: {
     title: `Start Your Project - ${COMPANY_NAME}`,
@@ -73,11 +80,7 @@ function App() {
           const seoInfo = SEO_DATA[sectionId as SectionId] || SEO_DATA[SectionId.HOME];
           
           if (seoInfo) {
-            document.title = seoInfo.title;
-            const metaDesc = document.querySelector('meta[name="description"]');
-            if (metaDesc) {
-              metaDesc.setAttribute('content', seoInfo.description);
-            }
+            updateDynamicMeta(sectionId, seoInfo);
           }
         }
       });
@@ -112,6 +115,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100 transition-colors duration-300 relative">
+      <CursorSpotlight />
       <Header theme={theme} toggleTheme={toggleTheme} />
       <main>
         <Hero />
@@ -120,6 +124,7 @@ function App() {
         <Process />
         <Portfolio />
         <About />
+        <Insights />
         <Testimonials />
         <Contact />
       </main>

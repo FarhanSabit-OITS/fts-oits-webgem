@@ -3,6 +3,7 @@ import { Menu, X, Sun, Moon, Home } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS } from '../constants';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
+import { useLanguage } from './LanguageContext';
 
 interface HeaderProps {
   theme: 'light' | 'dark';
@@ -12,6 +13,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,23 +76,42 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         </a>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1 xl:gap-2" aria-label="Main site navigation">
+        <nav className="hidden md:flex items-center gap-2 xl:gap-3" aria-label="Main site navigation">
           <ul className="flex items-center gap-1 xl:gap-2" role="list">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.label}>
-                <a 
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                  aria-label={`Jump to ${item.label} section`}
-                  className="px-3 xl:px-4 py-2 rounded-full text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
-                >
-                  {item.label === 'Home' ? <Home size={18} aria-label="Home" /> : item.label}
-                </a>
-              </li>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const labelKey = `nav_${item.label.toLowerCase()}`;
+              return (
+                <li key={item.label}>
+                  <a 
+                    href={item.href}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                    aria-label={`Jump to ${t(labelKey)} section`}
+                    className="px-3 xl:px-4 py-2 rounded-full text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
+                  >
+                    {item.label === 'Home' ? <Home size={18} aria-label={t('nav_home')} /> : t(labelKey)}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
           
-          <div className="ml-2 pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center gap-2">
+          <div className="ml-2 pl-2 border-l border-slate-200 dark:border-slate-700 flex items-center gap-3">
+             {/* Language Dropdown / Toggle */}
+             <div className="flex bg-slate-100 dark:bg-slate-900/60 p-1 rounded-full text-[10px] font-black tracking-tight border border-slate-200/50 dark:border-slate-800/80 font-mono">
+               <button
+                 onClick={() => setLanguage('en')}
+                 className={`px-2 py-1 rounded-full transition-all ${language === 'en' ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-950 dark:hover:text-white'}`}
+               >
+                 EN
+               </button>
+               <button
+                 onClick={() => setLanguage('bn')}
+                 className={`px-2 py-1 rounded-full transition-all ${language === 'bn' ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-950 dark:hover:text-white'}`}
+               >
+                 বাং
+               </button>
+             </div>
+
              <button
               onClick={toggleTheme}
               className="p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:rotate-12"
@@ -102,7 +123,23 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         </nav>
 
         {/* Mobile Toggle */}
-        <div className="flex items-center gap-4 md:hidden">
+        <div className="flex items-center gap-3 xs:gap-4 md:hidden">
+          {/* Mobile Language Selector */}
+          <div className="flex bg-slate-100 dark:bg-slate-900/60 p-1 rounded-full text-[9px] font-black border border-slate-200/50 dark:border-slate-800/80 font-mono">
+            <button
+              onClick={() => setLanguage('en')}
+              className={`px-1.5 py-0.5 rounded-full transition-all ${language === 'en' ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500'}`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLanguage('bn')}
+              className={`px-1.5 py-0.5 rounded-full transition-all ${language === 'bn' ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500'}`}
+            >
+              বাং
+            </button>
+          </div>
+
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -134,18 +171,21 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
         >
           <nav className="flex flex-col gap-2">
             <ul className="flex flex-col gap-2" role="list">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.label}>
-                  <a 
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    aria-label={`Jump to ${item.label} section`}
-                    className="px-4 py-3 rounded-lg text-lg font-medium text-slate-800 dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-95 block"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+              {NAV_ITEMS.map((item) => {
+                const labelKey = `nav_${item.label.toLowerCase()}`;
+                return (
+                  <li key={item.label}>
+                    <a 
+                      href={item.href}
+                      onClick={(e) => handleNavClick(e, item.href)}
+                      aria-label={`Jump to ${t(labelKey)} section`}
+                      className="px-4 py-3 rounded-lg text-lg font-medium text-slate-800 dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-95 block"
+                    >
+                      {item.label === 'Home' ? t('nav_home') : t(labelKey)}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         </div>

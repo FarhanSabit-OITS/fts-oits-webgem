@@ -3,8 +3,12 @@ import { Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, Map
 import { Button } from './ui/Button';
 import { CONTACT_EMAIL, ADDRESS } from '../constants';
 import { SectionId } from '../types';
+import { useLanguage } from './LanguageContext';
+import { Confetti } from './Confetti';
+import { ProjectEstimator } from './ProjectEstimator';
 
 export const Contact: React.FC = () => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -26,14 +30,14 @@ export const Contact: React.FC = () => {
 
   const validate = () => {
     const newErrors: typeof errors = {};
-    if (!formData.name.trim()) newErrors.name = 'Identification is required';
+    if (!formData.name.trim()) newErrors.name = t('contact_error_name');
     if (!formData.email.trim()) { 
-      newErrors.email = 'A business email is required'; 
+      newErrors.email = t('contact_error_email_empty'); 
     } 
     else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) { 
-      newErrors.email = 'Please provide a valid email format (e.g. name@company.com)'; 
+      newErrors.email = t('contact_error_email_invalid'); 
     }
-    if (!formData.message.trim()) newErrors.message = 'Please provide a project mission overview';
+    if (!formData.message.trim()) newErrors.message = t('contact_error_message');
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -57,17 +61,24 @@ export const Contact: React.FC = () => {
 
   return (
     <section ref={sectionRef} id={SectionId.CONTACT} className="py-24 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-500 relative overflow-hidden">
+      {/* Confetti Animation Trigger */}
+      <Confetti active={status === 'success'} />
+
       <div className="absolute top-0 right-0 w-[45%] h-full bg-blue-100/40 dark:bg-blue-900/5 -skew-x-12 transform translate-x-1/4 pointer-events-none" />
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 xl:gap-32 items-start mb-24">
           <div className="space-y-12">
             <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-600/10 dark:bg-blue-400/10 text-blue-900 dark:text-blue-300 text-[11px] font-black uppercase tracking-[0.25em] mb-8 ring-1 ring-blue-500/30 shadow-sm">
-                <Sparkles size={16} className="text-blue-600" /> Start Your Evolution
+                <Sparkles size={16} className="text-blue-600" /> {t('contact_badge')}
               </div>
-              <h3 className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tighter text-slate-950 dark:text-white drop-shadow-sm">Let's build <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 animate-pulse">industrial software.</span></h3>
+              <h3 className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tighter text-slate-950 dark:text-white drop-shadow-sm">
+                {t('contact_title')}
+              </h3>
             </div>
-            <p className="text-slate-700 dark:text-slate-300 text-xl font-medium max-w-lg leading-relaxed">Connect with our senior engineering team to discuss your infrastructure needs.</p>
+            <p className="text-slate-700 dark:text-slate-300 text-xl font-medium max-w-lg leading-relaxed">
+              {t('contact_desc')}
+            </p>
             
             <div className="space-y-6">
               <div className="flex flex-wrap items-center gap-4">
@@ -82,7 +93,7 @@ export const Contact: React.FC = () => {
                     <MapPin size={24} />
                  </div>
                  <div>
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">HQ Studio</p>
+                    <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">{t('contact_hq')}</p>
                     <p className="font-bold text-slate-900 dark:text-slate-100 leading-relaxed text-lg">{ADDRESS}</p>
                  </div>
               </div>
@@ -101,9 +112,21 @@ export const Contact: React.FC = () => {
                    className="grayscale hover:grayscale-0 transition-all duration-700"
                 />
               </div>
+
+              {/* Dynamic Project Estimator Widget */}
+              <div className="mt-8">
+                <ProjectEstimator 
+                  onEstimateSync={(briefText) => 
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      message: prev.message ? prev.message + "\n\n" + briefText : briefText 
+                    }))
+                  } 
+                />
+              </div>
             </div>
           </div>
- 
+  
           <div className={`relative transition-all duration-1000 delay-300 ease-out transform-gpu ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
             <div className={`relative bg-white dark:bg-slate-900 p-6 sm:p-10 md:p-14 rounded-[2rem] sm:rounded-[3.5rem] md:rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-700 overflow-hidden ${status === 'sending' ? 'scale-[0.98]' : 'scale-100'}`}>
               
@@ -114,7 +137,7 @@ export const Contact: React.FC = () => {
                     <div className="absolute inset-0 bg-blue-600/20 blur-3xl rounded-full scale-150 animate-pulse"></div>
                   </div>
                   <div className="text-center space-y-3">
-                    <p className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">Establishing Link...</p>
+                    <p className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">{t('contact_status_sending')}</p>
                     <p className="text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] animate-pulse">Encrypting Payload</p>
                   </div>
                 </div>
@@ -123,22 +146,22 @@ export const Contact: React.FC = () => {
               {status === 'success' ? (
                 <div className="text-center py-20 animate-in zoom-in-95 duration-700">
                   <div className="w-32 h-32 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mx-auto mb-10 shadow-2xl shadow-green-500/10 ring-4 ring-green-500/10"><CheckCircle2 size={64} className="stroke-[2.5px]" /></div>
-                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter text-glow">Packet Delivered</h4>
-                  <p className="text-slate-600 dark:text-slate-300 text-lg mb-10 max-w-xs mx-auto">Our engineering leads will respond shortly.</p>
-                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg shadow-xl shadow-green-500/5">Send New Inquiry</Button>
+                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter text-glow">{t('contact_status_success_title')}</h4>
+                  <p className="text-slate-600 dark:text-slate-300 text-lg mb-10 max-w-xs mx-auto">{t('contact_status_success_desc')}</p>
+                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg shadow-xl shadow-green-500/5">{t('contact_status_success_button')}</Button>
                 </div>
               ) : status === 'error' ? (
                 <div className="text-center py-20 animate-in zoom-in-95 duration-700">
                   <div className="w-32 h-32 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-600 dark:text-red-400 mx-auto mb-10 shadow-2xl shadow-red-500/10"><AlertCircle size={64} className="stroke-[2.5px]" /></div>
-                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter">Transmission Failed</h4>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg mb-12 max-w-sm mx-auto font-medium">Network timeout. Please retry the connection.</p>
-                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg flex items-center gap-3"><RefreshCcw size={20} /> Re-initiate</Button>
+                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter">{t('contact_status_error_title')}</h4>
+                  <p className="text-slate-600 dark:text-slate-400 text-lg mb-12 max-w-sm mx-auto font-medium">{t('contact_status_error_desc')}</p>
+                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg flex items-center gap-3"><RefreshCcw size={20} /> {t('contact_status_error_button')}</Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-10" noValidate>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-4 group">
-                      <label htmlFor="name-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">Your Identity <span className="text-blue-500">*</span></label>
+                      <label htmlFor="name-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">{t('contact_label_name')} <span className="text-blue-500">*</span></label>
                       <input 
                         type="text" 
                         id="name-input" 
@@ -147,7 +170,7 @@ export const Contact: React.FC = () => {
                         aria-invalid={!!errors.name} 
                         aria-describedby={errors.name ? 'name-error' : undefined}
                         className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                        placeholder="John Doe" 
+                        placeholder={t('contact_placeholder_name')} 
                         value={formData.name} 
                         onChange={(e) => setFormData({...formData, name: e.target.value})} 
                       />
@@ -158,7 +181,7 @@ export const Contact: React.FC = () => {
                       )}
                     </div>
                     <div className="space-y-4 group">
-                      <label htmlFor="email-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">Business Email <span className="text-blue-500">*</span></label>
+                      <label htmlFor="email-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">{t('contact_label_email')} <span className="text-blue-500">*</span></label>
                       <input 
                         type="email" 
                         id="email-input" 
@@ -167,7 +190,7 @@ export const Contact: React.FC = () => {
                         aria-invalid={!!errors.email} 
                         aria-describedby={errors.email ? 'email-error' : undefined}
                         className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                        placeholder="ceo@company.com" 
+                        placeholder={t('contact_placeholder_email')} 
                         value={formData.email} 
                         onChange={(e) => setFormData({...formData, email: e.target.value})} 
                       />
@@ -179,7 +202,7 @@ export const Contact: React.FC = () => {
                     </div>
                   </div>
                   <div className="space-y-4 group">
-                    <label htmlFor="message-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">Brief Your Mission <span className="text-blue-500">*</span></label>
+                    <label htmlFor="message-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">{t('contact_label_message')} <span className="text-blue-500">*</span></label>
                     <textarea 
                       id="message-input" 
                       name="message" 
@@ -187,7 +210,7 @@ export const Contact: React.FC = () => {
                       aria-describedby={errors.message ? 'message-error' : undefined}
                       rows={5} 
                       className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.message ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-[2.5rem] px-7 py-6 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all resize-none font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                      placeholder="What are we building?" 
+                      placeholder={t('contact_placeholder_message')} 
                       value={formData.message} 
                       onChange={(e) => setFormData({...formData, message: e.target.value})} 
                     />
@@ -208,11 +231,11 @@ export const Contact: React.FC = () => {
                       {status === 'sending' ? (
                         <div className="flex items-center gap-4 animate-pulse">
                           <Loader2 className="animate-spin" size={24} /> 
-                          Establishing Link...
+                          {t('contact_status_sending')}
                         </div>
                       ) : (
-                        <span className="flex items-center gap-4 group">
-                          Initiate Connection 
+                        <span className="flex items-center justify-center gap-4 group">
+                          {t('contact_button_submit')} 
                           <Send size={24} className="transform rotate-12 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" />
                         </span>
                       )}

@@ -1,7 +1,10 @@
-import React from 'react';
-import { Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin, Loader2 } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS } from '../constants';
 import { SectionId } from '../types';
+import { useLanguage } from './LanguageContext';
+import { LiveStatus } from './LiveStatus';
+import { PerformanceMonitor } from './PerformanceMonitor';
 
 interface FooterProps {
   theme: 'light' | 'dark';
@@ -27,6 +30,61 @@ const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; labe
 );
 
 export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
+  const { language, t } = useLanguage();
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
+  const handleSubscribeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    // Standard business/corporate email verification
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    if (!emailRegex.test(email)) {
+      setToast({
+        text: language === 'bn' 
+          ? 'অনুগ্রহ করে সঠিক ব্যবসায়িক ইমেল প্রদান করুন।' 
+          : 'Please provide a valid corporate email address.',
+        type: 'error'
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Mock API call to simulate network registration latency
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      
+      setToast({
+        text: language === 'bn'
+          ? 'নিউজলেটার সাবস্ক্রিপশন সফল হয়েছে! ওআইটিএস পরিবারের সাথে যুক্ত হওয়ার জন্য ধন্যবাদ।'
+          : 'Subscription established successfully! Welcome to OITS Dhaka Weekly Briefs.',
+        type: 'success'
+      });
+      setEmail('');
+    } catch (err) {
+      setToast({
+        text: language === 'bn'
+          ? 'নিবন্ধন ব্যর্থ হয়েছে। নেটওয়ার্ক স্থায়িত্ব পরীক্ষা করে পুনরায় চেষ্টা করুন।'
+          : 'Registration failed due to connection index. Please retry.',
+        type: 'error'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const element = document.querySelector(href);
@@ -49,9 +107,9 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
   return (
     <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-900" role="contentinfo" aria-label="Site information">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-12">
           
-          <div className="space-y-6">
+          <div className="space-y-6 lg:col-span-3">
             <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 group hover:opacity-90 transition-opacity" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)} aria-label={`${COMPANY_NAME} homepage - scroll to top of the page`}>
               <div className="w-8 h-8 flex items-center justify-center" aria-hidden="true">
                 <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-sm">
@@ -70,7 +128,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-blue-500 to-blue-400">{COMPANY_NAME}</span>
             </a>
             <p className="text-sm leading-relaxed text-slate-400 font-medium">
-              Empowering businesses through innovative software solutions. Your digital transformation partner.
+              {t('footer_desc')}
             </p>
             
             <a 
@@ -103,81 +161,139 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
             </div>
           </div>
 
-          <div>
-            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">Company</h4>
+          <div className="lg:col-span-2">
+            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">{t('footer_company')}</h4>
             <nav aria-label="Company informational links">
               <ul className="space-y-4" role="list">
-                {NAV_ITEMS.map((item) => (
-                  <li key={item.label}>
-                    <a 
-                      href={item.href} 
-                      onClick={(e) => handleNavClick(e, item.href)} 
-                      aria-label={`Jump to ${item.label} section`} 
-                      className="text-sm text-slate-400 hover:text-blue-400 transition-colors font-medium"
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
+                {NAV_ITEMS.map((item) => {
+                  const labelKey = `nav_${item.label.toLowerCase()}`;
+                  return (
+                    <li key={item.label}>
+                      <a 
+                        href={item.href} 
+                        onClick={(e) => handleNavClick(e, item.href)} 
+                        aria-label={`Jump to ${t(labelKey)} section`} 
+                        className="text-sm text-slate-400 hover:text-blue-400 transition-colors font-medium"
+                      >
+                        {item.label === 'Home' ? t('nav_home') : t(labelKey)}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
           </div>
 
-          <div>
-            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">Services</h4>
+          <div className="lg:col-span-2">
+            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">{t('footer_services')}</h4>
             <nav aria-label="Our specialized engineering services">
               <ul className="space-y-4" role="list">
-                {SERVICES.map((service) => (
-                  <li key={service.id}>
-                    <a 
-                      href={`#service-card-${service.id}`} 
-                      onClick={(e) => handleServiceClick(e, service.id)} 
-                      aria-label={`Learn more about our ${service.title} capabilities`}
-                      className="text-sm text-slate-400 hover:text-blue-400 transition-colors font-medium"
-                    >
-                      {service.title}
-                    </a>
-                  </li>
-                ))}
+                {SERVICES.map((service) => {
+                  const translatedTitle = language === 'bn' ? (service.id === 'tech-frontiers' ? 'টেকনোলজি ফ্রন্টিয়ার্স সমাধান' : service.id === 'cross-platform' ? 'ক্রস-প্ল্যাটফর্ম সলিউশন' : service.title) : service.title;
+                  return (
+                    <li key={service.id}>
+                      <a 
+                        href={`#service-card-${service.id}`} 
+                        onClick={(e) => handleServiceClick(e, service.id)} 
+                        aria-label={`Learn more about our ${translatedTitle} capabilities`}
+                        className="text-sm text-slate-400 hover:text-blue-400 transition-colors font-medium"
+                      >
+                        {translatedTitle}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
           </div>
 
-          <div>
-            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">Newsletter</h4>
-            <p className="text-sm mb-6 text-slate-400 font-medium">Subscribe for the latest tech news and digital strategy updates from OITS Dhaka.</p>
-            <form className="flex gap-2" aria-label="Newsletter subscription form">
-              <div className="flex-1">
+          <div className="space-y-6 lg:col-span-2">
+            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">{t('footer_newsletter')}</h4>
+            <p className="text-sm text-slate-400 font-medium">{t('footer_newsletter_desc')}</p>
+            <form onSubmit={handleSubscribeSubmit} className="flex flex-col gap-2" aria-label="Newsletter subscription form">
+              <div>
                 <label htmlFor="newsletter-email-footer" className="sr-only">Work email address for tech insights</label>
                 <input 
                   id="newsletter-email-footer"
                   type="email" 
                   name="email"
-                  placeholder="Business email address" 
-                  className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm w-full focus:outline-none focus:border-blue-600 text-white placeholder:text-slate-500 font-bold"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t('footer_newsletter_placeholder')}
+                  className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm w-full focus:outline-none focus:border-blue-600 text-white placeholder:text-slate-500 font-bold disabled:opacity-50"
+                  disabled={isSubmitting}
                   required
                 />
               </div>
               <button 
                 type="submit"
-                className="bg-blue-600 text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all active:scale-95 shrink-0" 
+                disabled={isSubmitting}
+                className="bg-blue-600 text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all active:scale-95 text-center flex items-center justify-center gap-2 disabled:bg-blue-850 disabled:opacity-75" 
                 aria-label="Subscribe to OITS Dhaka weekly newsletter"
               >
-                Join
+                {isSubmitting ? (
+                  <>
+                    <Loader2 size={12} className="animate-spin" />
+                    <span>{language === 'bn' ? 'যুক্ত হওয়া হচ্ছে...' : 'Joining...'}</span>
+                  </>
+                ) : (
+                  <span>{t('footer_newsletter_btn')}</span>
+                )}
               </button>
             </form>
           </div>
 
+          {/* Live Status indicator Widget Column */}
+          <div className="lg:col-span-3 flex justify-start lg:justify-end items-start">
+            <LiveStatus />
+          </div>
+
         </div>
         
-        <div className="pt-10 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-500 font-medium">
-          <p>&copy; {new Date().getFullYear()} {COMPANY_NAME}. Digital Excellence Delivered.</p>
-          <nav className="flex gap-10" aria-label="Legal and privacy documentation">
-            <a href="#" aria-label="Read our official privacy policy documentation" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" aria-label="Read our terms and conditions of service" className="hover:text-white transition-colors">Terms of Service</a>
+        <div className="pt-10 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-500 font-medium font-sans">
+          <p>&copy; {new Date().getFullYear()} {t('footer_copyright')}</p>
+          
+          {/* Performance telemetry monitor */}
+          <PerformanceMonitor />
+
+          <nav className="flex gap-10 animate-in" aria-label="Legal and privacy documentation">
+            <a href="#" aria-label="Read our official privacy policy documentation" className="hover:text-white transition-colors">{t('footer_privacy')}</a>
+            <a href="#" aria-label="Read our terms and conditions of service" className="hover:text-white transition-colors">{t('footer_terms')}</a>
           </nav>
         </div>
       </div>
+
+      {/* Dynamic Toast Notification Panel */}
+      {toast && (
+        <div className="fixed bottom-8 right-8 z-[120] bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl max-w-sm flex items-start gap-4 animate-fade-in duration-500 transition-all backdrop-blur-md">
+          <div className={`p-2 rounded-xl ${toast.type === 'success' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+            {toast.type === 'success' ? (
+              <svg className="w-5 h-5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            )}
+          </div>
+          <div className="space-y-1 flex-1">
+            <h5 className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-500">
+              {toast.type === 'success' ? (language === 'bn' ? 'স্ট্যাটাস: সফল' : 'STATUS: SUCCESS') : (language === 'bn' ? 'স্ট্যাটাস: ত্রুটি' : 'STATUS: ERROR')}
+            </h5>
+            <p className="text-xs font-bold text-slate-200 leading-relaxed">
+              {toast.text}
+            </p>
+          </div>
+          <button 
+            type="button"
+            onClick={() => setToast(null)} 
+            className="text-slate-500 hover:text-white transition-colors text-xs font-bold font-mono px-1.5 py-0.5 rounded-md hover:bg-slate-800"
+          >
+            ✕
+          </button>
+        </div>
+      )}
     </footer>
   );
 };
