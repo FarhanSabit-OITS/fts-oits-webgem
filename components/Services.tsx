@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
 import { Globe, Smartphone, PenTool, Cloud, Code2, Server, Database, Layers, Terminal, Users } from 'lucide-react';
 import { SERVICES, TECH_DOMAINS } from '../constants';
-import { SectionId } from '../types';
+import { SectionId, Service } from '../types';
+import { ServiceModal } from './ServiceModal';
 
 const iconMap: Record<string, React.ReactNode> = {
   Globe: <Globe className="w-8 h-8" />,
@@ -25,7 +27,14 @@ export const Services: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(TECH_DOMAINS[0].id);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  const handleOpenModal = (service: Service) => {
+    setSelectedService(service);
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -86,13 +95,24 @@ export const Services: React.FC = () => {
             <div 
               key={service.id} 
               id={`service-card-${service.id}`}
-              className={`group relative bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] sm:rounded-[3.5rem] p-8 sm:p-12 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/40 hover:border-blue-500/30 transform-gpu ${isVisible ? 'opacity-100 translate-y-0 rotate-0 scale-100' : 'opacity-0 translate-y-32 rotate-[-10deg] scale-90'}`}
+              onClick={() => handleOpenModal(service)}
+              className={`group relative bg-slate-50 dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[2rem] sm:rounded-[3.5rem] p-8 sm:p-12 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-4 hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-blue-900/40 hover:border-blue-500/30 transform-gpu cursor-pointer ${isVisible ? 'opacity-100 translate-y-0 rotate-0 scale-100' : 'opacity-0 translate-y-32 rotate-[-10deg] scale-90'}`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              <div className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl mb-10 transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-125 group-hover:shadow-blue-500/40 group-hover:rotate-6">
-                <div className="transition-all duration-500 group-hover:rotate-12 transform-gpu">
-                  {iconMap[service.icon]}
-                </div>
+              <div className="relative mb-10 inline-block">
+                <motion.div 
+                  whileHover={{ scale: 1.1 }}
+                  className="w-20 h-20 shrink-0 bg-white dark:bg-slate-800 rounded-3xl flex items-center justify-center text-slate-900 dark:text-white shadow-xl transition-all duration-700 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-blue-500/40 relative z-10"
+                >
+                  <motion.div 
+                    whileHover={{ rotate: 12, scale: 1.2 }}
+                    className="transition-transform duration-500 transform-gpu"
+                  >
+                    {iconMap[service.icon]}
+                  </motion.div>
+                </motion.div>
+                {/* Visual expansion morph state */}
+                <div className="absolute inset-0 bg-blue-500/20 dark:bg-blue-400/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 group-hover:scale-150 transition-all duration-700 -z-0" />
               </div>
 
               <h4 className="text-2xl font-black text-slate-950 dark:text-white mb-6 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors tracking-tight text-glow">
@@ -100,7 +120,7 @@ export const Services: React.FC = () => {
               </h4>
               <p className="text-slate-700 dark:text-slate-300 mb-10 text-base leading-relaxed font-semibold">{service.description}</p>
 
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2.5 mb-8">
                 {service.features.map((feature, idx) => (
                   <span 
                     key={idx} 
@@ -111,9 +131,23 @@ export const Services: React.FC = () => {
                   </span>
                 ))}
               </div>
+
+              {/* Interaction Hint */}
+              <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">Technical Details</span>
+                <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                  <Terminal size={14} />
+                </div>
+              </div>
             </div>
           ))}
         </div>
+
+        <ServiceModal 
+          service={selectedService} 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+        />
 
         <div className={`mt-32 transition-all duration-1000 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
           <div className="text-center mb-16">

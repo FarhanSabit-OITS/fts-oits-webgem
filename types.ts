@@ -5,6 +5,11 @@ export interface Service {
   description: string;
   icon: string;
   features: string[];
+  longDescription?: string;
+  technicalSpecs?: {
+    label: string;
+    value: string;
+  }[];
 }
 
 export interface Project {

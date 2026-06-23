@@ -61,6 +61,13 @@ export const SERVICES: Service[] = [
     description: 'Scalable, high-performance web applications built for business logic and seamless integration.',
     icon: 'Globe',
     features: ['React & Next.js Experts', 'SaaS Architecture', 'E-commerce Engine', 'Custom CMS'],
+    longDescription: 'We build high-availability web platforms that scale horizontally with your business. Our focus is on atomic design principles, optimized bundle sizes, and robust server-side rendering to ensure peak performance and SEO dominance.',
+    technicalSpecs: [
+      { label: 'Frontend Stack', value: 'React 18+, Next.js (App Router), Tailwind CSS' },
+      { label: 'State Management', value: 'Zustand, React Query, Redux Toolkit' },
+      { label: 'Security', value: 'OWASP Top 10 compliance, JWT/OAuth2, CSRF protection' },
+      { label: 'Performance', value: 'Core Web Vitals optimization, Edge caching' }
+    ]
   },
   {
     id: 'mobile-dev',
@@ -68,6 +75,13 @@ export const SERVICES: Service[] = [
     description: 'High-fidelity iOS and Android applications that deliver native-grade performance and fluid UX.',
     icon: 'Smartphone',
     features: ['iOS (Swift)', 'Android (Kotlin)', 'React Native', 'Flutter'],
+    longDescription: 'Our mobile engineering team specializes in memory-efficient applications that provide smooth 60FPS interactions. From hardware-level integrations to offline-first synchronization, we ensure your app performs in any environment.',
+    technicalSpecs: [
+      { label: 'Native Tech', value: 'SwiftUI (iOS), Jetpack Compose (Android)' },
+      { label: 'Cross-platform', value: 'Flutter 3.x, React Native (New Architecture)' },
+      { label: 'Offline Sync', value: 'SQLite, Realm, WorkManager/Background Fetch' },
+      { label: 'Testing', value: 'XCTest, Espresso, Detox for E2E' }
+    ]
   },
   {
     id: 'dedicated-teams',
@@ -75,6 +89,13 @@ export const SERVICES: Service[] = [
     description: 'Expand your engineering capacity with our highly skilled full-time developers and designers.',
     icon: 'Users',
     features: ['Staff Augmentation', 'Project Management', 'Full-stack Experts', 'Agile Setup'],
+    longDescription: 'Access a curated pool of top 1% engineering talent in Dhaka. Our dedicated teams integrate seamlessly into your Git workflow and Jira boards, operating as a natural extension of your internal product department.',
+    technicalSpecs: [
+      { label: 'Communication', value: 'Slack, Microsoft Teams, Daily Standups' },
+      { label: 'Workflow', value: 'GitHub Flow / Trunk-based development' },
+      { label: 'Transparency', value: 'Bi-weekly sprint demos and detailed Burndown charts' },
+      { label: 'Compliance', value: 'IP protection agreements and strict NDA protocols' }
+    ]
   },
   {
     id: 'cloud',
@@ -82,6 +103,13 @@ export const SERVICES: Service[] = [
     description: 'Robust AWS/GCP infrastructure with automated CI/CD pipelines and high availability.',
     icon: 'Cloud',
     features: ['AWS / GCP / Azure', 'DevOps Automation', 'Cybersecurity', 'Database Tuning'],
+    longDescription: 'We design resilient cloud architectures that handle millions of requests. Our DevOps-first approach emphasizes Infrastructure as Code (IaC), zero-downtime deployments, and automated security monitoring.',
+    technicalSpecs: [
+      { label: 'IaC Tools', value: 'Terraform, Pulumi, AWS CDK' },
+      { label: 'Containerization', value: 'Docker, Kubernetes (EKS/GKE), Helm' },
+      { label: 'Monitoring', value: 'Prometheus, Grafana, Datadog' },
+      { label: 'Log Aggregation', value: 'ELK Stack, CloudWatch, Sentry' }
+    ]
   },
   {
     id: 'tech-frontiers',
@@ -89,6 +117,13 @@ export const SERVICES: Service[] = [
     description: 'Cutting-edge development in AI, ML, AR/VR, Blockchain, and IoT to stay ahead of the curve.',
     icon: 'Terminal',
     features: ['Intelligent Features & AI/ML Solutions', 'Immersive Solutions & AR/VR Apps', 'Blockchain & Web-3 (Dapps) Solutions', 'IoT & Edge Computing Solutions'],
+    longDescription: 'We push the boundaries of what is possible with software. From fine-tuning LLMs for specialized business logic to building high-throughput decentralized finance protocols, we help you navigate the future of tech.',
+    technicalSpecs: [
+      { label: 'AI/ML', value: 'PyTorch, TensorFlow, OpenAI API, Vector DBs' },
+      { label: 'Blockchain', value: 'Solidity, Rust, Web3.js, Hyperledger' },
+      { label: 'IoT', value: 'MQTT, WebSockets, Embedded C++, Edge AI' },
+      { label: 'XR', value: 'Unity, Unreal Engine, WebXR, ARKit' }
+    ]
   },
   {
     id: 'cross-platform',
@@ -96,6 +131,13 @@ export const SERVICES: Service[] = [
     description: 'Unified experiences across devices using modern cross-platform frameworks.',
     icon: 'Smartphone',
     features: ['PWA', 'React Native', 'Flutter', 'WebAssembly'],
+    longDescription: 'Maximize your ROI by reaching users on every screen with a single codebase. We balance build speed with native performance, ensuring that your core business logic remains consistent across web, mobile, and desktop.',
+    technicalSpecs: [
+      { label: 'PWA', value: 'Service Workers, Web App Manifests, Push API' },
+      { label: 'Architecture', value: 'Clean Architecture with Repository pattern' },
+      { label: 'Performance', value: 'AOT Compilation, Tree Shaking' },
+      { label: 'Distro', value: 'App Store, Play Store, and Web deployment' }
+    ]
   },
 ];
 
