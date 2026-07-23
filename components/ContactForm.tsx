@@ -137,6 +137,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onClose, isModal = fal
                   id="contact-name"
                   type="text"
                   value={formData.name}
+                  autoComplete="name"
                   aria-required="true"
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? 'contact-name-error' : undefined}
@@ -169,6 +170,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onClose, isModal = fal
                   id="contact-email"
                   type="email"
                   value={formData.email}
+                  autoComplete="email"
                   aria-required="true"
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? 'contact-email-error' : undefined}

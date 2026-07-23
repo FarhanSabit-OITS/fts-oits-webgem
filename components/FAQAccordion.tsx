@@ -69,8 +69,28 @@ export const FAQAccordion: React.FC = () => {
     setOpenId((prev) => (prev === id ? null : id));
   };
 
+  // Generate FAQ JSON-LD structure dynamically depending on active language
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": FAQ_ITEMS.map((item) => ({
+      "@type": "Question",
+      "name": language === 'bn' ? item.questionBn : item.questionEn,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": language === 'bn' ? item.answerBn : item.answerEn
+      }
+    }))
+  };
+
   return (
     <div className="w-full space-y-4">
+      {/* JSON-LD Structured Data for FAQPage */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+
       <div className="flex items-center gap-2 mb-6">
         <div className="p-2 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400">
           <HelpCircle size={18} />

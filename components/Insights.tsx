@@ -209,12 +209,30 @@ export const Insights: React.FC = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {Array.from({ length: 4 }).map((_, idx) => (
-              <div key={idx} className="space-y-4 animate-pulse">
-                <div className="aspect-[4/3] rounded-3xl bg-slate-100 dark:bg-slate-900 w-full" />
-                <div className="space-y-2">
-                  <div className="h-4 bg-slate-100 dark:bg-slate-900 rounded-md w-1/3" />
-                  <div className="h-6 bg-slate-100 dark:bg-slate-900 rounded-md w-5/6" />
-                  <div className="h-4 bg-slate-100 dark:bg-slate-900 rounded-md w-full" />
+              <div key={idx} className="flex flex-col justify-between h-full bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-900/80 rounded-3xl p-5 animate-pulse">
+                <div className="space-y-4">
+                  {/* Image Aspect ratio frame */}
+                  <div className="aspect-[4/3] w-full rounded-2xl bg-slate-200/80 dark:bg-slate-800/80" />
+                  {/* Date and Readtime metadata */}
+                  <div className="flex gap-3">
+                    <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-1/3" />
+                    <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-1/4" />
+                  </div>
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <div className="h-4 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-5/6" />
+                    <div className="h-4 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-2/3" />
+                  </div>
+                  {/* Excerpt */}
+                  <div className="space-y-1.5 pt-1.5">
+                    <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-full" />
+                    <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-4/5" />
+                  </div>
+                </div>
+                {/* Footer Read Interface Arrow */}
+                <div className="pt-6 border-t border-slate-100 dark:border-slate-800/60 mt-6 flex justify-between items-center">
+                  <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-1/3" />
+                  <div className="w-8 h-8 rounded-full bg-slate-200/80 dark:bg-slate-800/80" />
                 </div>
               </div>
             ))}

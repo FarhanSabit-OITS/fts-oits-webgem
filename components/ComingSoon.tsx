@@ -23,6 +23,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { FAQAccordion } from './FAQAccordion';
 import { BackToTop } from './BackToTop';
 import { getServiceSVG } from './ServiceIcons';
+import { Breadcrumbs } from './Breadcrumbs';
 import { analytics } from '../utils/analytics';
 
 const SERVICE_OFFERINGS = [
@@ -126,6 +127,10 @@ export const ComingSoon: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
+            <div className="mb-6">
+              <Breadcrumbs />
+            </div>
+
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest mb-8 border border-blue-500/20">
               <Terminal size={12} /> {language === 'bn' ? 'সিস্টেম আপডেট: পর্যায় ২ চলমান' : 'System Update: Phase 2 In Progress'}
             </div>
