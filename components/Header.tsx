@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon, Home } from 'lucide-react';
+import { Menu, X, Sun, Moon, Home, ChevronRight } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS } from '../constants';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
@@ -119,6 +119,23 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
              >
                 {theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
              </button>
+          </div>
+
+          <div className="hidden lg:block ml-4">
+            <Button 
+              variant="primary" 
+              size="sm" 
+              onClick={(e) => {
+                const element = document.getElementById('contact');
+                if (element) element.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="font-black tracking-widest text-[10px] uppercase border-2 border-slate-900 dark:border-blue-600 shadow-md group"
+            >
+              <div className="flex items-center gap-2">
+                {t('hero_cta_quote')}
+                <ChevronRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+              </div>
+            </Button>
           </div>
         </nav>
 

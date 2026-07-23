@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from './LanguageContext';
-import { ArrowUpRight, Calendar, User, Clock, ChevronRight, X, Sparkles, Loader2, BookOpen } from 'lucide-react';
+import { ArrowUpRight, Calendar, User, Clock, ChevronRight, X, Sparkles, Loader2, BookOpen, Linkedin, Twitter, Send, Mail, CheckCircle2 } from 'lucide-react';
 
 export interface Article {
   id: string;
@@ -12,7 +12,7 @@ export interface Article {
   readTime: string;
   author: string;
   image: string;
-  originalCategory: string; // for filtering
+  originalCategory: 'web' | 'mobile' | 'design' | 'ai'; // for filtering
 }
 
 export const Insights: React.FC = () => {
@@ -22,23 +22,49 @@ export const Insights: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
-  // Set up categories list depending on the language state
-  const categories = {
-    en: [
-      { id: 'all', label: 'All Insights' },
-      { id: 'specialized', label: 'Specialized (AI/Web3)' },
-      { id: 'infrastructure', label: 'Infrastructure & Cloud' },
-      { id: 'backend', label: 'Backend Architecture' },
-      { id: 'frontend', label: 'Frontend Design' }
-    ],
-    bn: [
-      { id: 'all', label: 'সকল আর্টিকেল' },
-      { id: 'specialized', label: 'স্পেশালিস্ট (AI/IoT/Web3)' },
-      { id: 'infrastructure', label: 'ইনফ্রাস্ট্রাকচার ও ক্লাউড' },
-      { id: 'backend', label: 'ব্যাকএন্ড আর্কিটেকচার' },
-      { id: 'frontend', label: 'ফ্রন্টএন্ড ডিজাইন' }
-    ]
-  }[language === 'bn' ? 'bn' : 'en'];
+  // Newsletter State
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const categories = [
+    { id: 'all', label: t('insights_filter_all') },
+    { id: 'web', label: t('insights_filter_web') },
+    { id: 'mobile', label: t('insights_filter_mobile') },
+    { id: 'design', label: t('insights_filter_design') },
+    { id: 'ai', label: t('insights_filter_ai') }
+  ];
+
+  // Helper for social sharing
+  const handleShare = (platform: 'linkedin' | 'twitter', article: Article) => {
+    const url = window.location.href;
+    const text = encodeURIComponent(`${article.title} - Insight from OITS Dhaka`);
+    
+    if (platform === 'linkedin') {
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+    } else {
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
+    }
+  };
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+    
+    setIsSubscribing(true);
+    setSubscribeStatus('idle');
+    
+    try {
+      // Simulation of Newsletter Registration API
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setSubscribeStatus('success');
+      setNewsletterEmail('');
+    } catch (error) {
+      setSubscribeStatus('error');
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   // Mock Blog API Simulator
   const fetchMockBlogAPI = (): Promise<Article[]> => {
@@ -56,8 +82,8 @@ export const Insights: React.FC = () => {
             body: language === 'bn'
               ? 'আজকের পরিশীলিত আর্থিক অবকাঠামোয় বিলম্ব বা লেটেন্সি কেবল একটি সংযোগ সমস্যা নয়; এটি বড় ধরনের রেভিনিউ ক্ষতি করতে পারে। এই ডিটেইল্ড গাইডে ওআইটিএস ঢাকার সিনিয়র ইঞ্জিনিয়াররা দেখিয়েছেন কীভাবে লাইটওয়েট নোড ক্লাস্টার, রাস্ট রেপ্লিক্যান্টস এবং ইন-মেমোরি রেডিস ডাটা ট্র্যাকিং ব্যবহার করে ট্রানজেকশন ক্যোয়ারী ১ মিলিসেকেন্ডের নিচে নামিয়ে আনা যায় উনত্রিশ শতাংশ বুস্ট নিয়ে। \n\nমূল ফোকাস এরিয়া:\n১. ব্যাকপ্রেশার ম্যানেজমেন্ট ও পাইপলাইনিং।\n২. ডাটাবেস টিউনিং এবং নো-লক ট্রানজেকশন ক্যোয়ারী স্ট্যান্ডার্ডস。\n৩. গ্লোবাল মেমোরি রেপ্লিকেশন অপ্টিমাইজেশন।'
               : 'In today’s high-volume fintech ecosystem, a delay of 100 milliseconds can translate to millions in slippage and lost arbitrage opportunities. This deep dive breaks down how OITS Dhaka engineered a multi-threaded execution queue in low-level Rust to bypass non-blocking I/O cycles, achieving sub-millisecond thread execution profiles in real-world environments.\n\nKey Strategic Pillars:\n- Event Loop Saturation Bypass via Worker Thread Offloading.\n- Standardizing Lock-Free Ring Buffers to eliminate deadlocks.\n- Granular Database Tuning and read-heavy caching paradigms.',
-            category: language === 'bn' ? 'ব্যাকএন্ড' : 'Backend',
-            originalCategory: 'backend',
+            category: language === 'bn' ? 'ওয়েব ইঞ্জিনিয়ারিং' : 'Web Engineering',
+            originalCategory: 'web',
             date: language === 'bn' ? '১৩ জুন, ২০২৬' : 'June 13, 2026',
             readTime: language === 'bn' ? '৫ মিনিট পাঠ' : '5 min read',
             author: language === 'bn' ? 'তাহমিদ রহমান, টিম লিড' : 'Tahmid Rahman, Principal Engineer',
@@ -74,8 +100,8 @@ export const Insights: React.FC = () => {
             body: language === 'bn'
               ? 'অনলাইন সংযোগ বা স্পিডের উপর নির্ভর না করে সরাসরি নেটিভ ডিভাইসে ডিপ লার্নিং মডেল রান করানো এখন মোবাইল প্রযুক্তির এক বিশাল অর্জনের অংশ। ওআইটিএস ঢাকা রিসার্চ ল্যাবের তৈরি এই ব্লগে আমরা পোটেনশিয়াল নিউরাল নেটওয়ার্ক লাইব্রেরি ও কম্প্রেসড পাইটর্চ প্যাকেজের ব্যবহার সম্পর্কে বিশদ আলোচনা করেছি। এটি অ্যাপস্টোর ও গুগল প্লে স্টোরে সহজে সাবমিট করা যায় এবং ইউজার প্রাইভেসী শতভাগ রক্ষা করে।\n\nপ্রধান উপাদানসমূহ:\n১. অন-ডিভাইস এনপিইউ (NPU) অ্যাক্সিলারেশন অপ্টিমাইজেশন।\n২. লেয়ার কোয়ান্টাইজেশন মেথডোলজি。\n৩. মেমোরি থ্রেশহোল্ড মনিটরিং।'
               : 'The decentralization of machine learning is shifting intelligence from gargantuan server clusters to local, low-power edge processors. This article details OITS Dhaka’s engineering patterns using CoreML and TensorFlow Lite underneath cross-platform layers to achieve lightning-fast object detection and offline translation.\n\nKey Strategic Pillars:\n- Core Model Quantization to decrease weights by up to 75%.\n- Asynchronous inference engines utilizing direct neural hardware.\n- Zero cloud dependencies ensuring extreme user data privacy.',
-            category: language === 'bn' ? 'স্পেশালিস্ট' : 'Specialized',
-            originalCategory: 'specialized',
+            category: language === 'bn' ? 'এআই ও প্রযুক্তি' : 'AI & Frontier Tech',
+            originalCategory: 'ai',
             date: language === 'bn' ? '১০ জুন, ২০২৬' : 'June 10, 2026',
             readTime: language === 'bn' ? '৭ মিনিট পাঠ' : '7 min read',
             author: language === 'bn' ? 'আরিফ জামান, এআই আর্কিটেক্ট' : 'Arif Zaman, AI Research Lead',
@@ -92,8 +118,8 @@ export const Insights: React.FC = () => {
             body: language === 'bn'
               ? 'এন্টারপ্রাইজ সল্যুশনের নির্ভরযোগ্যতা রক্ষা করার জন্য কুবারনেটস ক্লাস্টার এবং ডকারাইজড কন্টেইনার আর্কিটেকচার এখন বেঞ্চমার্ক। ওআইটিএস ঢাকা টিম কীভাবে বিশ্বের বিভিন্ন জোনে ডাটা সিঙ্ক করার সময় রাইট-এন্ড-রীড অ্যাক্সেস ব্যালেন্স করেছে, তা এখানে বিশদ তুলে ধরা হয়েছে।\n\nমূল কৌশল:\n১. অ্যাক্টিভ-অ্যাক্টিভ মাল্টি-রিল মেথডলজি।\n২. লেটেন্সি-ভিত্তিক ক্লাউড ট্রাফিক রাউটিং এবং গ্লোবাল লোড ব্যালেন্সিং।\n৩. কুবারনেটস হেলথ ইন্ডিকেটর কনফিগারেশন।'
               : 'High Availability is the hallmark of modern software systems. Enterprise systems must design for complete geographical failure mitigation. This technical reference manual provides the infrastructure configuration scripts to implement automated read-replica handshakes on modern cloud providers under intense stress conditions.\n\nKey Strategic Pillars:\n- Utilizing active-active PostgreSQL databases paired with distributed message queues.\n- Route-53 Latency-Based Failover strategies to mask data center outages.\n- Self-healing Kubernetes microservice designs with zero packet drops.',
-            category: language === 'bn' ? 'ইনফ্রাস্ট্রাকচার' : 'Infrastructure',
-            originalCategory: 'infrastructure',
+            category: language === 'bn' ? 'ওয়েব ইঞ্জিনিয়ারিং' : 'Web Engineering',
+            originalCategory: 'web',
             date: language === 'bn' ? '০৫ জুন, ২০২৬' : 'June 05, 2026',
             readTime: language === 'bn' ? '৬ মিনিট পাঠ' : '6 min read',
             author: language === 'bn' ? 'সায়েম রেজা, ক্লাউড স্পেশালিস্ট' : 'Sayem Reza, DevOps Architect',
@@ -110,8 +136,8 @@ export const Insights: React.FC = () => {
             body: language === 'bn'
               ? 'ওয়েব অ্যাপ্লিকেশনের পারফরম্যান্স বৃদ্ধিতে রিয়্যাক্ট ১৯ (React 19) বিশ্বজুড়ে এক নতুন মাত্রা যোগ করেছে। মেমোরি ম্যানেজমেন্ট অপ্টিমাইজড করে রিয়্যাক্ট অটোমেটেড কম্পাইলার চালু করায়, এখন আর ইউজমেমো বা ইউজকলব্যাক নিয়ে মাথা ঘামাতে হবে না সিনিয়র ডেভেলপারদের। আমাদের অভিজ্ঞ ডেভেলপমেন্ট স্টুডিও কীভাবে এই কনসেপ্ট ব্যবহার করেছে তা জেনে নিন।\n\nরিসার্চের প্রধান হাইলাইটস:\n১. ডাবল রেন্ডার সাইক্লিং ট্র্যাকিং এবং প্রিভেন্টিং।\n২. ইউজ-হুকস মেমরি সলিউশন এবং সার্ভার অ্যাকশন টিউনিং।\n৩. স্টাইলশীট ও স্ক্রিপ্ট রিসোর্স প্রি-লোডিং।'
               : 'React 19 introduces structural shifts in state propagation, async transitions, and server components. By relying on the brand-new React Compiler to natively strip redundant re-renders, OITS Dhaka’s engineering studio achieved 40% improvements in baseline Lighthouse metrics.\n\nKey Strategic Pillars:\n- Seamless transition to compiler-directed memoization pipelines.\n- Harnessing Action Hooks to simplify form bindings and state loaders.\n- Client-side pre-fetching configurations optimized to slash server load.',
-            category: language === 'bn' ? 'ফ্রন্টএন্ড' : 'Frontend',
-            originalCategory: 'frontend',
+            category: language === 'bn' ? 'প্রোডাক্ট ডিজাইন' : 'Product Design',
+            originalCategory: 'design',
             date: language === 'bn' ? '৩০ মে, ২০২৬' : 'May 30, 2026',
             readTime: language === 'bn' ? '৪ মিনিট পাঠ' : '4 min read',
             author: language === 'bn' ? 'সাকিব আবদুল্লাহ, সিনিয়র ডেভেলপার' : 'Sakib Abdullah, Front-End Guild Lead',
@@ -249,6 +275,60 @@ export const Insights: React.FC = () => {
           </div>
         )}
 
+        {/* Newsletter Subscription Pod */}
+        <div className="mt-32 pt-20 border-t border-slate-100 dark:border-slate-900">
+          <div className="bg-slate-950 dark:bg-blue-600 rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12 group">
+            {/* Visual texture */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3" />
+            
+            <div className="max-w-md relative z-10 space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-black uppercase tracking-widest font-mono">
+                <Mail size={12} /> {t('insights_newsletter_title')}
+              </div>
+              <h4 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-none">
+                {language === 'bn' ? 'সরাসরি আপনার ইনবক্সে শ্রেষ্ঠ প্রকৌশল নিবন্ধ পান' : 'Engineering Insights Delivered to Your Inbox'}
+              </h4>
+              <p className="text-slate-400 dark:text-blue-100/70 font-medium text-sm md:text-base">
+                {t('insights_newsletter_desc')}
+              </p>
+            </div>
+
+            <div className="w-full max-w-sm relative z-10">
+              <form onSubmit={handleNewsletterSubmit} className="space-y-4">
+                <div className="relative group">
+                  <input 
+                    type="email" 
+                    required
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder={t('insights_newsletter_placeholder')}
+                    className="w-full bg-white/10 border border-white/20 rounded-2xl px-6 py-5 pr-14 text-white placeholder:text-slate-500 focus:outline-none focus:border-white/50 transition-all font-bold backdrop-blur-md"
+                    disabled={isSubscribing || subscribeStatus === 'success'}
+                  />
+                  <button 
+                    type="submit"
+                    disabled={isSubscribing || subscribeStatus === 'success'}
+                    className="absolute right-2 top-2 bottom-2 aspect-square bg-white text-slate-900 rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+                  >
+                    {isSubscribing ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+                  </button>
+                </div>
+
+                {subscribeStatus === 'success' && (
+                  <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold animate-in fade-in slide-in-from-bottom-2">
+                    <CheckCircle2 size={14} /> {t('insights_newsletter_success')}
+                  </div>
+                )}
+                {subscribeStatus === 'error' && (
+                  <div className="text-red-400 text-xs font-bold">
+                    {t('insights_newsletter_error')}
+                  </div>
+                )}
+              </form>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       {/* Full Article Modal Overlay */}
@@ -274,13 +354,32 @@ export const Insights: React.FC = () => {
                 <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase font-mono tracking-widest">
                   {selectedArticle.category}
                 </span>
-                <button 
-                  onClick={() => setSelectedArticle(null)}
-                  className="p-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900 transition-all font-mono active:scale-95"
-                  aria-label="Close modal slider"
-                >
-                  <X size={16} />
-                </button>
+                <div className="flex items-center gap-3">
+                   <div className="flex items-center gap-2 pr-4 border-r border-slate-100 dark:border-slate-800">
+                      <span className="text-[9px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest hidden sm:block">Share:</span>
+                      <button 
+                        onClick={() => handleShare('linkedin', selectedArticle)}
+                        className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-400 hover:text-blue-600 transition-all"
+                        aria-label="Share on LinkedIn"
+                      >
+                        <Linkedin size={16} />
+                      </button>
+                      <button 
+                        onClick={() => handleShare('twitter', selectedArticle)}
+                        className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-400 hover:text-slate-950 dark:hover:text-white transition-all"
+                        aria-label="Share on X"
+                      >
+                        <Twitter size={16} />
+                      </button>
+                   </div>
+                   <button 
+                    onClick={() => setSelectedArticle(null)}
+                    className="p-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900 transition-all font-mono active:scale-95"
+                    aria-label="Close modal slider"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               </div>
 
               {/* Image Banner Header */}

@@ -114,7 +114,21 @@ const translations: Record<Language, Record<string, string>> = {
     footer_services: 'Services',
     footer_copyright: 'OITS Dhaka. Digital Excellence Delivered.',
     footer_privacy: 'Privacy Policy',
-    footer_terms: 'Terms of Service'
+    footer_terms: 'Terms of Service',
+    
+    // Insights Section Enhancements
+    insights_filter_all: 'All Insights',
+    insights_filter_web: 'Web Engineering',
+    insights_filter_mobile: 'Mobile Ecosystems',
+    insights_filter_design: 'Product Design',
+    insights_filter_ai: 'AI & Frontier Tech',
+    insights_share_article: 'Share Article',
+    insights_newsletter_title: 'Engineering Briefing',
+    insights_newsletter_desc: 'Receive technical deep-dives and architectural strategies from our senior leads once a week.',
+    insights_newsletter_placeholder: 'Your technical lead email',
+    insights_newsletter_btn: 'Subscribe to Briefs',
+    insights_newsletter_success: 'Connection established. Welcome to the weekly briefing.',
+    insights_newsletter_error: 'Connection index failed. Please re-verify email.'
   },
   bn: {
     // Header
@@ -221,7 +235,21 @@ const translations: Record<Language, Record<string, string>> = {
     footer_services: 'সেবাসমূহ',
     footer_copyright: 'ওআইটিএস ঢাকা। চমৎকার ডিজিটাল সার্ভিস সরবরাহকৃত।',
     footer_privacy: 'গোপনীয়তা নীতি',
-    footer_terms: 'পরিষেবার শর্তাবলী'
+    footer_terms: 'পরিষেবার শর্তাবলী',
+
+    // Insights Section Enhancements
+    insights_filter_all: 'সবগুলো',
+    insights_filter_web: 'ওয়েব ইঞ্জিনিয়ারিং',
+    insights_filter_mobile: 'মোবাইল ইকোসিস্টেম',
+    insights_filter_design: 'প্রোডাক্ট ডিজাইন',
+    insights_filter_ai: 'AI এবং ভবিষ্যৎ প্রযুক্তি',
+    insights_share_article: 'আর্টিকেলটি শেয়ার করুন',
+    insights_newsletter_title: 'ইঞ্জিনিয়ারিং ব্রিফিং',
+    insights_newsletter_desc: 'সপ্তাহে সরাসরি আপনার ইনবক্সে আমাদের সিনিয়র লিডদের প্রযুক্তিগত বিশদ বিবরণ এবং কৌশলগুলো পান।',
+    insights_newsletter_placeholder: 'আপনার অফিসিয়াল ইমেল',
+    insights_newsletter_btn: 'সাবস্ক্রাইব করুন',
+    insights_newsletter_success: 'সংযোগ স্থাপন সম্পন্ন হয়েছে। সাপ্তাহিক ব্রিফিংয়ে আপনাকে স্বাগতম।',
+    insights_newsletter_error: 'সংযোগ ব্যর্থ হয়েছে। ইমেল পুনরায় যাচাই করুন।'
   }
 };
 

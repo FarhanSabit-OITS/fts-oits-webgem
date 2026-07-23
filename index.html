@@ -3,164 +3,78 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="OITS Dhaka - Modern Software Solutions. Transforming ideas into digital reality with expert web and mobile development." />
+    <meta name="description" content="OITS Dhaka - Frontier Software Engineering Studio in Dhaka, Bangladesh. Specializing in AI/ML, Cloud Infrastructure, High-Density Web Architectures, and Mobile Systems." />
+    <meta name="keywords" content="OITS Dhaka, Software Engineering Dhaka, Web Development Bangladesh, AI Solutions, Cloud Native, React Studio" />
+    <meta name="author" content="OITS Dhaka Engineering Team" />
     <title>OITS Dhaka | Transforming Ideas into Digital Reality</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230f172a%22/><path d=%22M25 35 L45 50 L25 65 M55 65 L75 65%22 stroke=%22%2338bdf8%22 stroke-width=%228%22 stroke-linecap=%22round%22 fill=%22none%22/></svg>" type="image/svg+xml">
     
+    <!-- Brand Favicon & Logos -->
+    <link rel="icon" href="/src/assets/images/oits_dhaka_logo_1784821009044.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="/src/assets/images/oits_dhaka_logo_1784821009044.jpg">
+
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://oitsdhaka.com/" />
+    <meta property="og:title" content="OITS Dhaka | Swiss-Modern Software Engineering Studio" />
+    <meta property="og:description" content="Frontier engineering solutions from Dhaka, BD. Redesigning software interfaces with high-density Swiss-Modern precision." />
+    <meta property="og:image" content="/src/assets/images/oits_dhaka_og_1784821024784.jpg" />
+    <meta property="og:site_name" content="OITS Dhaka" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@OITSDhaka" />
+    <meta name="twitter:title" content="OITS Dhaka | Swiss-Modern Software Engineering Studio" />
+    <meta name="twitter:description" content="Frontier engineering solutions from Dhaka, BD. Redesigning software interfaces with high-density Swiss-Modern precision." />
+    <meta name="twitter:image" content="/src/assets/images/oits_dhaka_og_1784821024784.jpg" />
+
     <!-- Preload LCP Hero Image -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop" imagesrcset="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=75&w=640&auto=format&fit=crop&fm=webp 640w, https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1200&auto=format&fit=crop&fm=webp 1200w, https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=85&w=2000&auto=format&fit=crop&fm=webp 2000w" imagesizes="100vw">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            colors: {
-              primary: {
-                50: '#f0f9ff',
-                100: '#e0f2fe',
-                200: '#bae6fd',
-                300: '#7dd3fc',
-                400: '#38bdf8',
-                500: '#0ea5e9',
-                600: '#0284c7',
-                700: '#0369a1',
-                800: '#075985',
-                900: '#0c4a6e',
-              }
-            },
-            animation: {
-              'marquee': 'marquee 25s linear infinite',
-              'float': 'float 6s ease-in-out infinite',
-              'fade-in': 'fadeIn 0.5s ease-out forwards',
-              'slide-up': 'slideUp 0.7s ease-out forwards',
-              'subtle-bounce': 'subtleBounce 0.6s ease-in-out infinite',
-              'slow-pulse': 'slowPulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'shimmer': 'shimmer 2s linear infinite',
-              'gradient-shift': 'gradientShift 8s ease infinite',
-            },
-            keyframes: {
-              gradientShift: {
-                '0%, 100%': { backgroundPosition: '0% 50%' },
-                '50%': { backgroundPosition: '100% 50%' },
-              },
-              shimmer: {
-                '0%': { backgroundPosition: '-200% 0' },
-                '100%': { backgroundPosition: '200% 0' },
-              },
-              marquee: {
-                '0%': { transform: 'translateX(0%)' },
-                '100%': { transform: 'translateX(-100%)' },
-              },
-              float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-20px)' },
-              },
-              fadeIn: {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' },
-              },
-              slideUp: {
-                '0%': { transform: 'translateY(20px)', opacity: '0' },
-                '100%': { transform: 'translateY(0)', opacity: '1' },
-              },
-              subtleBounce: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-3px)' },
-              },
-              slowPulse: {
-                '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-                '50%': { opacity: '0.8', transform: 'scale(1.05)' },
-              }
-            }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Structured Data: JSON-LD Schema Markup -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://oitsdhaka.com/#organization",
+          "name": "OITS Dhaka",
+          "url": "https://oitsdhaka.com",
+          "logo": "https://oitsdhaka.com/src/assets/images/oits_dhaka_logo_1784821009044.jpg",
+          "description": "Frontier software engineering studio based in Dhaka, Bangladesh specializing in Web, Mobile, AI/ML, and Cloud Systems.",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Dhaka",
+            "addressCountry": "BD"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "sabit@oitsdhaka.com",
+            "contactType": "engineering support"
+          },
+          "sameAs": [
+            "https://linkedin.com/company/oitsdhaka",
+            "https://twitter.com/oitsdhaka",
+            "https://github.com/oitsdhaka"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://oitsdhaka.com/#website",
+          "url": "https://oitsdhaka.com",
+          "name": "OITS Dhaka",
+          "publisher": {
+            "@id": "https://oitsdhaka.com/#organization"
           }
         }
-      }
+      ]
+    }
     </script>
-    <style type="text/tailwindcss">
-      @layer base {
-        body {
-          font-family: 'Inter', sans-serif;
-          -webkit-font-smoothing: antialiased;
-        }
-      }
-      @layer utilities {
-        .glass-panel {
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-        
-        .dark .glass-panel {
-          background: rgba(15, 23, 42, 0.7);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        
-        .text-glow {
-          text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 15px rgba(255, 255, 255, 0.8);
-        }
-        
-        .dark .text-glow {
-          text-shadow: 0 0 20px rgba(59, 130, 246, 0.7), 0 0 40px rgba(59, 130, 246, 0.4);
-        }
-        
-        .text-outline-thin {
-          text-shadow: 2px 2px 0 rgba(255,255,255,1), -2px -2px 0 rgba(255,255,255,1), 2px -2px 0 rgba(255,255,255,1), -2px 2px 0 rgba(255,255,255,1);
-        }
-        
-        .dark .text-outline-thin {
-          text-shadow: 1px 1px 0 rgba(0,0,0,0.8), -1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8);
-        }
-        
-        .bg-clip-text {
-          -webkit-background-clip: text;
-          background-clip: text;
-        }
-
-        .shimmer-bg {
-          background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-          background-size: 200% 100%;
-        }
-
-        .dark .shimmer-bg {
-          background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
-          background-size: 200% 100%;
-        }
-      }
-    </style>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

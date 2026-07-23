@@ -3,8 +3,6 @@ import { Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin, Loader2 } from 
 import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS } from '../constants';
 import { SectionId } from '../types';
 import { useLanguage } from './LanguageContext';
-import { LiveStatus } from './LiveStatus';
-import { PerformanceMonitor } from './PerformanceMonitor';
 
 interface FooterProps {
   theme: 'light' | 'dark';
@@ -242,20 +240,11 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               </button>
             </form>
           </div>
-
-          {/* Live Status indicator Widget Column */}
-          <div className="lg:col-span-3 flex justify-start lg:justify-end items-start">
-            <LiveStatus />
-          </div>
-
         </div>
         
         <div className="pt-10 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-500 font-medium font-sans">
           <p>&copy; {new Date().getFullYear()} {t('footer_copyright')}</p>
           
-          {/* Performance telemetry monitor */}
-          <PerformanceMonitor />
-
           <nav className="flex gap-10 animate-in" aria-label="Legal and privacy documentation">
             <a href="#" aria-label="Read our official privacy policy documentation" className="hover:text-white transition-colors">{t('footer_privacy')}</a>
             <a href="#" aria-label="Read our terms and conditions of service" className="hover:text-white transition-colors">{t('footer_terms')}</a>
