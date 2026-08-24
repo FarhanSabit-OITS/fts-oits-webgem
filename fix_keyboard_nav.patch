@@ -1,0 +1,28 @@
+--- vercel/index.html
++++ vercel/index.html
+@@ -2932,6 +2932,23 @@
+ 
+       // 3. Portfolio Filtering
+       const filterBtns = document.querySelectorAll(".filter-btn");
++      
++      // Keyboard Accessibility for Tabs
++      filterBtns.forEach((btn, index) => {
++        btn.setAttribute("role", "tab");
++        btn.setAttribute("tabindex", index === 0 ? "0" : "-1");
++        btn.addEventListener("keydown", (e) => {
++          let newIndex = index;
++          if (e.key === "ArrowRight" || e.key === "ArrowDown") {
++            newIndex = (index + 1) % filterBtns.length;
++          } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
++            newIndex = (index - 1 + filterBtns.length) % filterBtns.length;
++          }
++          if (newIndex !== index) {
++            filterBtns[newIndex].focus();
++            filterBtns[newIndex].click();
++          }
++        });
++      });
++
+       const pItems = document.querySelectorAll(".portfolio-item");
+ 
+       filterBtns.forEach((btn) => {

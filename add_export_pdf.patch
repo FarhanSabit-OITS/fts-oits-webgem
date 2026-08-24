@@ -1,0 +1,29 @@
+--- vercel/index.html
++++ vercel/index.html
+@@ -2650,6 +2650,22 @@
+         });
+ 
+         openModal("project-modal");
++      }
++
++      function exportProjectToPDF() {
++        const modalContent = document.querySelector("#project-modal > div");
++        if (!modalContent || typeof html2pdf === "undefined") return;
++        
++        const opt = {
++          margin:       0.5,
++          filename:     document.getElementById("proj-modal-title").textContent.replace(/\s+/g, '_') + '_Overview.pdf',
++          image:        { type: 'jpeg', quality: 0.98 },
++          html2canvas:  { scale: 2, useCORS: true },
++          jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
++        };
++        
++        // Temporarily hide the action buttons at the bottom during export
++        const buttonsDiv = modalContent.lastElementChild;
++        buttonsDiv.style.display = "none";
++        
++        html2pdf().set(opt).from(modalContent).save().then(() => {
++          buttonsDiv.style.display = "flex";
++        });
+       }
+     </script>
