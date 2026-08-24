@@ -166,7 +166,7 @@ export const Process: React.FC = () => {
 
           <button
             onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
-            className="w-full md:w-auto px-6 py-3 rounded-full bg-[#38BDF8] hover:bg-[#0284c7] text-[#070A13] font-bold text-xs font-mono uppercase tracking-wider transition-all whitespace-nowrap"
+            className="w-full md:w-auto px-6 py-3 rounded-full bg-[#38BDF8] hover:bg-[#10B981] text-[#070A13] font-bold text-xs font-mono uppercase tracking-wider border border-amber-950/20 hover:border-emerald-400/80 transition-all whitespace-nowrap shadow-md hover:shadow-emerald-500/20 active:scale-98"
           >
             Start Discovery Sprint
           </button>

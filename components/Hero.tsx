@@ -132,7 +132,7 @@ export const Hero: React.FC = () => {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
                 onClick={scrollToServices}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-[#10B981] hover:bg-[#059669] text-[#070A13] font-bold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:ring-2 focus-visible:ring-emerald-400 group"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-transparent hover:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-2 border-[#10B981] font-bold text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:ring-2 focus-visible:ring-[#10B981] group"
               >
                 <span>Explore Solutions</span>
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
@@ -140,7 +140,7 @@ export const Hero: React.FC = () => {
 
               <button
                 onClick={scrollToContact}
-                className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-300 dark:border-slate-700 font-semibold text-sm hover:border-[#38BDF8] dark:hover:border-[#38BDF8] transition-all focus-visible:ring-2 focus-visible:ring-[#38BDF8]"
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-transparent hover:bg-amber-700/10 text-amber-900 dark:text-amber-300 border-2 border-amber-800/80 dark:border-amber-600/80 hover:border-amber-700 dark:hover:border-amber-500 font-semibold text-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:ring-2 focus-visible:ring-amber-600 shadow-xs"
               >
                 <span>Schedule Consultation</span>
               </button>

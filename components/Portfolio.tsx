@@ -151,7 +151,7 @@ export const Portfolio: React.FC = () => {
               </div>
 
               <div className="px-6 pb-6 pt-2">
-                <button className="w-full py-2.5 px-4 rounded-xl bg-white dark:bg-slate-800 text-xs font-mono font-bold text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-[#38BDF8] flex items-center justify-center gap-2 group-hover:bg-sky-500/10 group-hover:text-[#38BDF8] transition-all">
+                <button className="w-full py-2.5 px-4 rounded-xl bg-white dark:bg-slate-800 text-xs font-mono font-bold text-slate-800 dark:text-slate-200 border border-stone-300 dark:border-stone-700/60 hover:border-[#10B981] dark:hover:border-[#10B981] hover:text-[#10B981] dark:hover:text-[#10B981] hover:bg-emerald-500/5 dark:hover:bg-emerald-500/10 flex items-center justify-center gap-2 transition-all">
                   <span>Architecture Deep-Dive</span>
                   <ChevronRight size={14} />
                 </button>

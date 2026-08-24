@@ -229,7 +229,7 @@ export const Contact: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 px-8 rounded-full bg-[#10B981] hover:bg-[#059669] text-[#070A13] font-bold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 transition-all flex items-center justify-center gap-2 active:scale-98 disabled:opacity-50"
+                  className="w-full py-4 px-8 rounded-full bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-bold text-sm uppercase tracking-wider border-2 border-slate-950 dark:border-white hover:border-[#10B981] dark:hover:border-[#10B981] hover:text-[#10B981] dark:hover:text-[#10B981] hover:bg-emerald-500/5 dark:hover:bg-emerald-500/10 shadow-lg shadow-black/10 transition-all flex items-center justify-center gap-2 active:scale-98 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-[#10B981]"
                 >
                   {isSubmitting ? (
                     <>

@@ -259,7 +259,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               <button
                 type="submit"
                 disabled={subscribeStatus === 'loading'}
-                className="px-5 py-2.5 rounded-xl bg-[#38BDF8] hover:bg-[#0284c7] text-[#070A13] font-bold text-xs font-mono uppercase tracking-wider transition-all whitespace-nowrap"
+                className="px-5 py-2.5 rounded-xl bg-[#38BDF8] hover:bg-[#10B981] text-[#070A13] font-bold text-xs font-mono uppercase tracking-wider border border-stone-800 hover:border-emerald-300/80 transition-all whitespace-nowrap active:scale-98 shadow-sm hover:shadow-emerald-500/20"
               >
                 {subscribeStatus === 'loading' ? 'Joining...' : 'Subscribe'}
               </button>

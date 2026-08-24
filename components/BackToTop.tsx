@@ -43,7 +43,7 @@ export const BackToTop: React.FC = () => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
           aria-label={language === 'bn' ? 'উপরে যান' : 'Back to top'}
-          className="fixed bottom-6 right-6 z-40 p-3.5 rounded-2xl bg-slate-900/90 dark:bg-white/90 backdrop-blur-md text-white dark:text-slate-950 border border-slate-700/50 dark:border-slate-200/50 shadow-2xl hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-all flex items-center justify-center group"
+          className="fixed bottom-6 right-6 z-40 p-3.5 rounded-2xl bg-slate-900/90 dark:bg-white/90 backdrop-blur-md text-white dark:text-slate-950 border border-stone-700/60 dark:border-stone-300/80 hover:border-[#10B981] dark:hover:border-[#10B981] hover:text-[#10B981] dark:hover:text-[#10B981] shadow-2xl hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981] transition-all flex items-center justify-center group"
         >
           <ArrowUp size={18} className="transition-transform group-hover:-translate-y-1" />
         </motion.button>
