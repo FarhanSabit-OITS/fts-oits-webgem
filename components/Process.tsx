@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, Layers, Code, ShieldCheck, Rocket, ChevronRight, Calendar } from 'lucide-react';
 import { PROCESS_STEPS } from '../constants';

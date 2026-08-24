@@ -1,37 +1,9 @@
-"use client";
-
 import React, { useState, useEffect, useRef } from 'react';
-import { ExternalLink, Tag, Download, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart, Twitter, Linkedin, Facebook, Play, BookOpen } from 'lucide-react';
+import { ExternalLink, Tag, Clock, CheckCircle, RotateCcw, Filter, Eye, ChevronRight, X, Target, Settings, BarChart, Twitter, Linkedin, Facebook, Play, BookOpen } from 'lucide-react';
 import { PROJECTS, COMPANY_NAME } from '../constants';
 import { SectionId, Project } from '../types';
 
 const ProjectModal = ({ project, onClose }: { project: Project; onClose: () => void }) => {
-  const [timeLeft, setTimeLeft] = useState('');
-  useEffect(() => {
-    if (project.status === 'In Progress') {
-      const timer = setInterval(() => {
-        const days = Math.floor(Math.random() * 30);
-        const hours = Math.floor(Math.random() * 24);
-        const mins = Math.floor(Math.random() * 60);
-        const secs = Math.floor(Math.random() * 60);
-        setTimeLeft(`${days}d ${hours}h ${mins}m ${secs}s left`);
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [project]);
-  
-  const exportPdf = async () => {
-    try {
-      const html2pdf = (await import('html2pdf.js')).default;
-      const element = document.getElementById('project-modal-content');
-      if (element) {
-        html2pdf().from(element).save(`${project.title.replace(/\s+/g, '_')}_Case_Study.pdf`);
-      }
-    } catch(e) {
-      console.error(e);
-    }
-  };
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -180,10 +152,7 @@ const SkeletonCard = () => (
 );
 
 const ShareButtons = ({ project }: { project: Project }) => {
-  const [currentUrl, setCurrentUrl] = React.useState('');
-  React.useEffect(() => {
-    setCurrentUrl(window.location.href);
-  }, []);
+  const currentUrl = window.location.href;
   const shareText = `Check out "${project.title}" by ${COMPANY_NAME}`;
   
   const shares = [
@@ -229,31 +198,6 @@ const ShareButtons = ({ project }: { project: Project }) => {
 export const Portfolio: React.FC = () => {
   const [filter, setFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
-    const [isArchiveOpen, setIsArchiveOpen] = useState(false);
-  const [archiveData, setArchiveData] = useState<{title: string, date: string}[]>([]);
-  const [isLoadingArchive, setIsLoadingArchive] = useState(false);
-  
-  const loadArchive = () => {
-    setIsLoadingArchive(true);
-    setTimeout(() => {
-      setArchiveData(prev => [
-        ...prev,
-        { title: "Legacy Telecom Gateway", date: "2024" },
-        { title: "Distributed Payment Router", date: "2023" },
-        { title: "Supply Chain Blockchain Network", date: "2023" },
-        { title: "Real-time Flight Tracker API", date: "2022" },
-        { title: "Automated Tax Calculator System", date: "2022" },
-      ]);
-      setIsLoadingArchive(false);
-    }, 1000);
-  };
-  
-  useEffect(() => {
-    if (isArchiveOpen && archiveData.length === 0) {
-      loadArchive();
-    }
-  }, [isArchiveOpen]);
-
   const [isVisible, setIsVisible] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -396,49 +340,6 @@ export const Portfolio: React.FC = () => {
         </div>
       </div>
       {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
-    
-      {/* Project Archive Section */}
-      <div className="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800/60 max-w-4xl mx-auto">
-        <button 
-          onClick={() => setIsArchiveOpen(!isArchiveOpen)}
-          className="flex items-center justify-between w-full group focus-ring rounded-xl p-2"
-        >
-          <h4 className="text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-            Project Archive
-          </h4>
-          <ChevronRight 
-            className={`w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-transform duration-300 ${isArchiveOpen ? 'rotate-90' : ''}`} 
-          />
-        </button>
-        
-        {isArchiveOpen && (
-          <div className="mt-6 flex flex-col gap-4 animate-in slide-in-from-top-4 fade-in duration-300">
-            {archiveData.map((item, idx) => (
-              <div key={idx} className="flex items-center justify-between p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 hover:border-blue-500/30 transition-colors">
-                <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{item.title}</span>
-                <span className="text-xs font-mono text-slate-500">{item.date}</span>
-              </div>
-            ))}
-            
-            {isLoadingArchive && (
-              <div className="flex flex-col gap-4">
-                {[1,2,3].map(i => (
-                  <div key={i} className="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-800 animate-pulse" />
-                ))}
-              </div>
-            )}
-            
-            <button 
-              onClick={loadArchive}
-              disabled={isLoadingArchive}
-              className="self-start mt-4 px-5 py-2.5 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl focus-ring disabled:opacity-50"
-            >
-              Load More Data
-            </button>
-          </div>
-        )}
-      </div>
-
     </section>
   );
 };

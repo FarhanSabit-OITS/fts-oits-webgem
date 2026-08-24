@@ -1,21 +1,17 @@
-"use client";
-
-import { useTheme } from './ThemeProvider';
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { Menu, X, Sun, Moon, Home, ChevronRight } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS } from '../constants';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
 import { useLanguage } from './LanguageContext';
+import { BrandLogo } from './BrandLogo';
 
 interface HeaderProps {
   theme: 'light' | 'dark';
   toggleTheme: () => void;
 }
 
-export const Header = () => {
-  const { theme, toggleTheme } = useTheme();
+export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
@@ -28,29 +24,14 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Custom Logo Component for reusability within Header
-  const BrandLogo = () => (
-    <div className="flex items-center gap-2">
-      <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shrink-0" aria-hidden="true">
-        <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-sm">
-          <defs>
-            <linearGradient id="header-logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#1e3a8a" /> {/* Cobalt Dark */}
-              <stop offset="50%" stopColor="#2563eb" /> {/* Cobalt Blue */}
-              <stop offset="100%" stopColor="#3b82f6" /> {/* Blue Light */}
-            </linearGradient>
-          </defs>
-          <circle cx="50" cy="50" r="42" fill="none" stroke="url(#header-logo-gradient)" strokeWidth="7" />
-          {/* Stylized 'IT' */}
-          <path d="M38 32 H48 V68 H38 Z" fill="url(#header-logo-gradient)" />
-          <path d="M54 32 H84 V41 H74 V68 H64 V41 H54 Z" fill="url(#header-logo-gradient)" />
-        </svg>
-      </div>
-      <span className="text-base xs:text-xl sm:text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-blue-600 to-blue-500 dark:from-blue-400 dark:via-blue-300 dark:to-blue-200 filter drop-shadow-sm">
-        {COMPANY_NAME}
-      </span>
-    </div>
-  );
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   return (
     <header 
@@ -62,14 +43,14 @@ export const Header = () => {
       role="banner"
     >
       <div className="container mx-auto px-3 xs:px-4 sm:px-6 flex items-center justify-between">
-        <Link 
+        <a 
           href={`#${SectionId.HOME}`}
-          className="group hover:opacity-90 transition-opacity min-w-0" 
-          
+          className="group hover:opacity-90 transition-opacity min-w-0 flex items-center" 
+          onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
           aria-label={`${COMPANY_NAME} homepage - scroll to top of the page`}
         >
-          <BrandLogo />
-        </Link>
+          <BrandLogo theme={theme} height={36} className="transition-transform duration-300 group-hover:scale-105" />
+        </a>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-2 xl:gap-3" aria-label="Main site navigation">
@@ -78,14 +59,14 @@ export const Header = () => {
               const labelKey = `nav_${item.label.toLowerCase()}`;
               return (
                 <li key={item.label}>
-                  <Link 
+                  <a 
                     href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={(e) => handleNavClick(e, item.href)}
                     aria-label={`Jump to ${t(labelKey)} section`}
                     className="px-3 xl:px-4 py-2 rounded-full text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
                   >
                     {item.label === 'Home' ? <Home size={18} aria-label={t('nav_home')} /> : t(labelKey)}
-                  </Link>
+                  </a>
                 </li>
               );
             })}
@@ -188,14 +169,14 @@ export const Header = () => {
                 const labelKey = `nav_${item.label.toLowerCase()}`;
                 return (
                   <li key={item.label}>
-                    <Link 
+                    <a 
                       href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={(e) => handleNavClick(e, item.href)}
                       aria-label={`Jump to ${t(labelKey)} section`}
                       className="px-4 py-3 rounded-lg text-lg font-medium text-slate-800 dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-95 block"
                     >
                       {item.label === 'Home' ? t('nav_home') : t(labelKey)}
-                    </Link>
+                    </a>
                   </li>
                 );
               })}

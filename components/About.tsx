@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, Target, Heart, Users } from 'lucide-react';
 import { SectionId } from '../types';

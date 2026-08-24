@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import { 
@@ -15,6 +13,7 @@ import {
 } from 'lucide-react';
 import { COMPANY_NAME, SERVICES, ADDRESS } from '../constants';
 import { useLanguage } from './LanguageContext';
+import { BrandLogo } from './BrandLogo';
 import { ContactForm } from './ContactForm';
 import { NotifyMe } from './NotifyMe';
 import { SocialLinks } from './SocialLinks';
@@ -100,10 +99,7 @@ export const ComingSoon: React.FC = () => {
       {/* Top Navigation Bar */}
       <nav className="fixed top-0 w-full z-40 px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-slate-900 dark:bg-white rounded-xl flex items-center justify-center text-white dark:text-slate-950 shadow-lg shrink-0">
-            <Globe size={22} className="animate-pulse" />
-          </div>
-          <span className="text-slate-950 dark:text-white font-black tracking-tighter text-lg sm:text-xl uppercase">{COMPANY_NAME}</span>
+          <BrandLogo height={34} />
         </div>
         <div className="flex items-center gap-2.5 sm:gap-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
           <span className="hidden xl:inline">Engineering Studio — Dhaka, BD</span>
@@ -350,3 +346,5 @@ export const ComingSoon: React.FC = () => {
     </div>
   );
 };
+
+

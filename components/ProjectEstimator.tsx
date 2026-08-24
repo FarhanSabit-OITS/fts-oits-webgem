@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from 'react';
 import { useLanguage } from './LanguageContext';
 import { Sparkles, ArrowRight, Zap, RefreshCw, Layers, Calendar, DollarSign } from 'lucide-react';

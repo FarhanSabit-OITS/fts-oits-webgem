@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Terminal, Code2, Cpu, Globe, Smartphone, Cloud, ChevronRight, ChevronLeft, ExternalLink, Quote } from 'lucide-react';
 import { Button } from './ui/Button';
@@ -100,7 +98,7 @@ export const Hero: React.FC = () => {
          </picture>
          
          {/* Noise Texture for Realism */}
-         <div className="absolute inset-0 bg-slate-900/10 dark:bg-slate-950/20 mix-blend-overlay pointer-events-none"></div>
+         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
       </div>
 
       {/* Heavier Gradient Overlay for Guaranteed Legibility */}

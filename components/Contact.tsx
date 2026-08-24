@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';

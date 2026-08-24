@@ -1,7 +1,4 @@
-"use client";
-
 import React, { useState } from 'react';
-import { useToast } from './ToastContext';
 import { Mail, CheckCircle2, AlertCircle, BellRing, ArrowRight } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { analytics } from '../utils/analytics';
@@ -121,3 +118,4 @@ export const NotifyMe: React.FC = () => {
     </div>
   );
 };
+

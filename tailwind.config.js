@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./**/*.{js,ts,jsx,tsx}",
@@ -11,6 +11,14 @@ export default {
         sans: ['Inter', 'sans-serif'],
       },
       colors: {
+        brand: {
+          navy: '#1D2A68',
+          'navy-dark': '#131B45',
+          'navy-light': '#2A3B8F',
+          cobalt: '#2563EB',
+          charcoal: '#0A0D14',
+          accent: '#38BDF8',
+        },
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',

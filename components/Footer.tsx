@@ -1,11 +1,9 @@
-"use client";
-
-import { useTheme } from './ThemeProvider';
 import React, { useState, useEffect } from 'react';
 import { Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin, Loader2 } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS } from '../constants';
 import { SectionId } from '../types';
 import { useLanguage } from './LanguageContext';
+import { BrandLogo } from './BrandLogo';
 
 interface FooterProps {
   theme: 'light' | 'dark';
@@ -30,8 +28,7 @@ const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; labe
   </a>
 );
 
-export const Footer = () => {
-  const { theme, toggleTheme } = useTheme();
+export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
   const { language, t } = useLanguage();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,21 +110,7 @@ export const Footer = () => {
           
           <div className="space-y-6 lg:col-span-3">
             <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 group hover:opacity-90 transition-opacity" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)} aria-label={`${COMPANY_NAME} homepage - scroll to top of the page`}>
-              <div className="w-8 h-8 flex items-center justify-center" aria-hidden="true">
-                <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-sm">
-                  <defs>
-                    <linearGradient id="footer-logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#1e3a8a" />
-                      <stop offset="50%" stopColor="#2563eb" />
-                      <stop offset="100%" stopColor="#3b82f6" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="42" fill="none" stroke="url(#footer-logo-gradient)" strokeWidth="7" />
-                  <path d="M38 32 H48 V68 H38 Z" fill="url(#footer-logo-gradient)" />
-                  <path d="M54 32 H84 V41 H74 V68 H64 V41 H54 Z" fill="url(#footer-logo-gradient)" />
-                </svg>
-              </div>
-              <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-blue-500 to-blue-400">{COMPANY_NAME}</span>
+              <BrandLogo theme="dark" height={36} className="transition-transform duration-300 group-hover:scale-105" />
             </a>
             <p className="text-sm leading-relaxed text-slate-400 font-medium">
               {t('footer_desc')}

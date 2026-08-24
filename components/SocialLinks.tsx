@@ -1,5 +1,3 @@
-"use client";
-
 import React from 'react';
 import { Linkedin, Twitter, Github, ExternalLink } from 'lucide-react';
 import { MagneticButton } from './MagneticButton';
@@ -91,3 +89,4 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({ variant = 'inline' }) 
     </nav>
   );
 };
+

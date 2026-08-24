@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, CheckCircle2, Globe, Smartphone, Users, Cloud, Terminal, Cpu } from 'lucide-react';

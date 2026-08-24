@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, X, Bot, User, Sparkles, Mic, MicOff, RefreshCcw, Info } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';

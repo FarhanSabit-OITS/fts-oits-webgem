@@ -1,10 +1,69 @@
 @import "tailwindcss";
 @config "./tailwind.config.js";
 
+:root {
+  --oits-deep-navy: #070a13;
+  --oits-midnight-navy: #0f172a;
+  --oits-blue-600: #2563eb;
+}
+
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  /* OITS Brand Color Palette Visualizer CSS Component */
+  .oits-brand-palette-card {
+    background-color: var(--oits-deep-navy);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .oits-brand-palette-card:hover {
+    border-color: var(--oits-blue-600);
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.25);
+  }
+
+  .oits-bg-deep-navy {
+    background-color: var(--oits-deep-navy);
+  }
+
+  .oits-bg-midnight-navy {
+    background-color: var(--oits-midnight-navy);
+  }
+
+  .oits-bg-blue-600 {
+    background-color: var(--oits-blue-600);
+  }
+
+  .oits-text-deep-navy {
+    color: var(--oits-deep-navy);
+  }
+
+  .oits-text-midnight-navy {
+    color: var(--oits-midnight-navy);
+  }
+
+  .oits-text-blue-600 {
+    color: var(--oits-blue-600);
+  }
+
+  .oits-border-deep-navy {
+    border-color: var(--oits-deep-navy);
+  }
+
+  .oits-border-midnight-navy {
+    border-color: var(--oits-midnight-navy);
+  }
+
+  .oits-border-blue-600 {
+    border-color: var(--oits-blue-600);
   }
 }
 

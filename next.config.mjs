@@ -1,16 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  distDir: 'dist',
-  images: {
-    unoptimized: true,
+  experimental: {
+    allowedDevOrigins: [
+      'ais-dev-eewwmp43sustpsgxnbcdk2-451132598385.asia-southeast1.run.app',
+      'localhost:3000',
+    ],
   },
-  allowedDevOrigins: [
-    '*.run.app',
-    '*.google.com',
-    '*.googleusercontent.com',
-    'localhost:3000',
-  ],
 };
 
 export default nextConfig;

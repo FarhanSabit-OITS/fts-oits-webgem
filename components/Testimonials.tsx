@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Quote } from 'lucide-react';
 import { TESTIMONIALS } from '../constants';
