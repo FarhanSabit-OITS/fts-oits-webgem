@@ -152,6 +152,45 @@
           color: black !important;
         }
       }
+
+      /* Lightweight Tooltips */
+      #global-tooltip {
+        position: fixed;
+        background-color: #0f172a;
+        color: #f8fafc;
+        font-size: 10px;
+        font-family: "JetBrains Mono", monospace;
+        white-space: nowrap;
+        padding: 4px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(-50%, -8px);
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .dark #global-tooltip {
+        background-color: #f1f5f9;
+        color: #0f172a;
+      }
+      #global-tooltip.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -12px);
+      }
+
+      /* Drag-to-scroll hide scrollbar */
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
     </style>
 
     <!-- Structured Data: Organization JSON-LD -->
@@ -255,39 +294,59 @@
           >
         </nav>
 
-        <!-- Action Suite (Mute, Language, Theme, Get a Quote) -->
+        <!-- Action Suite (Search, Mute, Language, Theme, Get a Quote) -->
         <div class="flex items-center gap-3">
-          <!-- Sound Effect Toggle -->
+          <!-- Mobile Menu Toggle -->
           <button
-            id="mute-toggle"
-            class="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors focus-ring"
-            aria-label="Toggle UI Sounds"
+            id="mobile-menu-btn"
+            class="md:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-900 focus-ring"
+            aria-label="Open Mobile Menu"
           >
             <svg
-              class="w-4 h-4"
+              class="w-5 h-5"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               viewBox="0 0 24 24"
-              id="mute-icon-unmuted"
             >
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <path
-                d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
               ></path>
             </svg>
+          </button>
+
+          <!-- Global Search Feature -->
+          <div class="relative hidden sm:block">
+            <input
+              type="text"
+              id="global-search"
+              placeholder="Search services, portfolio..."
+              class="w-48 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono rounded-full py-2 pl-8 pr-3 text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-400"
+            />
             <svg
-              class="w-4 h-4 hidden"
+              class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
               viewBox="0 0 24 24"
-              id="mute-icon-muted"
             >
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <line x1="23" y1="9" x2="17" y2="15"></line>
-              <line x1="17" y1="9" x2="23" y2="15"></line>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
             </svg>
+          </div>
+
+          <!-- Sound Profile Toggle -->
+          <button
+            id="sound-profile-toggle"
+            class="px-2 py-1.5 rounded-xl text-[9px] font-mono font-black uppercase text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors focus-ring flex items-center gap-1"
+            aria-label="Toggle UI Sound Profile"
+          >
+            SND:<span id="sound-profile-label">TECH</span>
           </button>
 
           <!-- Language Switcher -->
@@ -358,6 +417,62 @@
         </div>
       </div>
     </header>
+
+    <!-- Mobile Nav Drawer -->
+    <div
+      id="mobile-drawer"
+      class="fixed inset-0 z-[60] bg-slate-950/20 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300"
+    >
+      <div
+        id="mobile-drawer-content"
+        class="absolute top-0 right-0 w-64 h-full bg-white dark:bg-slate-950 border-l border-slate-100 dark:border-slate-800 shadow-2xl transform translate-x-full transition-transform duration-300 p-6 flex flex-col"
+      >
+        <div class="flex justify-between items-center mb-8">
+          <span
+            class="text-sm font-black tracking-tight font-sans text-slate-900 dark:text-white"
+            >OITS <span class="text-blue-600">DHAKA</span></span
+          >
+          <button
+            id="close-drawer-btn"
+            class="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-ring"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <nav
+          class="flex flex-col space-y-6 text-sm font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 flex-grow"
+        >
+          <a href="#services" class="hover:text-blue-600 transition-colors"
+            >SERVICES</a
+          >
+          <a href="#portfolio" class="hover:text-blue-600 transition-colors"
+            >PORTFOLIO</a
+          >
+          <a href="#faq" class="hover:text-blue-600 transition-colors">FAQ</a>
+        </nav>
+        <div
+          class="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800"
+        >
+          <a
+            href="javascript:openModal('quote-modal')"
+            class="flex items-center justify-center w-full px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white dark:text-slate-950 bg-blue-600 dark:bg-white rounded-xl hover:bg-blue-700 dark:hover:bg-slate-200 transition-colors"
+            >GET A QUOTE</a
+          >
+        </div>
+      </div>
+    </div>
 
     <!-- Hero / Introduction Container -->
     <main
@@ -676,8 +791,10 @@
               class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-900/80 shadow-sm text-center"
             >
               <span
-                class="block text-3xl font-black tracking-tight text-slate-900 dark:text-white"
-                >99.9%</span
+                class="block text-3xl font-black tracking-tight text-slate-900 dark:text-white metric-counter"
+                data-target="99.9"
+                data-suffix="%"
+                >0%</span
               >
               <span
                 class="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 block mt-1"
@@ -689,13 +806,15 @@
               class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-900/80 shadow-sm text-center"
             >
               <span
-                class="block text-3xl font-black tracking-tight text-slate-900 dark:text-white"
-                >100%</span
+                class="block text-3xl font-black tracking-tight text-slate-900 dark:text-white metric-counter"
+                data-target="100"
+                data-suffix="+"
+                >0</span
               >
               <span
                 class="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-400 block mt-1"
                 data-t-key="stat_ndas"
-                >STRICT NDAS</span
+                >PROJECTS DELIVERED</span
               >
             </div>
           </div>
@@ -718,90 +837,98 @@
           class="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-slate-50 dark:from-slate-950 to-transparent z-10"
         ></div>
 
-        <div class="animate-marquee gap-10 sm:gap-16 pt-4">
-          <!-- Frame 1 -->
-          <span
-            class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+        <div
+          id="marquee-drag-container"
+          class="flex w-full overflow-x-auto hide-scrollbar cursor-grab active:cursor-grabbing"
+        >
+          <div
+            id="marquee-track"
+            class="flex gap-10 sm:gap-16 pt-4 w-max pr-10 select-none"
           >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-              ></path>
-            </svg>
-            ACME CORP
-          </span>
-          <span
-            class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-              ></path>
-            </svg>
-            GLOBEX IND.
-          </span>
-          <span
-            class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
-              ></path>
-            </svg>
-            INITECH
-          </span>
-          <span
-            class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm1 10H11V7h2v5zm0 4H11v-2h2v2z"
-              ></path>
-            </svg>
-            SOYUZ TECH
-          </span>
-          <span
-            class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
-              ></path>
-            </svg>
-            MASSIVE DYNAMIC
-          </span>
+            <!-- Frame 1 -->
+            <span
+              class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                ></path>
+              </svg>
+              ACME CORP
+            </span>
+            <span
+              class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                ></path>
+              </svg>
+              GLOBEX IND.
+            </span>
+            <span
+              class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
+                ></path>
+              </svg>
+              INITECH
+            </span>
+            <span
+              class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm1 10H11V7h2v5zm0 4H11v-2h2v2z"
+                ></path>
+              </svg>
+              SOYUZ TECH
+            </span>
+            <span
+              class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+                ></path>
+              </svg>
+              MASSIVE DYNAMIC
+            </span>
 
-          <!-- Duplicated for Infinite Wrap Loop -->
-          <span
-            class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-              ></path>
-            </svg>
-            ACME CORP
-          </span>
-          <span
-            class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-              ></path>
-            </svg>
-            GLOBEX IND.
-          </span>
-          <span
-            class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
-              ></path>
-            </svg>
-            INITECH
-          </span>
+            <!-- Duplicated for Infinite Wrap Loop -->
+            <span
+              class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                ></path>
+              </svg>
+              ACME CORP
+            </span>
+            <span
+              class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                ></path>
+              </svg>
+              GLOBEX IND.
+            </span>
+            <span
+              class="text-xs font-sans font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest shrink-0 flex items-center gap-1.5 grayscale opacity-70"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
+                ></path>
+              </svg>
+              INITECH
+            </span>
+          </div>
         </div>
       </div>
 
@@ -1032,22 +1159,27 @@
           >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Component-based UI library"
               >React 18</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="React framework for production"
               >Next.js 14</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Strongly typed JavaScript"
               >TypeScript</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Utility-first CSS framework"
               >Tailwind CSS</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="V8 JavaScript runtime"
               >Node.js</span
             >
           </div>
@@ -1057,18 +1189,22 @@
           >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="UI toolkit for any screen"
               >Flutter</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Modern Android language"
               >Kotlin</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Declarative iOS frameworks"
               >SwiftUI</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Native mobile apps with React"
               >React Native</span
             >
           </div>
@@ -1078,22 +1214,27 @@
           >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="GCP Infrastructure services"
               >Google Cloud</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Amazon Web Services platform"
               >AWS</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Container orchestration system"
               >Kubernetes</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Application containerization"
               >Docker</span
             >
             <span
               class="px-3 py-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-mono rounded-lg"
+              data-tooltip="Infrastructure as Code tool"
               >Terraform</span
             >
           </div>
@@ -1360,6 +1501,61 @@
             </div>
           </div>
         </div>
+
+        <!-- Inline Newsletter Subscription -->
+        <div
+          class="max-w-3xl mx-auto mt-10 p-6 sm:p-8 rounded-3xl bg-slate-900 dark:bg-slate-900 border border-slate-800 shadow-2xl relative overflow-hidden"
+        >
+          <div
+            class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"
+          ></div>
+          <div
+            class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10"
+          >
+            <div class="space-y-2 max-w-sm">
+              <h4
+                class="text-[10px] font-black tracking-widest text-blue-500 uppercase"
+              >
+                NEWSLETTER
+              </h4>
+              <h5
+                class="text-lg font-black text-white uppercase tracking-tight"
+              >
+                STAY ON THE FRONTIER
+              </h5>
+              <p class="text-xs font-mono text-slate-400">
+                Join our inner circle for weekly engineering architecture
+                teardowns and scalability insights.
+              </p>
+            </div>
+            <form
+              id="newsletter-form"
+              class="w-full md:w-auto flex flex-col sm:flex-row gap-3"
+            >
+              <input
+                type="email"
+                id="newsletter-email"
+                required
+                placeholder="name@company.com"
+                class="bg-slate-950 border border-slate-800 text-white text-xs font-mono rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 w-full sm:w-64 placeholder:text-slate-600 transition-colors"
+              />
+              <button
+                type="submit"
+                class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black uppercase tracking-widest transition-all"
+              >
+                SUBSCRIBE
+              </button>
+            </form>
+            <div
+              id="newsletter-success"
+              class="hidden absolute inset-0 bg-slate-900 flex items-center justify-center rounded-3xl z-20"
+            >
+              <span class="text-sm font-mono font-bold text-green-400"
+                >Subscribed successfully. Welcome to the frontier.</span
+              >
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Industry Trends Blog List (Mock JSON integration target) -->
@@ -1511,21 +1707,21 @@
           <div class="flex gap-4">
             <a
               href="https://linkedin.com/company/oitsdhaka"
-              class="hover:text-blue-500 transition-colors"
+              class="inline-block transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 hover:text-blue-500"
               target="_blank"
               rel="noopener"
               >LINKEDIN</a
             >
             <a
               href="https://github.com/oitsdhaka"
-              class="hover:text-white transition-colors"
+              class="inline-block transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 hover:text-white"
               target="_blank"
               rel="noopener"
               >GITHUB</a
             >
             <a
               href="#404"
-              class="hover:text-slate-800 dark:hover:text-white transition-colors test-404"
+              class="inline-block transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 hover:text-slate-800 dark:hover:text-white test-404"
               >PRIVACY</a
             >
           </div>
@@ -1660,6 +1856,11 @@
               placeholder="John Doe"
               class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
             />
+            <span
+              id="name-error"
+              class="hidden text-[10px] text-red-500 mt-1 font-mono"
+              >Invalid name format. Please use alphabetic characters.</span
+            >
           </div>
           <div>
             <label
@@ -1676,6 +1877,11 @@
               placeholder="john@example.com"
               class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
             />
+            <span
+              id="email-error"
+              class="hidden text-[10px] text-red-500 mt-1 font-mono"
+              >Invalid email format.</span
+            >
           </div>
           <div>
             <label
@@ -1893,7 +2099,69 @@
             <!-- Populated dynamically -->
           </div>
 
-          <div class="pt-4 flex justify-end gap-3">
+          <!-- Project Timeline Progress Bar -->
+          <div
+            class="py-4 border-t border-slate-100 dark:border-slate-800/60 mt-4"
+          >
+            <span
+              class="text-[9px] font-mono font-black uppercase text-slate-400 tracking-widest block mb-4"
+              >PROJECT MILESTONES</span
+            >
+            <div class="relative flex justify-between items-center w-full">
+              <!-- Background line -->
+              <div
+                class="absolute top-1/2 left-0 w-full h-1 bg-slate-100 dark:bg-slate-800 -translate-y-1/2 z-0 rounded-full"
+              ></div>
+              <!-- Progress line (simulate 100%) -->
+              <div
+                class="absolute top-1/2 left-0 w-full h-1 bg-blue-500 -translate-y-1/2 z-0 rounded-full"
+              ></div>
+
+              <!-- Timeline nodes -->
+              <div class="relative z-10 flex flex-col items-center gap-2">
+                <div
+                  class="w-4 h-4 rounded-full bg-blue-600 border-4 border-white dark:border-slate-900 shadow-sm"
+                ></div>
+                <span
+                  class="text-[8px] font-black uppercase text-slate-900 dark:text-white absolute top-6"
+                  >Discovery</span
+                >
+              </div>
+              <div class="relative z-10 flex flex-col items-center gap-2">
+                <div
+                  class="w-4 h-4 rounded-full bg-blue-600 border-4 border-white dark:border-slate-900 shadow-sm"
+                ></div>
+                <span
+                  class="text-[8px] font-black uppercase text-slate-900 dark:text-white absolute top-6"
+                  >Design</span
+                >
+              </div>
+              <div class="relative z-10 flex flex-col items-center gap-2">
+                <div
+                  class="w-4 h-4 rounded-full bg-blue-600 border-4 border-white dark:border-slate-900 shadow-sm"
+                ></div>
+                <span
+                  class="text-[8px] font-black uppercase text-slate-900 dark:text-white absolute top-6"
+                  >Build</span
+                >
+              </div>
+              <div class="relative z-10 flex flex-col items-center gap-2">
+                <div
+                  class="w-4 h-4 rounded-full bg-blue-600 border-4 border-white dark:border-slate-900 shadow-sm"
+                ></div>
+                <span
+                  class="text-[8px] font-black uppercase text-slate-900 dark:text-white absolute top-6"
+                  >Launch</span
+                >
+              </div>
+            </div>
+            <div class="h-6"></div>
+            <!-- spacer for labels -->
+          </div>
+
+          <div
+            class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800/60 mt-2"
+          >
             <button
               onclick="closeModal('project-modal')"
               class="px-5 py-3 rounded-xl bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest hover:text-slate-900 dark:hover:text-white transition-colors"
@@ -1919,33 +2187,59 @@
     <!-- Audio Synthesis UI Interaction Feedback Engine -->
     <script>
       // State indicators
-      let isMuted = localStorage.getItem("oits_muted") === "true";
+      let soundProfile = localStorage.getItem("oits_sound_profile") || "Tech";
+      const soundProfiles = ["Minimal", "Tech", "Ambient", "Muted"];
 
       // Setup Sound state icons
       function updateMuteIcons() {
-        const unmuteIcon = document.getElementById("mute-icon-unmuted");
-        const muteIcon = document.getElementById("mute-icon-muted");
-        if (isMuted) {
-          unmuteIcon.classList.add("hidden");
-          muteIcon.classList.remove("hidden");
-        } else {
-          unmuteIcon.classList.remove("hidden");
-          muteIcon.classList.add("hidden");
-        }
+        const soundProfileLabel = document.getElementById(
+          "sound-profile-label",
+        );
+        if (soundProfileLabel)
+          soundProfileLabel.textContent = soundProfile.toUpperCase();
       }
       updateMuteIcons();
 
       // Mute trigger click
-      document.getElementById("mute-toggle").addEventListener("click", () => {
-        isMuted = !isMuted;
-        localStorage.setItem("oits_muted", isMuted);
-        updateMuteIcons();
-        playSynthNote(440, 0.05, "sine");
-      });
+      const profileToggle = document.getElementById("sound-profile-toggle");
+      if (profileToggle) {
+        profileToggle.addEventListener("click", () => {
+          let idx = soundProfiles.indexOf(soundProfile);
+          idx = (idx + 1) % soundProfiles.length;
+          soundProfile = soundProfiles[idx];
+          localStorage.setItem("oits_sound_profile", soundProfile);
+          updateMuteIcons();
+          playSynthNote(440, 0.05, "sine", true);
+        });
+      }
 
       // Synthesizer note generator
-      function playSynthNote(frequency = 440, duration = 0.05, type = "sine") {
-        if (isMuted) return;
+      function playSynthNote(
+        frequency = 440,
+        duration = 0.05,
+        type = "sine",
+        force = false,
+      ) {
+        if (soundProfile === "Muted" && !force) return;
+
+        let envDuration = duration;
+        let envType = type;
+        let gainValue = 0.08;
+
+        if (soundProfile === "Minimal") {
+          envDuration = duration * 0.5;
+          envType = "sine";
+          gainValue = 0.03;
+        } else if (soundProfile === "Ambient") {
+          envDuration = duration * 2.5;
+          envType = "triangle";
+          gainValue = 0.05;
+          frequency = frequency * 0.8;
+        } else if (soundProfile === "Tech") {
+          envType = type;
+          gainValue = 0.08;
+        }
+
         try {
           const AudioCtx = window.AudioContext || window.webkitAudioContext;
           if (!AudioCtx) return;
@@ -1953,19 +2247,32 @@
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
 
-          osc.type = type;
+          osc.type = envType;
           osc.frequency.setValueAtTime(frequency, ctx.currentTime);
-          gain.gain.setValueAtTime(0.08, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            ctx.currentTime + duration,
-          );
+
+          if (soundProfile === "Ambient") {
+            gain.gain.setValueAtTime(0.001, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              gainValue,
+              ctx.currentTime + envDuration * 0.2,
+            );
+            gain.gain.exponentialRampToValueAtTime(
+              0.001,
+              ctx.currentTime + envDuration,
+            );
+          } else {
+            gain.gain.setValueAtTime(gainValue, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              0.001,
+              ctx.currentTime + envDuration,
+            );
+          }
 
           osc.connect(gain);
           gain.connect(ctx.destination);
 
           osc.start();
-          osc.stop(ctx.currentTime + duration);
+          osc.stop(ctx.currentTime + envDuration);
         } catch (err) {
           // Safe bypass
         }
@@ -2732,35 +3039,64 @@
           .join("");
       }
 
-      // 6. Social Feed Mock Render
-      const mockSocialData = [
-        {
-          id: 1,
-          text: "We just launched our new open-source UI kit designed specifically for high-density dashboards.",
-          likes: 124,
-        },
-        {
-          id: 2,
-          text: "OITS Dhaka is hosting a workshop on scalable Node.js microservices next week.",
-          likes: 89,
-        },
-      ];
-      const socialContainer = document.getElementById("social-feed-container");
-      if (socialContainer) {
-        socialContainer.innerHTML = mockSocialData
-          .map(
-            (post) => `
-        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 font-medium">
-          <p class="mb-3">${post.text}</p>
-          <div class="flex items-center gap-1.5 text-[9px] font-mono text-slate-400">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
-            ${post.likes}
+      // 6. Social Feed Mock Render API Simulation
+      async function loadSocialFeed() {
+        const socialContainer = document.getElementById(
+          "social-feed-container",
+        );
+        if (!socialContainer) return;
+
+        // Show loading state
+        socialContainer.innerHTML = `
+          <div class="animate-pulse space-y-3">
+            <div class="h-16 bg-slate-200 dark:bg-slate-800/80 rounded-xl w-full"></div>
+            <div class="h-16 bg-slate-200 dark:bg-slate-800/80 rounded-xl w-full"></div>
           </div>
-        </div>
-      `,
-          )
-          .join("");
+        `;
+
+        try {
+          // Simulate network latency
+          await new Promise((resolve) => setTimeout(resolve, 1200));
+
+          // Mock API response payload
+          const mockSocialData = [
+            {
+              id: 1,
+              text: "We just launched our new open-source UI kit designed specifically for high-density dashboards.",
+              likes: 124,
+            },
+            {
+              id: 2,
+              text: "OITS Dhaka is hosting a workshop on scalable Node.js microservices next week. Join us!",
+              likes: 89,
+            },
+          ];
+
+          socialContainer.innerHTML = mockSocialData
+            .map(
+              (post) => `
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 font-medium opacity-0 translate-y-2 transition-all duration-500 fade-in-post">
+            <p class="mb-3">${post.text}</p>
+            <div class="flex items-center gap-1.5 text-[9px] font-mono text-slate-400">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+              ${post.likes}
+            </div>
+          </div>
+        `,
+            )
+            .join("");
+
+          // Trigger animations
+          setTimeout(() => {
+            document.querySelectorAll(".fade-in-post").forEach((post) => {
+              post.classList.remove("opacity-0", "translate-y-2");
+            });
+          }, 50);
+        } catch (error) {
+          socialContainer.innerHTML = `<span class="text-xs text-red-500">Failed to fetch social feed.</span>`;
+        }
       }
+      loadSocialFeed();
 
       // 7. Dynamic Reading Time indicator for FAQ
       function updateReadingTime() {
@@ -2806,6 +3142,265 @@
           nfModal.querySelector(".relative").style.opacity = "1";
           playSynthNote(300, 0.1, "sawtooth");
         }
+      });
+
+      // 10. Global Search Handler
+      const globalSearch = document.getElementById("global-search");
+      if (globalSearch) {
+        globalSearch.addEventListener("input", (e) => {
+          const query = e.target.value.toLowerCase();
+
+          // Filter Services
+          const serviceCards = document.querySelectorAll("#services .group");
+          serviceCards.forEach((card) => {
+            const text = card.textContent.toLowerCase();
+            if (text.includes(query)) {
+              card.style.display = "flex";
+            } else {
+              card.style.display = "none";
+            }
+          });
+
+          // Filter Portfolio
+          const portfolioItems = document.querySelectorAll(".portfolio-item");
+          portfolioItems.forEach((item) => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(query)) {
+              item.style.display = "flex";
+            } else {
+              item.style.display = "none";
+            }
+          });
+        });
+      }
+
+      // 11. Newsletter Subscription
+      const newsletterForm = document.getElementById("newsletter-form");
+      const newsletterSuccess = document.getElementById("newsletter-success");
+      const newsletterEmail = document.getElementById("newsletter-email");
+      if (newsletterForm) {
+        // Load saved email if exists
+        const savedEmail = localStorage.getItem("oits_newsletter_email");
+        if (savedEmail) {
+          newsletterEmail.value = savedEmail;
+        }
+
+        newsletterForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const email = newsletterEmail.value;
+          localStorage.setItem("oits_newsletter_email", email);
+
+          newsletterSuccess.classList.remove("hidden");
+          newsletterSuccess.style.opacity = "0";
+          setTimeout(() => {
+            newsletterSuccess.style.opacity = "1";
+            newsletterSuccess.style.transition = "opacity 0.3s ease";
+          }, 10);
+        });
+      }
+    </script>
+
+    <div id="global-tooltip"></div>
+    <script>
+      // 12. Lightweight Tooltips
+      const tooltip = document.getElementById("global-tooltip");
+      document.querySelectorAll("[data-tooltip]").forEach((el) => {
+        el.addEventListener("mouseenter", (e) => {
+          tooltip.textContent = el.getAttribute("data-tooltip");
+          const rect = el.getBoundingClientRect();
+          tooltip.style.left = rect.left + rect.width / 2 + "px";
+          tooltip.style.top = rect.top + "px";
+          tooltip.classList.add("active");
+        });
+        el.addEventListener("mouseleave", () => {
+          tooltip.classList.remove("active");
+        });
+      });
+
+      // 13. Drag-to-Scroll Marquee
+      const marqueeContainer = document.getElementById(
+        "marquee-drag-container",
+      );
+      if (marqueeContainer) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let animationId;
+
+        marqueeContainer.addEventListener("mousedown", (e) => {
+          isDown = true;
+          marqueeContainer.classList.remove("active:cursor-grabbing");
+          marqueeContainer.style.cursor = "grabbing";
+          startX = e.pageX - marqueeContainer.offsetLeft;
+          scrollLeft = marqueeContainer.scrollLeft;
+          cancelAnimationFrame(animationId);
+        });
+        marqueeContainer.addEventListener("mouseleave", () => {
+          isDown = false;
+          marqueeContainer.style.cursor = "grab";
+          startAutoScroll();
+        });
+        marqueeContainer.addEventListener("mouseup", () => {
+          isDown = false;
+          marqueeContainer.style.cursor = "grab";
+          startAutoScroll();
+        });
+        marqueeContainer.addEventListener("mousemove", (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - marqueeContainer.offsetLeft;
+          const walk = (x - startX) * 1.5;
+          marqueeContainer.scrollLeft = scrollLeft - walk;
+        });
+
+        function startAutoScroll() {
+          cancelAnimationFrame(animationId);
+          function scroll() {
+            if (!isDown) {
+              marqueeContainer.scrollLeft += 1;
+              if (
+                marqueeContainer.scrollLeft >=
+                marqueeContainer.scrollWidth / 2
+              ) {
+                marqueeContainer.scrollLeft = 0;
+              }
+            }
+            animationId = requestAnimationFrame(scroll);
+          }
+          animationId = requestAnimationFrame(scroll);
+        }
+        startAutoScroll();
+      }
+
+      // 14. Animated Counters
+      const counters = document.querySelectorAll(".metric-counter");
+      const counterObserver = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const el = entry.target;
+              const target = parseFloat(el.getAttribute("data-target"));
+              const suffix = el.getAttribute("data-suffix") || "";
+              let current = 0;
+              const isFloat = target % 1 !== 0;
+              const increment = target / 50; // 50 frames
+
+              const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                  el.textContent =
+                    (isFloat ? current.toFixed(1) : Math.ceil(current)) +
+                    suffix;
+                  requestAnimationFrame(updateCounter);
+                } else {
+                  el.textContent = target + suffix;
+                }
+              };
+              updateCounter();
+              observer.unobserve(el);
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+
+      counters.forEach((counter) => counterObserver.observe(counter));
+
+      // 15. Form Inline Validation & Submission
+      const contactForm = document.getElementById("contact-form");
+      const contactName = document.getElementById("contact-name");
+      const contactEmail = document.getElementById("contact-email");
+      const nameError = document.getElementById("name-error");
+      const emailError = document.getElementById("email-error");
+
+      const validateName = (val) => /^[a-zA-Z\s]{2,}$/.test(val);
+      const validateEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+
+      if (contactName && nameError) {
+        contactName.addEventListener("input", (e) => {
+          if (!validateName(e.target.value) && e.target.value.length > 0) {
+            nameError.classList.remove("hidden");
+            contactName.classList.add("border-red-500", "focus:ring-red-500");
+          } else {
+            nameError.classList.add("hidden");
+            contactName.classList.remove(
+              "border-red-500",
+              "focus:ring-red-500",
+            );
+          }
+        });
+      }
+
+      if (contactEmail && emailError) {
+        contactEmail.addEventListener("input", (e) => {
+          if (!validateEmail(e.target.value) && e.target.value.length > 0) {
+            emailError.classList.remove("hidden");
+            contactEmail.classList.add("border-red-500", "focus:ring-red-500");
+          } else {
+            emailError.classList.add("hidden");
+            contactEmail.classList.remove(
+              "border-red-500",
+              "focus:ring-red-500",
+            );
+          }
+        });
+      }
+
+      if (contactForm) {
+        contactForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const isNameValid = validateName(contactName.value);
+          const isEmailValid = validateEmail(contactEmail.value);
+
+          if (isNameValid && isEmailValid) {
+            // Success handler (e.g., submit to backend)
+            const btn = contactForm.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = "SENT SUCCESSFULLY";
+            btn.classList.add("bg-green-600");
+            setTimeout(() => {
+              closeModal("quote-modal");
+              btn.textContent = originalText;
+              btn.classList.remove("bg-green-600");
+              contactForm.reset();
+            }, 1500);
+          }
+        });
+      }
+
+      // 16. Mobile Nav Drawer Toggle
+      const mobileBtn = document.getElementById("mobile-menu-btn");
+      const mobileDrawer = document.getElementById("mobile-drawer");
+      const mobileDrawerContent = document.getElementById(
+        "mobile-drawer-content",
+      );
+      const closeDrawerBtn = document.getElementById("close-drawer-btn");
+
+      function openDrawer() {
+        mobileDrawer.classList.remove("hidden");
+        // Reflow
+        void mobileDrawer.offsetWidth;
+        mobileDrawer.classList.remove("opacity-0");
+        mobileDrawerContent.classList.remove("translate-x-full");
+      }
+
+      function closeDrawer() {
+        mobileDrawerContent.classList.add("translate-x-full");
+        mobileDrawer.classList.add("opacity-0");
+        setTimeout(() => {
+          mobileDrawer.classList.add("hidden");
+        }, 300);
+      }
+
+      if (mobileBtn) mobileBtn.addEventListener("click", openDrawer);
+      if (closeDrawerBtn) closeDrawerBtn.addEventListener("click", closeDrawer);
+
+      // Close on nav link click
+      const mobileLinks = mobileDrawerContent
+        ? mobileDrawerContent.querySelectorAll("nav a")
+        : [];
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", closeDrawer);
       });
     </script>
   </body>
