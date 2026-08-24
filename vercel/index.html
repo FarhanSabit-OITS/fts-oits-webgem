@@ -85,6 +85,19 @@
       border-color: #3b82f6;
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
     }
+
+    /* Print Styles */
+    @media print {
+      body { background: white !important; color: black !important; }
+      #scroll-progress, header, #back-to-top, .animate-marquee, #exit-modal, #quote-modal, #project-modal, button { display: none !important; }
+      .print-ready-layout { display: block !important; margin: 0 auto !important; padding: 0 !important; width: 100% !important; }
+      .reveal-on-scroll { opacity: 1 !important; transform: none !important; }
+      section { page-break-inside: avoid; margin-bottom: 2rem !important; }
+      .grid { display: flex !important; flex-wrap: wrap !important; gap: 1rem !important; }
+      .grid > div { flex: 1 1 45% !important; margin-bottom: 0 !important; }
+      h1, h2, h3, h4, p, span { color: black !important; }
+      .dark\:text-white { color: black !important; }
+    }
   </style>
 
   <!-- Structured Data: Organization JSON-LD -->
@@ -188,7 +201,7 @@
   </header>
 
   <!-- Hero / Introduction Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16 print-ready-layout">
 
     <!-- Breadcrumb Indicator -->
     <div class="flex items-center justify-start py-1">
@@ -213,9 +226,10 @@
     </div>
 
     <!-- Main Grid Section -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+    <section class="relative grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <canvas id="hero-particles" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
       <!-- Left Editorial Column -->
-      <div class="lg:col-span-7 space-y-8">
+      <div class="lg:col-span-7 space-y-8 relative z-10">
         <!-- Active Phase Update Badge -->
         <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest border border-blue-500/10">
           <svg class="w-3.5 h-3.5 animate-spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
@@ -265,7 +279,7 @@
       </div>
 
       <!-- Right Column: Interactive Subscription Form & Stats Card -->
-      <div class="lg:col-span-5 space-y-8">
+      <div class="lg:col-span-5 space-y-8 relative z-10">
         <!-- Interactive Subscription Form -->
         <div class="p-6 sm:p-8 rounded-3xl bg-slate-900 text-white dark:bg-slate-900 border border-slate-800 shadow-2xl relative overflow-hidden">
           <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -355,8 +369,8 @@
     </div>
 
     <!-- Capabilities / Services Segment -->
-    <section id="services" class="space-y-8 reveal-on-scroll">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <section id="services" class="space-y-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 reveal-on-scroll">
         <div>
           <h2 class="text-xs font-black text-blue-600 dark:text-blue-500 uppercase tracking-[0.25em] mb-2" data-t-key="capabilities_title">CAPABILITIES</h2>
           <h3 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tight" data-t-key="capabilities_subtitle">HIGH-DENSITY ENGINEERING SUITE</h3>
@@ -369,7 +383,7 @@
       <!-- Services Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Card 1: Enterprise Web -->
-        <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-900/80 hover:border-blue-500/50 hover:shadow-lg transition-all group flex flex-col justify-between h-[300px]">
+        <div class="reveal-on-scroll p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-900/80 hover:border-blue-500/50 hover:shadow-lg transition-all group flex flex-col justify-between h-[300px]" style="transition-delay: 100ms;">
           <div>
             <div class="w-12 h-12 bg-slate-50 dark:bg-slate-950 rounded-2xl flex items-center justify-center text-slate-600 dark:text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
               <!-- Web icon -->
@@ -387,7 +401,7 @@
         </div>
 
         <!-- Card 2: Native Mobile -->
-        <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-900/80 hover:border-blue-500/50 hover:shadow-lg transition-all group flex flex-col justify-between h-[300px]">
+        <div class="reveal-on-scroll p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-900/80 hover:border-blue-500/50 hover:shadow-lg transition-all group flex flex-col justify-between h-[300px]" style="transition-delay: 200ms;">
           <div>
             <div class="w-12 h-12 bg-slate-50 dark:bg-slate-950 rounded-2xl flex items-center justify-center text-slate-600 dark:text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
               <!-- Smartphone Icon -->
@@ -405,7 +419,7 @@
         </div>
 
         <!-- Card 3: Cloud & Security -->
-        <div class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-900/80 hover:border-blue-500/50 hover:shadow-lg transition-all group flex flex-col justify-between h-[300px]">
+        <div class="reveal-on-scroll p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-900/80 hover:border-blue-500/50 hover:shadow-lg transition-all group flex flex-col justify-between h-[300px]" style="transition-delay: 300ms;">
           <div>
             <div class="w-12 h-12 bg-slate-50 dark:bg-slate-950 rounded-2xl flex items-center justify-center text-slate-600 dark:text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
               <!-- Cloud icon -->
@@ -428,13 +442,20 @@
     <section id="portfolio" class="space-y-8 reveal-on-scroll">
       <div>
         <h2 class="text-xs font-black text-blue-600 dark:text-blue-500 uppercase tracking-[0.25em] mb-2" data-t-key="portfolio_title">PORTFOLIO</h2>
-        <h3 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tight" data-t-key="portfolio_subtitle">PRODUCTION RELEASE HISTORY</h3>
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <h3 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tight" data-t-key="portfolio_subtitle">PRODUCTION RELEASE HISTORY</h3>
+          <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 hide-scrollbar" id="portfolio-filters">
+            <button class="filter-btn active px-4 py-2 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider bg-slate-900 text-white dark:bg-white dark:text-slate-900 transition-colors" data-filter="all">All</button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" data-filter="enterprise">Enterprise</button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" data-filter="mobile">Mobile</button>
+          </div>
+        </div>
       </div>
 
       <!-- Portfolio Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Project 1 -->
-        <div onclick="openProject('fintech')" class="group cursor-pointer rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-900 hover:shadow-xl transition-all flex flex-col justify-between">
+        <div onclick="openProject('fintech')" class="group cursor-pointer rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-900 hover:shadow-xl transition-all flex flex-col justify-between portfolio-item" data-category="enterprise">
           <div class="aspect-[16/9] bg-slate-100 dark:bg-slate-950 overflow-hidden relative">
             <img src="/src/assets/images/case_study_fintech_1784821693608.jpg" alt="FinTech Analytics Hub" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
             <span class="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md text-white border border-slate-800 text-[9px] font-mono font-black uppercase tracking-widest py-1 px-2.5 rounded-full">ENTERPRISE SYSTEM</span>
@@ -454,7 +475,7 @@
         </div>
 
         <!-- Project 2 -->
-        <div onclick="openProject('telemedicine')" class="group cursor-pointer rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-900 hover:shadow-xl transition-all flex flex-col justify-between">
+        <div onclick="openProject('telemedicine')" class="group cursor-pointer rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-900 bg-white dark:bg-slate-900 hover:shadow-xl transition-all flex flex-col justify-between portfolio-item" data-category="mobile">
           <div class="aspect-[16/9] bg-slate-100 dark:bg-slate-950 overflow-hidden relative">
             <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1200" alt="Luma Telemedicine App" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
             <span class="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md text-white border border-slate-800 text-[9px] font-mono font-black uppercase tracking-widest py-1 px-2.5 rounded-full">MOBILE SYSTEM</span>
@@ -1187,6 +1208,110 @@
 
     // Set current year inside footer
     document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // 1. Background Particle Animation for Hero
+    const heroCanvas = document.getElementById('hero-particles');
+    if (heroCanvas) {
+      const heroCtx = heroCanvas.getContext('2d');
+      let hParticlesArray = [];
+      
+      function resizeHeroCanvas() {
+        heroCanvas.width = heroCanvas.parentElement.clientWidth;
+        heroCanvas.height = heroCanvas.parentElement.clientHeight;
+      }
+      window.addEventListener('resize', resizeHeroCanvas);
+      resizeHeroCanvas();
+
+      class HParticle {
+        constructor() {
+          this.x = Math.random() * heroCanvas.width;
+          this.y = Math.random() * heroCanvas.height;
+          this.size = Math.random() * 2;
+          this.speedX = Math.random() * 0.5 - 0.25;
+          this.speedY = Math.random() * 0.5 - 0.25;
+          this.opacity = Math.random() * 0.5 + 0.1;
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.x > heroCanvas.width) this.x = 0;
+          if (this.x < 0) this.x = heroCanvas.width;
+          if (this.y > heroCanvas.height) this.y = 0;
+          if (this.y < 0) this.y = heroCanvas.height;
+        }
+        draw() {
+          heroCtx.fillStyle = document.documentElement.classList.contains('dark') ? `rgba(255, 255, 255, ${this.opacity})` : `rgba(59, 130, 246, ${this.opacity})`;
+          heroCtx.beginPath();
+          heroCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          heroCtx.fill();
+        }
+      }
+
+      function initHParticles() {
+        hParticlesArray = [];
+        const numParticles = window.innerWidth > 768 ? 60 : 30;
+        for (let i = 0; i < numParticles; i++) {
+          hParticlesArray.push(new HParticle());
+        }
+      }
+      initHParticles();
+
+      function animateHParticles() {
+        heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+        for (let i = 0; i < hParticlesArray.length; i++) {
+          hParticlesArray[i].update();
+          hParticlesArray[i].draw();
+        }
+        requestAnimationFrame(animateHParticles);
+      }
+      animateHParticles();
+    }
+
+    // 2. Global Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'Escape') {
+        const modals = ['quote-modal', 'exit-modal', 'project-modal'];
+        modals.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && !el.classList.contains('hidden')) {
+            closeModal(id);
+          }
+        });
+      } else if (e.key.toLowerCase() === 'c') {
+        openModal('quote-modal');
+      }
+    });
+
+    // 3. Portfolio Filtering
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const pItems = document.querySelectorAll('.portfolio-item');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-900');
+          b.classList.add('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-400');
+        });
+        btn.classList.add('bg-slate-900', 'text-white', 'dark:bg-white', 'dark:text-slate-900');
+        btn.classList.remove('bg-slate-100', 'text-slate-600', 'dark:bg-slate-800', 'dark:text-slate-400');
+
+        const filterValue = btn.getAttribute('data-filter');
+        
+        pItems.forEach(item => {
+          if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+            item.style.display = 'flex';
+            item.style.opacity = '0';
+            setTimeout(() => { item.style.opacity = '1'; }, 50);
+          } else {
+            item.style.display = 'none';
+          }
+        });
+        playSynthNote(480, 0.05, 'triangle');
+      });
+    });
+
   </script>
 
 </body>
