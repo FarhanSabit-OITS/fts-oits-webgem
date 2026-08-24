@@ -19,6 +19,95 @@
     <!-- Tailwind CSS via Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      // Project Archive Logic
+      const mockArchiveData = [
+        { title: "Legacy Telecom Gateway", date: "2024" },
+        { title: "Distributed Payment Router", date: "2023" },
+        { title: "Supply Chain Blockchain Network", date: "2023" },
+        { title: "Real-time Flight Tracker API", date: "2022" },
+        { title: "Automated Tax Calculator System", date: "2022" },
+      ];
+      let archiveIndex = 0;
+      
+      function toggleArchive() {
+        const container = document.getElementById("archive-container");
+        const chevron = document.getElementById("archive-chevron");
+        if(container.classList.contains("hidden")) {
+          container.classList.remove("hidden");
+          container.classList.add("flex");
+          chevron.classList.add("rotate-180");
+          if (archiveIndex === 0) loadMoreArchive(); // Initial load
+        } else {
+          container.classList.add("hidden");
+          container.classList.remove("flex");
+          chevron.classList.remove("rotate-180");
+        }
+      }
+      
+      function loadMoreArchive() {
+        const list = document.getElementById("archive-list");
+        const btn = document.getElementById("archive-load-btn");
+        
+        // Loader skeleton for archive item
+        const tempLoader = document.createElement("div");
+        tempLoader.className = "flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 animate-pulse";
+        tempLoader.innerHTML = `<div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/3 rounded-full"></div><div class="h-3 bg-slate-200 dark:bg-slate-700 w-12 rounded-full"></div>`;
+        list.appendChild(tempLoader);
+        
+        setTimeout(() => {
+          tempLoader.remove();
+          const itemsToLoad = 2;
+          for(let i=0; i<itemsToLoad; i++) {
+            if(archiveIndex >= mockArchiveData.length) break;
+            const item = mockArchiveData[archiveIndex];
+            const div = document.createElement("div");
+            div.className = "flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 animate-fade-in";
+            div.innerHTML = `<span class="text-xs font-bold text-slate-700 dark:text-slate-300">${item.title}</span><span class="text-[10px] font-mono text-slate-500">${item.date}</span>`;
+            list.appendChild(div);
+            archiveIndex++;
+          }
+          if(archiveIndex >= mockArchiveData.length) {
+            btn.style.display = "none";
+          }
+        }, 800);
+      }
+
+      // Scroll Progress Bar
+      window.addEventListener('scroll', () => {
+        const scrollPx = document.documentElement.scrollTop || document.body.scrollTop;
+        const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (scrollPx / winHeightPx) * 100;
+        const progressBar = document.getElementById("scroll-progress-bar");
+        if(progressBar) progressBar.style.width = scrolled + "%";
+      }, { passive: true });
+
+      // Generic Toast System
+      function showToast(message, type = "success") {
+        const container = document.getElementById("toast-container");
+        if (!container) return;
+        const toast = document.createElement("div");
+        toast.className = "px-4 py-3 rounded-xl shadow-xl border text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-2 transform translate-y-4 opacity-0 transition-all duration-300";
+        
+        if (type === "success") {
+          toast.classList.add("bg-green-50", "dark:bg-green-900/90", "border-green-200", "dark:border-green-900/50", "text-green-700", "dark:text-green-400");
+          toast.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg> <span>${message}</span>`;
+        } else {
+          toast.classList.add("bg-blue-50", "dark:bg-blue-900/90", "border-blue-200", "dark:border-blue-900/50", "text-blue-700", "dark:text-blue-400");
+          toast.innerHTML = `<span>${message}</span>`;
+        }
+        
+        container.appendChild(toast);
+        
+        requestAnimationFrame(() => {
+          toast.classList.remove("translate-y-4", "opacity-0");
+        });
+        
+        setTimeout(() => {
+          toast.classList.add("translate-y-4", "opacity-0");
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+
       tailwind.config = {
         darkMode: "class",
         theme: {
@@ -1438,6 +1527,19 @@
             </div>
           </div>
         </div>
+        
+        <!-- Project Archive (Secondary Collapsed JSON Source) -->
+        <div class="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800/60">
+          <div class="flex items-center justify-between cursor-pointer group" onclick="toggleArchive()">
+            <h4 class="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Project Archive</h4>
+            <svg id="archive-chevron" class="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+          <div id="archive-container" class="hidden flex-col gap-4 mt-6">
+            <div id="archive-list" class="flex flex-col gap-3"></div>
+            <button id="archive-load-btn" onclick="loadMoreArchive()" class="self-start mt-2 px-5 py-2.5 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl focus-ring">Load More Data</button>
+          </div>
+        </div>
+
       </section>
 
       <!-- Interactive FAQ Component (Dynamic Accordions & Structured data) -->
@@ -1588,14 +1690,7 @@
                 SUBSCRIBE
               </button>
             </form>
-            <div
-              id="newsletter-success"
-              class="hidden absolute inset-0 bg-slate-900 flex items-center justify-center rounded-3xl z-20"
-            >
-              <span class="text-sm font-mono font-bold text-green-400"
-                >Subscribed successfully. Welcome to the frontier.</span
-              >
-            </div>
+            
           </div>
         </div>
       </section>
@@ -1620,7 +1715,25 @@
           id="blog-list-container"
           class="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <!-- Rendered by JS -->
+          <!-- CSS-only Skeleton Loader -->
+          <div class="p-6 rounded-2xl bg-slate-100 dark:bg-slate-800/50 animate-pulse h-[140px] flex flex-col justify-between">
+            <div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/4 rounded-full"></div>
+            <div class="h-5 bg-slate-200 dark:bg-slate-700 w-3/4 rounded-full mt-2"></div>
+            <div class="h-5 bg-slate-200 dark:bg-slate-700 w-1/2 rounded-full mt-2"></div>
+            <div class="flex justify-between mt-auto">
+              <div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/4 rounded-full"></div>
+              <div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/4 rounded-full"></div>
+            </div>
+          </div>
+          <div class="p-6 rounded-2xl bg-slate-100 dark:bg-slate-800/50 animate-pulse h-[140px] flex flex-col justify-between hidden md:flex">
+            <div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/4 rounded-full"></div>
+            <div class="h-5 bg-slate-200 dark:bg-slate-700 w-3/4 rounded-full mt-2"></div>
+            <div class="h-5 bg-slate-200 dark:bg-slate-700 w-1/2 rounded-full mt-2"></div>
+            <div class="flex justify-between mt-auto">
+              <div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/4 rounded-full"></div>
+              <div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/4 rounded-full"></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -3223,7 +3336,7 @@
         }
       };
       
-      window.renderBlogFeed();
+      setTimeout(() => window.renderBlogFeed(), 1500);
 
       // 6. Social Feed Mock Render API Simulation
       async function loadSocialFeed() {
@@ -3579,23 +3692,17 @@
           const isEmailValid = validateEmail(contactEmail.value);
 
           if (isNameValid && isEmailValid) {
-            // Success handler (e.g., submit to backend)
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = "SENT SUCCESSFULLY";
             submitBtn.classList.remove("animate-pulse");
-            submitBtn.classList.add("bg-green-600");
+            contactForm.reset();
+            showToast("Request submitted successfully");
             
-            // Trigger Confetti Celebratory Animation
             if (typeof triggerSuccessConfetti === "function") {
                triggerSuccessConfetti();
             }
 
             setTimeout(() => {
               closeModal("quote-modal");
-              submitBtn.textContent = originalText;
-              submitBtn.classList.remove("bg-green-600");
-              contactForm.reset();
-            }, 2500);
+            }, 1000);
           }
         });
       }
