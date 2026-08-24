@@ -1,8 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin, Loader2 } from 'lucide-react';
-import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS } from '../constants';
+import React, { useState } from 'react';
+import { 
+  Github, 
+  Linkedin, 
+  Twitter, 
+  Facebook, 
+  Sun, 
+  Moon, 
+  MapPin, 
+  Mail, 
+  CheckCircle2, 
+  ShieldCheck, 
+  ArrowUpRight,
+  Send,
+  Loader2,
+  Terminal,
+  Activity
+} from 'lucide-react';
+import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS, CONTACT_EMAIL } from '../constants';
 import { SectionId } from '../types';
-import { useLanguage } from './LanguageContext';
 import { BrandLogo } from './BrandLogo';
 
 interface FooterProps {
@@ -10,266 +25,265 @@ interface FooterProps {
   toggleTheme: () => void;
 }
 
-const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; label: string }) => (
-  <a 
-    href={href} 
-    className="group relative p-3 rounded-xl hover:bg-slate-800 transition-all duration-300 flex items-center justify-center border border-transparent hover:border-slate-700"
-    aria-label={`Follow OITS Dhaka on ${label}`}
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <Icon size={20} className="text-slate-400 group-hover:text-white transition-colors" aria-hidden="true" />
-    
-    {/* Tooltip */}
-    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white bg-slate-900 rounded-lg opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap pointer-events-none shadow-2xl border border-slate-700 transform translate-y-2 group-hover:translate-y-0 duration-300 z-50" aria-hidden="true">
-      {label}
-      <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-slate-700"></span>
-    </span>
-  </a>
-);
-
 export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
-  const { language, t } = useLanguage();
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toast, setToast] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => {
-        setToast(null);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast]);
-
-  const handleSubscribeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!newsletterEmail.trim()) return;
 
-    // Standard business/corporate email verification
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    if (!emailRegex.test(email)) {
-      setToast({
-        text: language === 'bn' 
-          ? 'অনুগ্রহ করে সঠিক ব্যবসায়িক ইমেল প্রদান করুন।' 
-          : 'Please provide a valid corporate email address.',
-        type: 'error'
-      });
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(newsletterEmail)) {
+      setSubscribeStatus('error');
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      // Mock API call to simulate network registration latency
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      
-      setToast({
-        text: language === 'bn'
-          ? 'নিউজলেটার সাবস্ক্রিপশন সফল হয়েছে! ওআইটিএস পরিবারের সাথে যুক্ত হওয়ার জন্য ধন্যবাদ।'
-          : 'Subscription established successfully! Welcome to OITS Dhaka Weekly Briefs.',
-        type: 'success'
-      });
-      setEmail('');
-    } catch (err) {
-      setToast({
-        text: language === 'bn'
-          ? 'নিবন্ধন ব্যর্থ হয়েছে। নেটওয়ার্ক স্থায়িত্ব পরীক্ষা করে পুনরায় চেষ্টা করুন।'
-          : 'Registration failed due to connection index. Please retry.',
-        type: 'error'
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    setSubscribeStatus('loading');
+    setTimeout(() => {
+      setSubscribeStatus('success');
+      setNewsletterEmail('');
+      setTimeout(() => setSubscribeStatus('idle'), 5000);
+    }, 1200);
   };
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleServiceClick = (e: React.MouseEvent<HTMLAnchorElement>, serviceId: string) => {
-    e.preventDefault();
-    const element = document.getElementById(`service-card-${serviceId}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-      const servicesSection = document.getElementById(SectionId.SERVICES);
-      if (servicesSection) servicesSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <footer className="bg-slate-950 text-slate-300 py-16 border-t border-slate-900" role="contentinfo" aria-label="Site information">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-12">
+    <footer 
+      id="footer-root"
+      className="bg-[#05080F] text-slate-400 border-t border-slate-900 pt-20 pb-12 transition-colors duration-300 relative overflow-hidden"
+      role="contentinfo"
+    >
+      {/* Ambient Grid Backdrop */}
+      <div 
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(#38BDF8 1px, transparent 1px)`,
+          backgroundSize: '24px 24px'
+        }}
+      />
+
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        
+        {/* Top Footer Tier: Brand & Newsletter */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-slate-900">
           
-          <div className="space-y-6 lg:col-span-3">
-            <a href={`#${SectionId.HOME}`} className="flex items-center gap-2 group hover:opacity-90 transition-opacity" onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)} aria-label={`${COMPANY_NAME} homepage - scroll to top of the page`}>
-              <BrandLogo theme="dark" height={36} className="transition-transform duration-300 group-hover:scale-105" />
-            </a>
-            <p className="text-sm leading-relaxed text-slate-400 font-medium">
-              {t('footer_desc')}
-            </p>
-            
+          {/* Brand Info & Mission (5 cols) */}
+          <div className="lg:col-span-5 space-y-6">
             <a 
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-start gap-3 text-sm text-slate-400 hover:text-white transition-colors group"
-              aria-label={`View the official OITS Dhaka office location in ${ADDRESS} on Google Maps`}
+              href={`#${SectionId.HOME}`}
+              onClick={(e) => scrollToSection(e, SectionId.HOME)}
+              className="inline-block"
+              aria-label={`${COMPANY_NAME} home`}
             >
-              <MapPin size={18} className="mt-0.5 text-blue-500 group-hover:text-blue-400" aria-hidden="true" />
-              <span className="font-medium">{ADDRESS}</span>
+              <BrandLogo theme="dark" height={42} />
             </a>
 
-            <nav className="flex gap-2" aria-label="Our social media presence">
-              <SocialLink href="#" icon={Github} label="GitHub" />
-              <SocialLink href="#" icon={Linkedin} label="LinkedIn" />
-              <SocialLink href="#" icon={Twitter} label="Twitter" />
-              <SocialLink href="#" icon={Facebook} label="Facebook" />
-            </nav>
-            
-            <div className="pt-2">
-               <button
-                  onClick={toggleTheme}
-                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-800 hover:border-slate-700"
-                  aria-label={theme === 'dark' ? 'Activate light mode visual theme' : 'Activate dark mode visual theme'}
-               >
-                  {theme === 'dark' ? <Sun size={14} aria-hidden="true" /> : <Moon size={14} aria-hidden="true" />}
-                  <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-               </button>
+            <p className="text-sm text-slate-400 max-w-md leading-relaxed font-normal">
+              High-performance software engineering firm based in Dhaka. We architect enterprise cloud solutions, native mobile ecosystems, and zero-trust digital infrastructure.
+            </p>
+
+            {/* Live Operational Status Widget */}
+            <div className="inline-flex items-center gap-3 px-3.5 py-2 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs font-mono text-slate-300">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse"></span>
+              <span>All Systems Operational (99.9% SLA)</span>
+            </div>
+
+            {/* Social Links */}
+            <div className="flex items-center gap-3 pt-2">
+              <a 
+                href="https://github.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-[#38BDF8] transition-all"
+                aria-label="OITS Dhaka on GitHub"
+              >
+                <Github size={18} />
+              </a>
+              <a 
+                href="https://linkedin.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-[#38BDF8] hover:border-[#38BDF8] transition-all"
+                aria-label="OITS Dhaka on LinkedIn"
+              >
+                <Linkedin size={18} />
+              </a>
+              <a 
+                href="https://twitter.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-[#38BDF8] hover:border-[#38BDF8] transition-all"
+                aria-label="OITS Dhaka on X"
+              >
+                <Twitter size={18} />
+              </a>
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">{t('footer_company')}</h4>
-            <nav aria-label="Company informational links">
-              <ul className="space-y-4" role="list">
-                {NAV_ITEMS.map((item) => {
-                  const labelKey = `nav_${item.label.toLowerCase()}`;
-                  return (
-                    <li key={item.label}>
-                      <a 
-                        href={item.href} 
-                        onClick={(e) => handleNavClick(e, item.href)} 
-                        aria-label={`Jump to ${t(labelKey)} section`} 
-                        className="text-sm text-slate-400 hover:text-blue-400 transition-colors font-medium"
-                      >
-                        {item.label === 'Home' ? t('nav_home') : t(labelKey)}
-                      </a>
-                    </li>
-                  );
-                })}
+          {/* 4-Column Structured Link Directory (7 cols) */}
+          <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-8">
+            
+            {/* Solutions */}
+            <div>
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4">
+                Solutions
+              </h4>
+              <ul className="space-y-2.5 text-xs font-mono">
+                <li>
+                  <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-[#38BDF8] transition-colors">
+                    Web & SaaS Apps
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-[#38BDF8] transition-colors">
+                    Cloud & Kubernetes
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-[#38BDF8] transition-colors">
+                    AI / ML Pipelines
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-[#38BDF8] transition-colors">
+                    Native Mobile
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-[#38BDF8] transition-colors">
+                    Cybersecurity Audit
+                  </a>
+                </li>
               </ul>
-            </nav>
-          </div>
+            </div>
 
-          <div className="lg:col-span-2">
-            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">{t('footer_services')}</h4>
-            <nav aria-label="Our specialized engineering services">
-              <ul className="space-y-4" role="list">
-                {SERVICES.map((service) => {
-                  const translatedTitle = language === 'bn' ? (service.id === 'tech-frontiers' ? 'টেকনোলজি ফ্রন্টিয়ার্স সমাধান' : service.id === 'cross-platform' ? 'ক্রস-প্ল্যাটফর্ম সলিউশন' : service.title) : service.title;
-                  return (
-                    <li key={service.id}>
-                      <a 
-                        href={`#service-card-${service.id}`} 
-                        onClick={(e) => handleServiceClick(e, service.id)} 
-                        aria-label={`Learn more about our ${translatedTitle} capabilities`}
-                        className="text-sm text-slate-400 hover:text-blue-400 transition-colors font-medium"
-                      >
-                        {translatedTitle}
-                      </a>
-                    </li>
-                  );
-                })}
+            {/* Architecture */}
+            <div>
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4">
+                Architecture
+              </h4>
+              <ul className="space-y-2.5 text-xs font-mono">
+                <li>
+                  <a href={`#${SectionId.ABOUT}`} onClick={(e) => scrollToSection(e, SectionId.ABOUT)} className="hover:text-[#38BDF8] transition-colors">
+                    Zero-Trust Security
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.ABOUT}`} onClick={(e) => scrollToSection(e, SectionId.ABOUT)} className="hover:text-[#38BDF8] transition-colors">
+                    Elastic Scaling
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.PROCESS}`} onClick={(e) => scrollToSection(e, SectionId.PROCESS)} className="hover:text-[#38BDF8] transition-colors">
+                    4-Phase Lifecycle
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.PROCESS}`} onClick={(e) => scrollToSection(e, SectionId.PROCESS)} className="hover:text-[#38BDF8] transition-colors">
+                    Quality Gates
+                  </a>
+                </li>
               </ul>
-            </nav>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4">
+                Resources
+              </h4>
+              <ul className="space-y-2.5 text-xs font-mono">
+                <li>
+                  <a href={`#${SectionId.PORTFOLIO}`} onClick={(e) => scrollToSection(e, SectionId.PORTFOLIO)} className="hover:text-[#38BDF8] transition-colors">
+                    Case Studies
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.CONTACT}`} onClick={(e) => scrollToSection(e, SectionId.CONTACT)} className="hover:text-[#38BDF8] transition-colors">
+                    Project Estimator
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.CONTACT}`} onClick={(e) => scrollToSection(e, SectionId.CONTACT)} className="hover:text-[#38BDF8] transition-colors">
+                    Book Consultation
+                  </a>
+                </li>
+                <li>
+                  <a href={`#${SectionId.CONTACT}`} onClick={(e) => scrollToSection(e, SectionId.CONTACT)} className="hover:text-[#38BDF8] transition-colors">
+                    Security Whitepaper
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white mb-4">
+                Compliance
+              </h4>
+              <ul className="space-y-2.5 text-xs font-mono">
+                <li><span className="hover:text-white cursor-pointer">Privacy Policy</span></li>
+                <li><span className="hover:text-white cursor-pointer">Terms of Service</span></li>
+                <li><span className="hover:text-white cursor-pointer">SOC2 Compliance</span></li>
+                <li><span className="hover:text-white cursor-pointer">Cookie Settings</span></li>
+              </ul>
+            </div>
+
           </div>
 
-          <div className="space-y-6 lg:col-span-2">
-            <h4 className="text-white text-xs font-black uppercase tracking-widest mb-8">{t('footer_newsletter')}</h4>
-            <p className="text-sm text-slate-400 font-medium">{t('footer_newsletter_desc')}</p>
-            <form onSubmit={handleSubscribeSubmit} className="flex flex-col gap-2" aria-label="Newsletter subscription form">
-              <div>
-                <label htmlFor="newsletter-email-footer" className="sr-only">Work email address for tech insights</label>
-                <input 
-                  id="newsletter-email-footer"
-                  type="email" 
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t('footer_newsletter_placeholder')}
-                  className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm w-full focus:outline-none focus:border-blue-600 text-white placeholder:text-slate-500 font-bold disabled:opacity-50"
-                  disabled={isSubmitting}
-                  required
-                />
-              </div>
-              <button 
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-blue-600 text-white px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all active:scale-95 text-center flex items-center justify-center gap-2 disabled:bg-blue-850 disabled:opacity-75" 
-                aria-label="Subscribe to OITS Dhaka weekly newsletter"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 size={12} className="animate-spin" />
-                    <span>{language === 'bn' ? 'যুক্ত হওয়া হচ্ছে...' : 'Joining...'}</span>
-                  </>
-                ) : (
-                  <span>{t('footer_newsletter_btn')}</span>
-                )}
-              </button>
-            </form>
-          </div>
         </div>
-        
-        <div className="pt-10 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-500 font-medium font-sans">
-          <p>&copy; {new Date().getFullYear()} {t('footer_copyright')}</p>
-          
-          <nav className="flex gap-10 animate-in" aria-label="Legal and privacy documentation">
-            <a href="#" aria-label="Read our official privacy policy documentation" className="hover:text-white transition-colors">{t('footer_privacy')}</a>
-            <a href="#" aria-label="Read our terms and conditions of service" className="hover:text-white transition-colors">{t('footer_terms')}</a>
-          </nav>
-        </div>
-      </div>
 
-      {/* Dynamic Toast Notification Panel */}
-      {toast && (
-        <div className="fixed bottom-8 right-8 z-[120] bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl max-w-sm flex items-start gap-4 animate-fade-in duration-500 transition-all backdrop-blur-md">
-          <div className={`p-2 rounded-xl ${toast.type === 'success' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-            {toast.type === 'success' ? (
-              <svg className="w-5 h-5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            )}
-          </div>
-          <div className="space-y-1 flex-1">
-            <h5 className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-500">
-              {toast.type === 'success' ? (language === 'bn' ? 'স্ট্যাটাস: সফল' : 'STATUS: SUCCESS') : (language === 'bn' ? 'স্ট্যাটাস: ত্রুটি' : 'STATUS: ERROR')}
-            </h5>
-            <p className="text-xs font-bold text-slate-200 leading-relaxed">
-              {toast.text}
+        {/* Newsletter Subscription Bar */}
+        <div className="py-8 border-b border-slate-900 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          <div className="md:col-span-6">
+            <h4 className="text-sm font-bold text-white mb-1">
+              Subscribe to the Engineering Briefing
+            </h4>
+            <p className="text-xs text-slate-400 font-mono">
+              Weekly architectural insights, cloud optimization strategies, and tech deep-dives.
             </p>
           </div>
-          <button 
-            type="button"
-            onClick={() => setToast(null)} 
-            className="text-slate-500 hover:text-white transition-colors text-xs font-bold font-mono px-1.5 py-0.5 rounded-md hover:bg-slate-800"
-          >
-            ✕
-          </button>
+
+          <div className="md:col-span-6">
+            <form onSubmit={handleSubscribe} className="flex gap-2">
+              <input
+                type="email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
+                placeholder="techlead@enterprise.com"
+                className="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#38BDF8]"
+              />
+              <button
+                type="submit"
+                disabled={subscribeStatus === 'loading'}
+                className="px-5 py-2.5 rounded-xl bg-[#38BDF8] hover:bg-[#0284c7] text-[#070A13] font-bold text-xs font-mono uppercase tracking-wider transition-all whitespace-nowrap"
+              >
+                {subscribeStatus === 'loading' ? 'Joining...' : 'Subscribe'}
+              </button>
+            </form>
+            {subscribeStatus === 'success' && (
+              <p className="text-xs text-[#10B981] font-mono mt-1">✓ Subscribed to engineering briefs.</p>
+            )}
+            {subscribeStatus === 'error' && (
+              <p className="text-xs text-red-400 font-mono mt-1">Please enter a valid corporate email.</p>
+            )}
+          </div>
         </div>
-      )}
+
+        {/* Bottom Legal & Copyright Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
+          <p>© {new Date().getFullYear()} OITS Dhaka. All Rights Reserved. Engineered for Performance.</p>
+          <div className="flex items-center gap-6">
+            <span>ISO 27001 Aligned</span>
+            <span>•</span>
+            <span>Dhaka, Bangladesh</span>
+          </div>
+        </div>
+
+      </div>
     </footer>
   );
 };

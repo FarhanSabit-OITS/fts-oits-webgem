@@ -5,6 +5,9 @@
   --oits-deep-navy: #070a13;
   --oits-midnight-navy: #0f172a;
   --oits-blue-600: #2563eb;
+  --oits-sky: #38bdf8;
+  --oits-emerald: #10b981;
+  --oits-amber: #f59e0b;
 }
 
 @layer base {

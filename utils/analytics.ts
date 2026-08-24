@@ -79,6 +79,29 @@ class AnalyticsTracker {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Handle modern page visibility & bfcache lifecycle
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          try {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(this.events.slice(-50)));
+          } catch {
+            // Ignore storage errors on exit
+          }
+        }
+      });
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('pagehide', (e) => {
+        try {
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(this.events.slice(-50)));
+        } catch {
+          // Ignore
+        }
+      });
+    }
   }
 
   private setupPerformanceTracking() {

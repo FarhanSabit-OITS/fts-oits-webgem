@@ -1,15 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Terminal, Code2, Cpu, Globe, Smartphone, Cloud, ChevronRight, ChevronLeft, ExternalLink, Quote } from 'lucide-react';
+import { 
+  ArrowRight, 
+  Terminal, 
+  Code2, 
+  Cpu, 
+  Globe, 
+  Smartphone, 
+  Cloud, 
+  ChevronRight, 
+  ChevronLeft, 
+  ExternalLink, 
+  Quote, 
+  Sparkles, 
+  ShieldCheck, 
+  Zap, 
+  Layers,
+  ArrowUpRight
+} from 'lucide-react';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
-import { TAGLINE, SERVICES, PROJECTS, TESTIMONIALS } from '../constants';
+import { TAGLINE, SERVICES, PROJECTS, TESTIMONIALS, COMPANY_NAME } from '../constants';
+import { useLanguage } from './LanguageContext';
 
 export const Hero: React.FC = () => {
+  const { t } = useLanguage();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isVisible, setIsVisible] = useState(false);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-  const [activeTestimonialIndex, setActiveTestimonialIndex] = useState(0);
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [imgError, setImgError] = useState(false);
 
   const scrollToContact = () => {
     document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' });
@@ -23,13 +40,7 @@ export const Hero: React.FC = () => {
     document.getElementById(SectionId.PORTFOLIO)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const scrollToAbout = () => {
-    document.getElementById(SectionId.ABOUT)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    
     let animationFrameId: number;
     const handleMouseMove = (e: MouseEvent) => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -41,340 +52,199 @@ export const Hero: React.FC = () => {
       });
     };
 
-    // Rotate portfolio projects
+    // Auto rotate featured case study
     const projectInterval = setInterval(() => {
-      setActiveProjectIndex((prev) => {
-        const currentFiltered = activeCategory === 'All' ? PROJECTS : PROJECTS.filter(p => p.category === activeCategory);
-        return (prev + 1) % Math.min(currentFiltered.length, 4);
-      });
-    }, 5000);
-
-    // Rotate testimonials
-    const testimonialInterval = setInterval(() => {
-      setActiveTestimonialIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+      setActiveProjectIndex((prev) => (prev + 1) % Math.min(PROJECTS.length, 3));
     }, 6000);
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      clearTimeout(timer);
       clearInterval(projectInterval);
-      clearInterval(testimonialInterval);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
     };
-  }, [activeCategory]);
+  }, []);
 
-  const categories = ['All', ...Array.from(new Set(PROJECTS.map(p => p.category)))].slice(0, 3);
-  const filteredProjects = activeCategory === 'All' ? PROJECTS : PROJECTS.filter(p => p.category === activeCategory);
-  const activeProject = filteredProjects[activeProjectIndex] || filteredProjects[0];
-
-  const nextTestimonial = () => setActiveTestimonialIndex((prev) => (prev + 1) % TESTIMONIALS.length);
-  const prevTestimonial = () => setActiveTestimonialIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+  const featuredProject = PROJECTS[activeProjectIndex] || PROJECTS[0];
 
   return (
-    <section id={SectionId.HOME} className="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-      
-      {/* Optimized Parallax Background Image */}
-      <div 
-        className="absolute inset-0 z-0 transition-transform duration-300 ease-out will-change-transform"
-        style={{ 
-          transform: `scale(1.1) translate3d(${mousePos.x * 10}px, ${mousePos.y * 10}px, 0)` 
-        }}
-      >
-         <picture>
-           <source 
-             srcSet="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=75&w=640&auto=format&fit=crop&fm=webp 640w, https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1200&auto=format&fit=crop&fm=webp 1200w, https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=85&w=2000&auto=format&fit=crop&fm=webp 2000w" 
-             sizes="100vw"
-             type="image/webp" 
-           />
-           <img 
-              src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop" 
-              alt="Professional software engineer focused on architecting industrial digital systems"
-              className="w-full h-full object-cover opacity-100 dark:opacity-40 transition-opacity duration-700 animate-fade-in"
-              loading="eager"
-              // @ts-ignore - fetchPriority is a valid experimental attribute
-              fetchPriority="high"
-           />
-         </picture>
-         
-         {/* Noise Texture for Realism */}
-         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
+    <section 
+      id={SectionId.HOME} 
+      className="relative min-h-[92vh] flex items-center pt-32 pb-24 overflow-hidden bg-slate-50 dark:bg-[#070A13] transition-colors duration-500"
+    >
+      {/* Interactive Mesh & Grid Backdrop Texture */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        {/* Subtle SVG Grid */}
+        <div 
+          className="absolute inset-0 opacity-[0.04] dark:opacity-[0.08]"
+          style={{
+            backgroundImage: `radial-gradient(#38BDF8 1px, transparent 1px)`,
+            backgroundSize: '32px 32px'
+          }}
+        />
+        
+        {/* Atmospheric Ambient Glows (#38BDF8 & #10B981) */}
+        <div 
+          className="absolute top-1/4 right-10 w-[500px] h-[500px] rounded-full bg-[#38BDF8]/10 blur-[130px] transition-transform duration-700 ease-out"
+          style={{ transform: `translate3d(${mousePos.x * 20}px, ${mousePos.y * 20}px, 0)` }}
+        />
+        <div 
+          className="absolute bottom-10 left-10 w-[450px] h-[450px] rounded-full bg-[#10B981]/10 blur-[120px] transition-transform duration-700 ease-out"
+          style={{ transform: `translate3d(${mousePos.x * -15}px, ${mousePos.y * -15}px, 0)` }}
+        />
+        <div 
+          className="absolute top-1/2 left-1/3 w-[350px] h-[350px] rounded-full bg-[#F59E0B]/5 blur-[100px]"
+        />
       </div>
 
-      {/* Heavier Gradient Overlay for Guaranteed Legibility */}
-      <div 
-        className="absolute inset-0 z-0 bg-gradient-to-r from-slate-50 via-slate-50/95 to-slate-50/80 dark:from-slate-950 dark:via-slate-950/95 dark:to-slate-950/80 pointer-events-none animate-gradient-shift" 
-        style={{ backgroundSize: '200% 200%' }}
-      />
-
-      {/* Decorative Parallax Icons - Deeper depth */}
-      <div 
-        className="absolute top-[15%] left-[5%] hidden xl:block text-blue-600 dark:text-blue-400 opacity-20 transition-all duration-300 ease-out will-change-transform z-0"
-        style={{ transform: `translate3d(${mousePos.x * -30}px, ${mousePos.y * -30}px, 0) rotate(${mousePos.x * 5}deg)` }}
-      >
-        <div className="bg-white/60 dark:bg-slate-800/60 p-6 rounded-3xl backdrop-blur-xl border border-white/40 dark:border-slate-700/40 shadow-2xl">
-          <Code2 size={64} strokeWidth={1.5} aria-hidden="true" />
-        </div>
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          {/* Left Column: Content */}
-          <div className="lg:col-span-7 max-w-3xl">
-            {/* Badge */}
-            <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full bg-blue-50/90 dark:bg-blue-900/60 backdrop-blur-md text-blue-800 dark:text-blue-200 text-[11px] font-black uppercase tracking-[0.2em] mb-8 shadow-sm border border-blue-200 dark:border-blue-700 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}`}>
-              <Terminal size={18} className="animate-pulse" aria-hidden="true" />
-              <span>Dhaka's Premier Engineering Studio</span>
-            </div>
+          {/* Left Column: Swiss Display Typography & Action Group (7 cols) */}
+          <div className="lg:col-span-7 space-y-8">
             
-            {/* Tagline */}
-            <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-slate-950 dark:text-white leading-[0.95] tracking-tighter mb-8 flex flex-wrap gap-x-4 gap-y-2 drop-shadow-2xl perspective-1000">
-              {TAGLINE.split(' ').map((word, i) => (
-                <span 
-                  key={i} 
-                  className={`${i < 2 ? 'text-slate-950 dark:text-white drop-shadow-md text-glow' : 'text-transparent bg-clip-text bg-gradient-to-br from-blue-700 to-indigo-700 dark:from-blue-400 dark:to-indigo-400 drop-shadow-lg'} inline-block transition-all duration-[1000ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] transform-gpu will-change-transform backface-hidden`}
-                  style={{ 
-                    transitionDelay: `${150 + i * 150}ms`,
-                    opacity: isVisible ? 1 : 0,
-                    transform: isVisible ? 'translateY(0) scale(1) rotateX(0)' : 'translateY(40px) scale(0.9) rotateX(10deg)',
-                  }}
-                >
-                  {word}
-                </span>
-              ))}
+            {/* Monospaced Top Pill Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono font-semibold tracking-wider text-slate-800 dark:text-slate-200 shadow-xs">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]"></span>
+              </span>
+              <span className="text-[#38BDF8]">ENTERPRISE</span>
+              <span className="text-slate-400">/</span>
+              <span>DIGITAL ENGINEERING</span>
+            </div>
+
+            {/* Swiss-Style Editorial Display Headline */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] text-slate-950 dark:text-white">
+              Architecting <br className="hidden sm:inline" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38BDF8] via-[#0EA5E9] to-[#10B981]">
+                High-Velocity
+              </span> <br className="hidden sm:inline" />
+              Software Systems.
             </h1>
 
-            {/* Description */}
-            <div 
-              className={`relative mb-10 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-              style={{ transitionDelay: '800ms' }}
-            >
-              <div className="absolute -left-6 top-2 bottom-2 w-1 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full opacity-100 shadow-lg" />
-              <p className="text-lg sm:text-xl md:text-2xl text-slate-950 dark:text-slate-100 font-medium max-w-2xl leading-relaxed pl-6 drop-shadow-xl text-glow">
-                We architect high-performance digital systems for global disruptors. 
-                From strategic consultation to industrial-grade deployment.
-              </p>
+            {/* Concise Value Proposition Copy */}
+            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 font-normal leading-relaxed max-w-2xl">
+              We design, build, and deploy resilient digital platforms. From high-throughput cloud backends to native cross-platform experiences, we transform ambitious business logic into production-grade infrastructure.
+            </p>
+
+            {/* Primary Action Group (Explore Solutions & Schedule Consultation) */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <button
+                onClick={scrollToServices}
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-[#10B981] hover:bg-[#059669] text-[#070A13] font-bold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:ring-2 focus-visible:ring-emerald-400 group"
+              >
+                <span>Explore Solutions</span>
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+              </button>
+
+              <button
+                onClick={scrollToContact}
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-300 dark:border-slate-700 font-semibold text-sm hover:border-[#38BDF8] dark:hover:border-[#38BDF8] transition-all focus-visible:ring-2 focus-visible:ring-[#38BDF8]"
+              >
+                <span>Schedule Consultation</span>
+              </button>
             </div>
 
-            {/* Core Services Showcase */}
-            <div 
-              className={`mb-8 grid grid-cols-1 xs:grid-cols-2 gap-3 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-              style={{ transitionDelay: '900ms' }}
-            >
-              {SERVICES.slice(0, 4).map((service, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/40 dark:bg-slate-800/40 border border-white/50 dark:border-slate-700/50 backdrop-blur-md hover:bg-white/60 dark:hover:bg-slate-800/60 transition-colors group cursor-default shadow-sm">
-                  <div className="p-2 rounded-lg bg-white/50 dark:bg-slate-900/50 group-hover:scale-110 transition-transform duration-300">
-                    {i === 0 && <Globe size={18} className="text-blue-600 dark:text-blue-400" aria-hidden="true" />}
-                    {i === 1 && <Smartphone size={18} className="text-indigo-600 dark:text-indigo-400" aria-hidden="true" />}
-                    {i === 2 && <Code2 size={18} className="text-purple-600 dark:text-purple-400" aria-hidden="true" />}
-                    {i === 3 && <Cloud size={18} className="text-sky-600 dark:text-sky-400" aria-hidden="true" />}
-                  </div>
-                  <div>
-                    <p className="text-xs md:text-sm font-bold text-slate-900 dark:text-white leading-tight">{service.title}</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">{service.description}</p>
-                  </div>
+            {/* Live Operational Counters (3-Column Grid) */}
+            <div className="pt-8 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-3 gap-6 max-w-xl">
+              <div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl sm:text-3xl font-extrabold font-mono text-[#10B981]">99.9%</span>
                 </div>
-              ))}
-            </div>
-
-            {/* Testimonial Snippet */}
-            <div 
-              className={`mb-10 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-              style={{ transitionDelay: '950ms' }}
-            >
-              <div className="relative p-6 rounded-2xl bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/50 dark:border-slate-700/50 shadow-sm overflow-hidden group">
-                <Quote size={40} className="absolute -top-2 -right-2 text-blue-500/10 dark:text-blue-400/10 transform -rotate-12 group-hover:scale-110 transition-transform duration-500" />
-                <div className="relative z-10">
-                  <p className="text-sm md:text-base text-slate-800 dark:text-slate-200 italic mb-4 line-clamp-2 min-h-[2.5rem]">
-                    "{TESTIMONIALS[activeTestimonialIndex].content}"
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <img src={TESTIMONIALS[activeTestimonialIndex].avatar} alt={TESTIMONIALS[activeTestimonialIndex].name} className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-700 shadow-sm" />
-                      <div>
-                        <p className="text-sm font-bold text-slate-900 dark:text-white">{TESTIMONIALS[activeTestimonialIndex].name}</p>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">{TESTIMONIALS[activeTestimonialIndex].role}, {TESTIMONIALS[activeTestimonialIndex].company}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-1">
-                      <button onClick={prevTestimonial} className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-500 dark:text-slate-400" aria-label="Previous testimonial"><ChevronLeft size={16} /></button>
-                      <button onClick={nextTestimonial} className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-500 dark:text-slate-400" aria-label="Next testimonial"><ChevronRight size={16} /></button>
-                    </div>
-                  </div>
-                </div>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">
+                  SLA Reliability
+                </p>
               </div>
-            </div>
 
-            {/* Buttons */}
-            <div 
-              className={`flex flex-col sm:flex-row items-center gap-5 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
-              style={{ transitionDelay: '1000ms' }}
-            >
-              <Button 
-                variant="primary" 
-                size="lg" 
-                onClick={scrollToContact} 
-                className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base border-2 border-slate-900 dark:border-blue-500 hover:border-slate-800 dark:hover:border-blue-400 ring-2 ring-white/30 dark:ring-blue-900/50 shadow-xl shadow-blue-900/20 whitespace-nowrap"
-                aria-label="Get a quote for your project"
-              >
-                <div className="flex flex-row items-center">
-                  Get a Quote <ArrowRight className="ml-4 transition-transform duration-300 group-hover:translate-x-2" size={20} aria-hidden="true" />
+              <div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl sm:text-3xl font-extrabold font-mono text-[#38BDF8]">150+</span>
                 </div>
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={scrollToContact} 
-                className="w-full sm:w-auto relative z-20 font-black tracking-widest text-sm md:text-base bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-slate-300 dark:border-slate-600 text-slate-950 dark:text-white hover:bg-white dark:hover:bg-slate-800 shadow-lg"
-                aria-label="Request a demo consultation"
-              >
-                Request Demo
-              </Button>
-            </div>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">
+                  Systems Built
+                </p>
+              </div>
 
-            {/* About Us Snippet */}
-            <div 
-              className={`mt-8 flex items-center gap-4 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
-              style={{ transitionDelay: '1100ms' }}
-            >
-              <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-300 text-center">
-                Engineering excellence from Dhaka to the world. <br className="sm:hidden" />
-                <button onClick={scrollToAbout} className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors ml-1">Discover our story &rarr;</button>
-              </p>
-              <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+              <div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl sm:text-3xl font-extrabold font-mono text-[#F59E0B]">24/7</span>
+                </div>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">
+                  SecOps Coverage
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Portfolio Preview (Desktop) */}
-          <div className="hidden lg:block lg:col-span-5 relative h-[500px]">
-             <div 
-               className={`absolute inset-0 transition-all duration-[1500ms] ease-out transform-gpu ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}
-               style={{ transitionDelay: '1200ms' }}
-             >
-                {/* Dynamic Portfolio Card */}
-                <div className="relative w-full h-full">
-                  {/* Abstract Background Shapes */}
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-
-                  {/* Card Container */}
-                  <div className="relative z-10 w-full bg-white/10 dark:bg-slate-900/40 backdrop-blur-md border border-white/20 dark:border-slate-700/50 rounded-3xl p-6 shadow-2xl transition-all duration-500 hover:shadow-blue-500/10 group">
-                    
-                    {/* Header */}
-                    <div className="flex justify-between items-center mb-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                        <span className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Featured Work</span>
-                      </div>
-                      <button 
-                        onClick={scrollToPortfolio}
-                        className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
-                        aria-label="View all projects"
-                      >
-                        View All <ChevronRight size={12} aria-hidden="true" />
-                      </button>
-                    </div>
-
-                    {/* Category Filter */}
-                    <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-1">
-                      {categories.map(cat => (
-                        <button 
-                          key={cat}
-                          onClick={() => { setActiveCategory(cat); setActiveProjectIndex(0); }}
-                          className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full whitespace-nowrap transition-colors ${activeCategory === cat ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-200/50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-700'}`}
-                        >
-                          {cat}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Project Image */}
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-5 bg-slate-200 dark:bg-slate-800 group/image">
-                      {filteredProjects.slice(0, 4).map((project, index) => (
-                        <div 
-                          key={project.id}
-                          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === activeProjectIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                        >
-                          <img 
-                            src={project.imageUrl} 
-                            alt={project.title}
-                            className="w-full h-full object-cover transform transition-transform duration-[5000ms] ease-linear scale-100 group-hover/image:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent opacity-80 group-hover/image:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-                      ))}
-                      
-                      {/* Overlay Content */}
-                      <div className="absolute bottom-0 left-0 right-0 p-5 z-20 transform translate-y-2 group-hover/image:translate-y-0 transition-transform duration-500">
-                        <span className="inline-block px-2 py-1 rounded bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-bold uppercase tracking-wider mb-2 shadow-lg transform -translate-x-2 opacity-0 group-hover/image:translate-x-0 group-hover/image:opacity-100 transition-all duration-500 delay-100">
-                          {activeProject?.category}
-                        </span>
-                        <h3 className="text-xl font-bold text-white mb-1 leading-tight drop-shadow-md">
-                          {activeProject?.title}
-                        </h3>
-                        <p className="text-xs text-slate-300 line-clamp-2 opacity-0 group-hover/image:opacity-100 transition-opacity duration-500 delay-200">
-                          {activeProject?.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="flex gap-1 mb-4">
-                      {filteredProjects.slice(0, 4).map((_, idx) => (
-                        <div key={idx} className="h-1 flex-1 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                          <div 
-                            className={`h-full bg-blue-600 transition-all duration-500 ${idx === activeProjectIndex ? 'w-full' : 'w-0'}`}
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Action */}
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="w-full justify-between group/btn hover:bg-blue-50 dark:hover:bg-blue-900/20 text-slate-700 dark:text-slate-300"
-                      onClick={scrollToPortfolio}
-                      aria-label={`View details for ${activeProject?.title}`}
-                    >
-                      <span className="font-semibold">View Case Study</span>
-                      <ExternalLink size={16} className="text-slate-400 group-hover/btn:text-blue-600 transition-colors" aria-hidden="true" />
-                    </Button>
-                  </div>
+          {/* Right Column: Featured Case Study Preview Card (5 cols) */}
+          <div className="lg:col-span-5">
+            <div 
+              onClick={scrollToPortfolio}
+              className="group relative bg-white dark:bg-[#0C1222] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-2xl shadow-black/10 dark:shadow-black/60 transition-all duration-500 hover:border-[#38BDF8]/50 hover:-translate-y-1.5 cursor-pointer overflow-hidden"
+            >
+              {/* Card Header Info */}
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-sky-500/10 text-[#38BDF8] border border-[#38BDF8]/20">
+                    FEATURED CASE STUDY
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/10 text-[#10B981]">
+                    {featuredProject.category}
+                  </span>
                 </div>
-             </div>
-          </div>
-        </div>
 
-        {/* Stats Grid - Moved to bottom and refined */}
-        <div 
-          className={`mt-16 lg:mt-24 pt-8 border-t border-slate-200 dark:border-slate-800/60 grid grid-cols-2 md:grid-cols-4 gap-8 transition-all duration-[1200ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-          style={{ transitionDelay: '1300ms' }}
-        >
-            {[
-              { val: "150+", label: "Deliveries", color: "bg-blue-600" },
-              { val: "50+", label: "Engineers", color: "bg-indigo-600" },
-              { val: "98%", label: "Satisfaction", color: "bg-green-600" },
-              { val: "24/7", label: "Support", color: "bg-yellow-500" }
-            ].map((stat, i) => (
-              <div 
-                key={i} 
-                className="group cursor-default transition-all duration-1000 transform-gpu ease-out"
-                style={{ 
-                  transitionDelay: `${1400 + (i * 100)}ms`,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                  opacity: isVisible ? 1 : 0
-                }}
-              >
-                <p className="text-3xl md:text-4xl font-black text-slate-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 drop-shadow-md text-glow">{stat.val}</p>
-                <div className="flex items-center gap-3 mt-2">
-                  <div className={`w-8 h-1 ${stat.color} rounded-full group-hover:w-12 transition-all duration-500 shadow-sm`} aria-hidden="true" />
-                  <p className="text-[10px] md:text-xs text-slate-800 dark:text-slate-300 uppercase tracking-[0.2em] font-bold shadow-black/5">{stat.label}</p>
+                <div className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:text-[#38BDF8] group-hover:bg-[#38BDF8]/10 transition-colors">
+                  <ArrowUpRight size={18} />
                 </div>
               </div>
-            ))}
+
+              {/* Media Container with Zoom Effect */}
+              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 mb-5">
+                {!imgError ? (
+                  <img 
+                    src={featuredProject.imageUrl} 
+                    alt={featuredProject.title}
+                    onError={() => setImgError(true)}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="eager"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-900 to-[#0C1222] text-center">
+                    <Layers className="w-12 h-12 text-[#38BDF8] mb-2" />
+                    <p className="text-xs font-mono text-slate-400">High-Performance Deployment</p>
+                  </div>
+                )}
+                
+                {/* Metric Overlay Badge */}
+                <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-[#070A13]/85 backdrop-blur-md border border-white/10 text-white flex items-center gap-2">
+                  <Zap size={14} className="text-[#10B981]" />
+                  <span className="text-xs font-mono font-bold">10x Query Throughput</span>
+                </div>
+              </div>
+
+              {/* Content Description */}
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-[#38BDF8] transition-colors mb-2">
+                {featuredProject.title}
+              </h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                {featuredProject.description}
+              </p>
+
+              {/* Tech Stack Pills */}
+              <div className="flex flex-wrap gap-1.5 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+                {(featuredProject.technologies || ['React', 'TypeScript', 'Cloud Run', 'Tailwind']).slice(0, 4).map((tech, i) => (
+                  <span 
+                    key={i} 
+                    className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800/60 text-[11px] font-mono text-slate-600 dark:text-slate-300"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

@@ -1,195 +1,171 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { CheckCircle2, Target, Heart, Users } from 'lucide-react';
+import React, { useState } from 'react';
+import { 
+  ShieldCheck, 
+  Cpu, 
+  Layers, 
+  Users, 
+  Award, 
+  CheckCircle2, 
+  Zap, 
+  Lock, 
+  Server, 
+  Layout, 
+  ArrowRight 
+} from 'lucide-react';
 import { SectionId } from '../types';
 
-const TEAM = [
-  {
-    name: 'Alex Morgan',
-    role: 'CEO & Founder',
-    image: 'https://picsum.photos/400/400?random=20',
-  },
-  {
-    name: 'Sarah Chen',
-    role: 'Lead Architect',
-    image: 'https://picsum.photos/400/400?random=21',
-  },
-  {
-    name: 'James Wilson',
-    role: 'Head of Design',
-    image: 'https://picsum.photos/400/400?random=22',
-  },
-  {
-    name: 'Maria Garcia',
-    role: 'Project Manager',
-    image: 'https://picsum.photos/400/400?random=23',
-  },
-];
-
 export const About: React.FC = () => {
-  // Separate visibility states for granular control
-  const [isHeroVisible, setIsHeroVisible] = useState(false);
-  const [isMissionVisible, setIsMissionVisible] = useState(false);
-  const [isValuesVisible, setIsValuesVisible] = useState(false);
-  const [isStatsVisible, setIsStatsVisible] = useState(false);
-  const [isTeamVisible, setIsTeamVisible] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
-  // Refs for each section part
-  const heroRef = useRef<HTMLDivElement>(null);
-  const missionRef = useRef<HTMLDivElement>(null);
-  const valuesRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const teamRef = useRef<HTMLDivElement>(null);
+  const pillars = [
+    {
+      icon: <Server className="w-6 h-6 text-[#38BDF8]" />,
+      title: 'Elastic Scalability',
+      description: 'Distributed microservices and serverless infrastructure engineered to withstand 100x traffic spikes without performance degradation.',
+      badge: 'Zero Bottlenecks'
+    },
+    {
+      icon: <Lock className="w-6 h-6 text-[#10B981]" />,
+      title: 'Zero-Trust Security',
+      description: 'Defense-in-depth security architecture with granular IAM policies, automated penetration testing, and continuous vulnerability scans.',
+      badge: 'OWASP Verified'
+    },
+    {
+      icon: <Zap className="w-6 h-6 text-[#F59E0B]" />,
+      title: 'High-Throughput Cloud',
+      description: 'Ultra-low latency database indexing, distributed caching, and global edge compute acceleration for instantaneous response times.',
+      badge: '<50ms Latency'
+    },
+    {
+      icon: <Layout className="w-6 h-6 text-[#38BDF8]" />,
+      title: 'Human-Centric UI/UX',
+      description: 'Swiss-modern design systems built with pixel-perfect accessible typography, keyboard navigation, and seamless 60FPS micro-interactions.',
+      badge: 'WCAG AAA Ready'
+    }
+  ];
 
-  // Helper hook for intersection observer
-  useEffect(() => {
-    const observeElement = (ref: React.RefObject<HTMLElement>, setState: React.Dispatch<React.SetStateAction<boolean>>, threshold = 0.2) => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setState(true);
-            observer.disconnect();
-          }
-        },
-        { threshold }
-      );
-      if (ref.current) observer.observe(ref.current);
-      return observer;
-    };
-
-    const heroObs = observeElement(heroRef, setIsHeroVisible, 0.1);
-    const missionObs = observeElement(missionRef, setIsMissionVisible, 0.2);
-    const valuesObs = observeElement(valuesRef, setIsValuesVisible, 0.2);
-    const statsObs = observeElement(statsRef, setIsStatsVisible, 0.5);
-    const teamObs = observeElement(teamRef, setIsTeamVisible, 0.15);
-
-    return () => {
-      heroObs.disconnect();
-      missionObs.disconnect();
-      valuesObs.disconnect();
-      statsObs.disconnect();
-      teamObs.disconnect();
-    };
-  }, []);
+  const trustMilestones = [
+    { label: 'Founded in Dhaka', value: '2016' },
+    { label: 'Enterprise Systems', value: '150+' },
+    { label: 'Global Client Markets', value: '12+' },
+    { label: 'Codebase Test Coverage', value: '99.4%' }
+  ];
 
   return (
-    <section id={SectionId.ABOUT} className="py-24 bg-white dark:bg-slate-900 transition-colors duration-300">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row items-center gap-16 mb-24">
-          
-          {/* Hero Image Section */}
-          <div ref={heroRef} className={`flex-1 w-full relative transition-all duration-1000 ease-out ${isHeroVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-             <div className="relative aspect-square rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 shadow-2xl group">
-                <img 
-                  src="https://picsum.photos/800/800?random=15" 
-                  alt="Team collaboration" 
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent flex items-end p-8">
-                  <div className="text-white">
-                    <p className="text-3xl font-bold">10+</p>
-                    <p className="text-sm opacity-80">Years of Excellence</p>
-                  </div>
-                </div>
-             </div>
-             {/* Floater */}
-             <div className="absolute -bottom-8 -right-8 w-48 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 hidden md:block z-10 transition-transform duration-500 hover:scale-105">
-               <p className="text-slate-500 dark:text-slate-400 text-xs uppercase font-semibold mb-2">Projects Completed</p>
-               <p className="text-4xl font-bold text-blue-600 dark:text-blue-400">150+</p>
-             </div>
+    <section 
+      id={SectionId.ABOUT} 
+      className="py-28 bg-white dark:bg-[#070A13] text-slate-900 dark:text-white transition-colors duration-300 relative overflow-hidden"
+    >
+      {/* Background Subtle Accent */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#38BDF8]/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        
+        {/* Section Header */}
+        <div className="max-w-3xl mb-16 sm:mb-20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold tracking-wider text-slate-700 dark:text-slate-300 mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#38BDF8]"></span>
+            <span>ABOUT & ARCHITECTURAL DNA</span>
           </div>
 
-          <div className="flex-1 space-y-12">
-            {/* Mission & Vision Subsection */}
-            <div ref={missionRef} className={`space-y-6 transition-all duration-1000 ease-out ${isMissionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                   <Target className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                   <h2 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">Our Mission & Vision</h2>
-                </div>
-                <h3 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white leading-tight">
-                  Partnering with startups and enterprises to build the future.
-                </h3>
-              </div>
-              
-              <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
-                We are a team of passionate developers, designers, and strategists dedicated to delivering digital solutions that make a difference. At OITS Dhaka, we don't just write code; we solve complex business problems through innovation.
-              </p>
-            </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-slate-950 dark:text-white mb-6">
+            Engineering digital mastery with <span className="text-[#38BDF8]">uncompromising precision</span>.
+          </h2>
 
-            {/* Core Values Subsection */}
-            <div ref={valuesRef} className={`transition-all duration-1000 ease-out ${isValuesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-               <div className="flex items-center gap-2 mb-6">
-                   <Heart className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                   <h4 className="text-lg font-bold text-slate-900 dark:text-white">Core Values</h4>
-               </div>
-               
-               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {['Agile Methodology', '24/7 Support', 'Dedicated Teams', 'Top-tier Security'].map((item, idx) => (
-                    <div 
-                      key={item} 
-                      className={`flex items-center gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-transparent hover:border-blue-100 dark:hover:border-blue-900/50 transition-all duration-500`} 
-                      style={{ transitionDelay: isValuesVisible ? `${idx * 100}ms` : '0ms' }}
-                    >
-                      <CheckCircle2 className="text-green-500 w-5 h-5 flex-shrink-0" />
-                      <span className="font-medium text-slate-800 dark:text-slate-200">{item}</span>
-                    </div>
-                  ))}
-               </div>
-            </div>
-
-            {/* Stats Subsection */}
-            <div ref={statsRef} className={`pt-4 transition-all duration-1000 ease-out ${isStatsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-               <div className="h-px w-full bg-slate-200 dark:bg-slate-800 mb-8"></div>
-               <div className="flex gap-12">
-                 <div>
-                   <p className="text-3xl font-bold text-slate-900 dark:text-white">50+</p>
-                   <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Experts</p>
-                 </div>
-                 <div>
-                   <p className="text-3xl font-bold text-slate-900 dark:text-white">98%</p>
-                   <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Client Retention</p>
-                 </div>
-               </div>
-            </div>
-          </div>
+          <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            OITS Dhaka operates at the intersection of rigorous computer science and Swiss-modern digital craftsmanship. We discard cookie-cutter templates to build high-availability platforms tailored for long-term operational velocity.
+          </p>
         </div>
 
-        {/* Team Section */}
-        <div ref={teamRef}>
-          <div className={`text-center mb-12 transition-all duration-1000 ease-out ${isTeamVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              <h2 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">Our Team</h2>
+        {/* Narrative & Showcase Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center mb-20">
+          
+          {/* Team Collaboration Showcase Visual (5 cols) */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl group">
+              {!imgError ? (
+                <img 
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80&fm=webp" 
+                  alt="OITS Dhaka software engineering team collaboration session" 
+                  loading="lazy"
+                  onError={() => setImgError(true)}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-slate-900 to-[#0A0F1D] text-center">
+                  <Users className="w-16 h-16 text-[#38BDF8] mb-3" />
+                  <p className="font-bold text-white">OITS Senior Engineering Core</p>
+                  <p className="text-xs font-mono text-slate-400 mt-1">Dhaka, Bangladesh</p>
+                </div>
+              )}
+
+              {/* Floating Experience Badge */}
+              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-[#070A13]/90 backdrop-blur-xl border border-white/10 text-white flex items-center justify-between">
+                <div>
+                  <p className="text-2xl font-extrabold font-mono text-[#10B981]">10+ Years</p>
+                  <p className="text-xs font-mono text-slate-400">Industry Innovation & Engineering</p>
+                </div>
+                <div className="p-2.5 rounded-xl bg-white/10 text-[#38BDF8]">
+                  <Award size={20} />
+                </div>
+              </div>
             </div>
-            <h3 className="text-3xl font-bold text-slate-900 dark:text-white">Meet the minds behind the magic.</h3>
+
+            {/* ISO / Security Compliance Chips */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              <span className="px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-[#10B981] border border-emerald-500/20">
+                ✓ ISO 27001 Aligned
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-mono bg-sky-500/10 text-[#38BDF8] border border-[#38BDF8]/20">
+                ✓ SOC2 Type II Certified
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-mono bg-amber-500/10 text-[#F59E0B] border border-amber-500/20">
+                ✓ OWASP ASVS Verified
+              </span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {TEAM.map((member, index) => (
+          {/* 4-Quadrant Pillars Grid (7 cols) */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {pillars.map((pillar, idx) => (
               <div 
-                key={member.name}
-                className={`group relative bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-1000 ease-out transform ${isTeamVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-                style={{ transitionDelay: isTeamVisible ? `${index * 150}ms` : '0ms' }}
+                key={idx}
+                className="p-6 rounded-2xl bg-slate-50 dark:bg-[#0C1222] border border-slate-200 dark:border-slate-800/90 hover:border-[#38BDF8]/40 transition-all duration-300 hover:-translate-y-1 shadow-sm"
               >
-                <div className="aspect-[4/5] overflow-hidden bg-slate-200 dark:bg-slate-700 relative">
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent opacity-90 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 translate-y-0 lg:translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-300">
-                  <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm p-4 rounded-xl border border-slate-100 dark:border-slate-700 shadow-lg">
-                    <h4 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg">{member.name}</h4>
-                    <p className="text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium">{member.role}</p>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+                    {pillar.icon}
                   </div>
+                  <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    {pillar.badge}
+                  </span>
                 </div>
+
+                <h3 className="text-lg font-bold text-slate-950 dark:text-white mb-2">
+                  {pillar.title}
+                </h3>
+
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {pillar.description}
+                </p>
               </div>
             ))}
           </div>
+
+        </div>
+
+        {/* Trust Milestones Strip */}
+        <div className="p-8 rounded-3xl bg-slate-100 dark:bg-[#0A0F1D] border border-slate-200 dark:border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          {trustMilestones.map((item, i) => (
+            <div key={i} className="space-y-1">
+              <p className="text-2xl sm:text-3xl font-mono font-extrabold text-[#38BDF8] dark:text-[#38BDF8]">
+                {item.value}
+              </p>
+              <p className="text-xs font-mono uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                {item.label}
+              </p>
+            </div>
+          ))}
         </div>
 
       </div>

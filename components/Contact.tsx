@@ -1,251 +1,343 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Send, AlertCircle, CheckCircle2, Copy, Check, Sparkles, RefreshCcw, MapPin, Navigation, Loader2 } from 'lucide-react';
-import { Button } from './ui/Button';
-import { CONTACT_EMAIL, ADDRESS } from '../constants';
+import React, { useState } from 'react';
+import { 
+  Send, 
+  MapPin, 
+  Mail, 
+  Phone, 
+  Clock, 
+  CheckCircle2, 
+  AlertCircle, 
+  ShieldCheck, 
+  Copy, 
+  Check, 
+  Sparkles,
+  Loader2
+} from 'lucide-react';
+import { CONTACT_EMAIL, ADDRESS, COMPANY_NAME } from '../constants';
 import { SectionId } from '../types';
-import { useLanguage } from './LanguageContext';
-import { Confetti } from './Confetti';
-import { ProjectEstimator } from './ProjectEstimator';
 
 export const Contact: React.FC = () => {
-  const { t } = useLanguage();
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-  const [isCopied, setIsCopied] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    workEmail: '',
+    projectScope: 'Custom Enterprise Web App',
+    budgetTier: '$10k – $25k',
+    message: ''
+  });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } }, { threshold: 0.1 });
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const scopeOptions = [
+    'Custom Enterprise Web App',
+    'Native Mobile App (iOS/Android)',
+    'Cloud Architecture & DevOps',
+    'AI / LLM System Integration',
+    'Dedicated Engineering Team',
+    'Cybersecurity Audit & Hardening'
+  ];
+
+  const budgetTiers = [
+    '$5k – $10k',
+    '$10k – $25k',
+    '$25k – $50k',
+    '$50k+'
+  ];
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(CONTACT_EMAIL);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const validate = () => {
-    const newErrors: typeof errors = {};
-    if (!formData.name.trim()) newErrors.name = t('contact_error_name');
-    if (!formData.email.trim()) { 
-      newErrors.email = t('contact_error_email_empty'); 
-    } 
-    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) { 
-      newErrors.email = t('contact_error_email_invalid'); 
+    const errs: Record<string, string> = {};
+    if (!formData.fullName.trim()) errs.fullName = 'Full name is required';
+    if (!formData.workEmail.trim()) {
+      errs.workEmail = 'Work email is required';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.workEmail)) {
+      errs.workEmail = 'Please provide a valid corporate email format';
     }
-    if (!formData.message.trim()) newErrors.message = t('contact_error_message');
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (!formData.message.trim()) errs.message = 'Please provide a summary of your project requirements';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    setStatus('sending');
+
+    setIsSubmitting(true);
+    // Simulate high-reliability API transmission
     setTimeout(() => {
-      if (Math.random() < 0.02) { setStatus('error'); } 
-      else { 
-        setStatus('success'); 
-        setFormData({ name: '', email: '', message: '' }); 
-        setErrors({}); 
-        setTimeout(() => setStatus('idle'), 8000); 
-      }
-    }, 2500);
+      setIsSubmitting(false);
+      setIsSuccess(true);
+      setFormData({
+        fullName: '',
+        workEmail: '',
+        projectScope: 'Custom Enterprise Web App',
+        budgetTier: '$10k – $25k',
+        message: ''
+      });
+      setTimeout(() => setIsSuccess(false), 8000);
+    }, 1500);
   };
 
-  const mapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.123456789012!2d90.3644321!3d23.7431234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ0JzM1LjIiTiA5MMKwMjEnNTEuOSJF!5e0!3m2!1sen!2sbd!4v1234567890123`;
-
   return (
-    <section ref={sectionRef} id={SectionId.CONTACT} className="py-24 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-500 relative overflow-hidden">
-      {/* Confetti Animation Trigger */}
-      <Confetti active={status === 'success'} />
+    <section 
+      id={SectionId.CONTACT} 
+      className="py-28 bg-slate-50 dark:bg-[#070A13] text-slate-900 dark:text-white transition-colors duration-300 relative overflow-hidden"
+    >
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        
+        {/* Section Heading */}
+        <div className="max-w-3xl mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold tracking-wider text-slate-700 dark:text-slate-300 mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#10B981]"></span>
+            <span>DIRECT CONSULTATION & INTAKE</span>
+          </div>
 
-      <div className="absolute top-0 right-0 w-[45%] h-full bg-blue-100/40 dark:bg-blue-900/5 -skew-x-12 transform translate-x-1/4 pointer-events-none" />
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 xl:gap-32 items-start mb-24">
-          <div className="space-y-12">
-            <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-600/10 dark:bg-blue-400/10 text-blue-900 dark:text-blue-300 text-[11px] font-black uppercase tracking-[0.25em] mb-8 ring-1 ring-blue-500/30 shadow-sm">
-                <Sparkles size={16} className="text-blue-600" /> {t('contact_badge')}
-              </div>
-              <h3 className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tighter text-slate-950 dark:text-white drop-shadow-sm">
-                {t('contact_title')}
-              </h3>
-            </div>
-            <p className="text-slate-700 dark:text-slate-300 text-xl font-medium max-w-lg leading-relaxed">
-              {t('contact_desc')}
-            </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 dark:text-white mb-4">
+            Let’s architect your <span className="text-[#38BDF8]">next system</span>.
+          </h2>
+
+          <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            Submit your technical scope below. Our lead architects review all inquiries and respond within 24 hours.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          
+          {/* Left Column: Full Validation Enterprise Contact Form (7 cols) */}
+          <div className="lg:col-span-7 bg-white dark:bg-[#0C1222] border border-slate-200 dark:border-slate-800 rounded-3xl p-8 sm:p-10 shadow-xl">
             
-            <div className="space-y-6">
-              <div className="flex flex-wrap items-center gap-4">
-                <p className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-slate-100 tracking-tight drop-shadow-sm break-all sm:break-words">{CONTACT_EMAIL}</p>
-                <button onClick={handleCopyEmail} className={`p-4 rounded-2xl transition-all border-2 ${isCopied ? 'bg-green-600 border-green-600 text-white shadow-2xl scale-110' : 'bg-white dark:bg-slate-900 text-slate-400 hover:text-blue-600 border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20'}`} aria-label="Copy email address">
-                  {isCopied ? <Check size={22} className="animate-in zoom-in duration-500" /> : <Copy size={22} />}
+            {isSuccess ? (
+              <div className="py-12 text-center space-y-4 animate-in fade-in-0 duration-300">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-[#10B981] flex items-center justify-center mx-auto">
+                  <CheckCircle2 size={32} />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-950 dark:text-white">
+                  Consultation Request Received
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+                  Thank you. An engineering lead from OITS Dhaka will review your project brief and follow up via email within 24 hours.
+                </p>
+                <button
+                  onClick={() => setIsSuccess(false)}
+                  className="mt-4 px-6 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-slate-700 dark:text-slate-200"
+                >
+                  Send Another Inquiry
                 </button>
               </div>
-              
-              <div className="flex items-start gap-4 p-8 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all group">
-                 <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform">
-                    <MapPin size={24} />
-                 </div>
-                 <div>
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">{t('contact_hq')}</p>
-                    <p className="font-bold text-slate-900 dark:text-slate-100 leading-relaxed text-lg">{ADDRESS}</p>
-                 </div>
-              </div>
- 
-               {/* Embedded Map */}
-              <div className="w-full h-64 md:h-80 rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-800 shadow-xl mt-6">
-                <iframe 
-                   src={mapUrl} 
-                   width="100%" 
-                   height="100%" 
-                   style={{ border: 0 }} 
-                   allowFullScreen 
-                   loading="lazy" 
-                   referrerPolicy="no-referrer-when-downgrade"
-                   title="OITS Dhaka Location"
-                   className="grayscale hover:grayscale-0 transition-all duration-700"
-                />
-              </div>
-
-              {/* Dynamic Project Estimator Widget */}
-              <div className="mt-8">
-                <ProjectEstimator 
-                  onEstimateSync={(briefText) => 
-                    setFormData(prev => ({ 
-                      ...prev, 
-                      message: prev.message ? prev.message + "\n\n" + briefText : briefText 
-                    }))
-                  } 
-                />
-              </div>
-            </div>
-          </div>
-  
-          <div className={`relative transition-all duration-1000 delay-300 ease-out transform-gpu ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            <div className={`relative bg-white dark:bg-slate-900 p-6 sm:p-10 md:p-14 rounded-[2rem] sm:rounded-[3.5rem] md:rounded-[4rem] border-2 border-slate-200 dark:border-slate-800 shadow-2xl transition-all duration-700 overflow-hidden ${status === 'sending' ? 'scale-[0.98]' : 'scale-100'}`}>
-              
-              {status === 'sending' && (
-                <div className="absolute inset-0 z-50 bg-white/70 dark:bg-slate-900/85 backdrop-blur-[6px] flex flex-col items-center justify-center animate-in fade-in duration-500">
-                  <div className="relative mb-10">
-                    <Loader2 size={100} className="text-blue-600 animate-spin stroke-[1.5px]" />
-                    <div className="absolute inset-0 bg-blue-600/20 blur-3xl rounded-full scale-150 animate-pulse"></div>
-                  </div>
-                  <div className="text-center space-y-3">
-                    <p className="text-3xl font-black text-slate-950 dark:text-white tracking-tighter">{t('contact_status_sending')}</p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-bold uppercase tracking-[0.3em] animate-pulse">Encrypting Payload</p>
-                  </div>
-                </div>
-              )}
-
-              {status === 'success' ? (
-                <div className="text-center py-20 animate-in zoom-in-95 duration-700">
-                  <div className="w-32 h-32 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mx-auto mb-10 shadow-2xl shadow-green-500/10 ring-4 ring-green-500/10"><CheckCircle2 size={64} className="stroke-[2.5px]" /></div>
-                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter text-glow">{t('contact_status_success_title')}</h4>
-                  <p className="text-slate-600 dark:text-slate-300 text-lg mb-10 max-w-xs mx-auto">{t('contact_status_success_desc')}</p>
-                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg shadow-xl shadow-green-500/5">{t('contact_status_success_button')}</Button>
-                </div>
-              ) : status === 'error' ? (
-                <div className="text-center py-20 animate-in zoom-in-95 duration-700">
-                  <div className="w-32 h-32 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-600 dark:text-red-400 mx-auto mb-10 shadow-2xl shadow-red-500/10"><AlertCircle size={64} className="stroke-[2.5px]" /></div>
-                  <h4 className="text-4xl font-black mb-4 text-slate-950 dark:text-white tracking-tighter">{t('contact_status_error_title')}</h4>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg mb-12 max-w-sm mx-auto font-medium">{t('contact_status_error_desc')}</p>
-                  <Button variant="primary" size="lg" onClick={() => setStatus('idle')} className="rounded-2xl px-14 h-16 border-2 font-black text-lg flex items-center gap-3"><RefreshCcw size={20} /> {t('contact_status_error_button')}</Button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-10" noValidate>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div className="space-y-4 group">
-                      <label htmlFor="name-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">{t('contact_label_name')} <span className="text-blue-500">*</span></label>
-                      <input 
-                        type="text" 
-                        id="name-input" 
-                        name="name" 
-                        autoComplete="name"
-                        aria-invalid={!!errors.name} 
-                        aria-describedby={errors.name ? 'name-error' : undefined}
-                        className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                        placeholder={t('contact_placeholder_name')} 
-                        value={formData.name} 
-                        onChange={(e) => setFormData({...formData, name: e.target.value})} 
-                      />
-                      {errors.name && (
-                        <p id="name-error" className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
-                          <AlertCircle size={14} /> {errors.name}
-                        </p>
-                      )}
-                    </div>
-                    <div className="space-y-4 group">
-                      <label htmlFor="email-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">{t('contact_label_email')} <span className="text-blue-500">*</span></label>
-                      <input 
-                        type="email" 
-                        id="email-input" 
-                        name="email" 
-                        autoComplete="email"
-                        aria-invalid={!!errors.email} 
-                        aria-describedby={errors.email ? 'email-error' : undefined}
-                        className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-2xl px-7 py-5 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                        placeholder={t('contact_placeholder_email')} 
-                        value={formData.email} 
-                        onChange={(e) => setFormData({...formData, email: e.target.value})} 
-                      />
-                      {errors.email && (
-                        <p id="email-error" className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
-                          <AlertCircle size={14} /> {errors.email}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="space-y-4 group">
-                    <label htmlFor="message-input" className="text-[12px] font-black uppercase tracking-[0.2em] text-slate-800 dark:text-slate-200 ml-1 group-focus-within:text-blue-600 transition-colors cursor-pointer">{t('contact_label_message')} <span className="text-blue-500">*</span></label>
-                    <textarea 
-                      id="message-input" 
-                      name="message" 
-                      aria-invalid={!!errors.message} 
-                      aria-describedby={errors.message ? 'message-error' : undefined}
-                      rows={5} 
-                      className={`w-full bg-slate-50 dark:bg-slate-950 border-2 ${errors.message ? 'border-red-500 focus:border-red-500' : 'border-slate-400 dark:border-slate-600 focus:border-blue-600'} rounded-[2.5rem] px-7 py-6 text-slate-950 dark:text-white focus:outline-none focus:ring-4 focus:ring-blue-600/20 transition-all resize-none font-bold shadow-sm placeholder:text-slate-400 dark:placeholder:text-slate-600`} 
-                      placeholder={t('contact_placeholder_message')} 
-                      value={formData.message} 
-                      onChange={(e) => setFormData({...formData, message: e.target.value})} 
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                
+                {/* Full Name & Work Email */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      placeholder="e.g. Sarah Jenkins"
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#38BDF8] transition-all ${
+                        errors.fullName ? 'border-red-500' : 'border-slate-200 dark:border-slate-800'
+                      }`}
                     />
-                    {errors.message && (
-                      <p id="message-error" className="text-red-600 dark:text-red-400 text-[11px] mt-2 flex items-center gap-2 font-black animate-in fade-in slide-in-from-top-1 duration-300">
-                        <AlertCircle size={14} /> {errors.message}
-                      </p>
+                    {errors.fullName && (
+                      <p className="text-xs text-red-500 mt-1 font-mono">{errors.fullName}</p>
                     )}
                   </div>
-                  <div className="pt-4">
-                    <Button 
-                      type="submit" 
-                      variant="primary" 
-                      size="lg" 
-                      className={`w-full font-black text-xl h-20 active:scale-95 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] dark:shadow-[0_20px_40px_-10px_rgba(37,99,235,0.4)] bg-slate-950 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 ${status === 'sending' ? 'cursor-wait opacity-60' : 'hover:scale-[1.02]'}`} 
-                      disabled={status === 'sending'}
-                    >
-                      {status === 'sending' ? (
-                        <div className="flex items-center gap-4 animate-pulse">
-                          <Loader2 className="animate-spin" size={24} /> 
-                          {t('contact_status_sending')}
-                        </div>
-                      ) : (
-                        <span className="flex items-center justify-center gap-4 group">
-                          {t('contact_button_submit')} 
-                          <Send size={24} className="transform rotate-12 transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2" />
-                        </span>
-                      )}
-                    </Button>
+
+                  <div>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+                      Work Email *
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.workEmail}
+                      onChange={(e) => setFormData({ ...formData, workEmail: e.target.value })}
+                      placeholder="e.g. s.jenkins@enterprise.com"
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#38BDF8] transition-all ${
+                        errors.workEmail ? 'border-red-500' : 'border-slate-200 dark:border-slate-800'
+                      }`}
+                    />
+                    {errors.workEmail && (
+                      <p className="text-xs text-red-500 mt-1 font-mono">{errors.workEmail}</p>
+                    )}
                   </div>
-                </form>
-              )}
-            </div>
+                </div>
+
+                {/* Project Scope Dropdown & Budget Tier */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+                      Project Scope
+                    </label>
+                    <select
+                      value={formData.projectScope}
+                      onChange={(e) => setFormData({ ...formData, projectScope: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#38BDF8] transition-all cursor-pointer"
+                    >
+                      {scopeOptions.map((opt, i) => (
+                        <option key={i} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+                      Target Budget Tier
+                    </label>
+                    <select
+                      value={formData.budgetTier}
+                      onChange={(e) => setFormData({ ...formData, budgetTier: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#38BDF8] transition-all cursor-pointer"
+                    >
+                      {budgetTiers.map((tier, i) => (
+                        <option key={i} value={tier}>{tier}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Message / Brief */}
+                <div>
+                  <label className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+                    Project Mission & Technical Objectives *
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    placeholder="Describe your current tech stack, desired timeline, and architectural challenges..."
+                    className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900 border text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#38BDF8] transition-all resize-none ${
+                      errors.message ? 'border-red-500' : 'border-slate-200 dark:border-slate-800'
+                    }`}
+                  />
+                  {errors.message && (
+                    <p className="text-xs text-red-500 mt-1 font-mono">{errors.message}</p>
+                  )}
+                </div>
+
+                {/* Submit CTA */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-4 px-8 rounded-full bg-[#10B981] hover:bg-[#059669] text-[#070A13] font-bold text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 transition-all flex items-center justify-center gap-2 active:scale-98 disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      <span>Transmitting Project Brief...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Transmit Consultation Scope</span>
+                      <Send size={16} />
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
           </div>
+
+          {/* Right Column: Direct Coordinates & SLA Commitment (5 cols) */}
+          <div className="lg:col-span-5 space-y-6">
+            
+            {/* Direct Coordinates Card */}
+            <div className="p-8 rounded-3xl bg-white dark:bg-[#0C1222] border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+              <h3 className="text-lg font-bold text-slate-950 dark:text-white pb-4 border-b border-slate-100 dark:border-slate-800">
+                Direct Engineering Coordinates
+              </h3>
+
+              {/* Direct Email */}
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-2xl bg-sky-500/10 text-[#38BDF8] shrink-0">
+                  <Mail size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-1">Direct Inquiries</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-mono font-bold text-slate-900 dark:text-white truncate">
+                      {CONTACT_EMAIL}
+                    </span>
+                    <button
+                      onClick={handleCopyEmail}
+                      className="p-1 rounded-md text-slate-400 hover:text-[#38BDF8]"
+                      title="Copy email"
+                    >
+                      {copied ? <Check size={14} className="text-[#10B981]" /> : <Copy size={14} />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Studio HQ */}
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-2xl bg-emerald-500/10 text-[#10B981] shrink-0">
+                  <MapPin size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-1">Studio Headquarters</p>
+                  <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
+                    {ADDRESS}
+                  </p>
+                </div>
+              </div>
+
+              {/* Business Hours */}
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-2xl bg-amber-500/10 text-[#F59E0B] shrink-0">
+                  <Clock size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-1">Engineering Hours</p>
+                  <p className="text-sm text-slate-800 dark:text-slate-200">
+                    Sun – Thu: 09:00 – 18:00 (GMT+6)<br />
+                    24/7 On-Call SecOps for Active SLAs
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* SLA Commitment Pledge Badge */}
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-slate-900/50 to-sky-500/10 border border-emerald-500/30 flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-[#10B981] text-[#070A13] shrink-0">
+                <ShieldCheck size={24} />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-950 dark:text-white">
+                  Guaranteed 24-Hour SLA Response
+                </h4>
+                <p className="text-xs font-mono text-slate-600 dark:text-slate-400 mt-0.5">
+                  All enterprise technical requests receive direct architect analysis.
+                </p>
+              </div>
+            </div>
+
+            {/* Google Maps Embed */}
+            <div className="rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 aspect-[16/9] shadow-sm">
+              <iframe
+                title="OITS Dhaka Studio Location"
+                src="https://maps.google.com/maps?q=Dhanmondi%20Dhaka%20Bangladesh&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+          </div>
+
         </div>
+
       </div>
     </section>
   );

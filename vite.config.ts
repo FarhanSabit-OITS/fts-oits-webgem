@@ -25,13 +25,8 @@ export default defineConfig(({ mode }) => {
       },
       build: {
         outDir: 'dist',
-        emptyOutDir: false,
+        emptyOutDir: true,
         sourcemap: false,
-        rollupOptions: {
-          input: {
-            main: path.resolve(__dirname, 'index.html')
-          }
-        }
       }
     };
 });

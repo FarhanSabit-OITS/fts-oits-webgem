@@ -1,96 +1,177 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Search, Layers, Code, ShieldCheck, Rocket, ChevronRight, Calendar } from 'lucide-react';
-import { PROCESS_STEPS } from '../constants';
+import React, { useState } from 'react';
+import { 
+  Search, 
+  Layers, 
+  Code2, 
+  ShieldCheck, 
+  Rocket, 
+  CheckCircle2, 
+  Calendar, 
+  Clock,
+  ArrowRight,
+  Sparkles,
+  Lock,
+  Zap,
+  Activity
+} from 'lucide-react';
 import { SectionId } from '../types';
 
-const iconMap: Record<string, React.ReactNode> = {
-  Search: <Search className="w-6 h-6" />,
-  Layers: <Layers className="w-6 h-6" />,
-  Code: <Code className="w-6 h-6" />,
-  ShieldCheck: <ShieldCheck className="w-6 h-6" />,
-  Rocket: <Rocket className="w-6 h-6" />,
-};
-
 export const Process: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [activeStep, setActiveStep] = useState<number>(0);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+  const deliveryPhases = [
+    {
+      phase: '01',
+      title: 'Discovery & Strategic Roadmap',
+      turnaround: 'Weeks 1 – 2',
+      description: 'Deep architectural discovery, domain boundary mapping, user journeys, and infrastructure scoping.',
+      deliverables: [
+        'Domain Architecture Blueprint',
+        'Security Threat Model & RBAC Spec',
+        'Database Schema & ERD Documentation',
+        'Sprint Velocity & Milestones Plan'
+      ],
+      qualityGate: 'Architecture Signoff & Threat Review'
+    },
+    {
+      phase: '02',
+      title: 'Architecture & Security Hardening',
+      turnaround: 'Weeks 2 – 4',
+      description: 'Infrastructure as Code (Terraform), foundational API gateways, CI/CD pipeline automation, and design system creation.',
+      deliverables: [
+        'Terraform Cloud Ingress & VPCs',
+        'Multi-Tier Auth & Token Lifecycle',
+        'Reusable Component System (Figma to React)',
+        'Automated Mock Servers & Contract Tests'
+      ],
+      qualityGate: 'Zero-Trust Perimeter Validation'
+    },
+    {
+      phase: '03',
+      title: 'Agile Sprint Delivery & QA',
+      turnaround: 'Weeks 4 – 10',
+      description: 'Two-week agile sprints with bi-weekly client demos, automated unit/integration suites, and continuous code audits.',
+      deliverables: [
+        'Sprint Feature Implementations',
+        'E2E Playwright/Detox Test Suites',
+        'Automated SonarQube Code Scans',
+        'Bi-Weekly Staging Environment Demos'
+      ],
+      qualityGate: '95%+ Unit Test Coverage & Zero SAST Warnings'
+    },
+    {
+      phase: '04',
+      title: 'Production Launch & 24/7 SLA',
+      turnaround: 'Week 10+',
+      description: 'Canary rollout, blue/green production deployment, live telemetry monitoring, and guaranteed 99.9% uptime SLA.',
+      deliverables: [
+        'Zero-Downtime Blue/Green Release',
+        'Grafana/Datadog Telemetry Dashboards',
+        '24/7 SecOps Monitoring & PagerDuty',
+        'Comprehensive Operational Runbooks'
+      ],
+      qualityGate: 'SOC2 & ISO Penetration Audit Approval'
     }
-
-    return () => observer.disconnect();
-  }, []);
+  ];
 
   return (
-    <section ref={sectionRef} id={SectionId.PROCESS} className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <h2 className="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-4">Our Workflow</h2>
-          <h3 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">How we bring your vision to life.</h3>
-          <p className="text-slate-600 dark:text-slate-400 text-lg font-medium">
-            A structured, agile development lifecycle designed for speed, transparency, and high-quality outcomes.
+    <section 
+      id={SectionId.PROCESS} 
+      className="py-28 bg-slate-50 dark:bg-[#070A13] text-slate-900 dark:text-white transition-colors duration-300 relative overflow-hidden"
+    >
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        
+        {/* Section Heading */}
+        <div className="max-w-3xl mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold tracking-wider text-slate-700 dark:text-slate-300 mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#F59E0B]"></span>
+            <span>LIFECYCLE & DELIVERY METHODOLOGY</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 dark:text-white mb-4">
+            4-Phase <span className="text-[#38BDF8]">Precision Delivery</span>.
+          </h2>
+
+          <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            Every product engineered by OITS Dhaka moves through strict quality gates to guarantee security, performance, and predictability.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
-          {/* Connector Line (Desktop) */}
-          <div className="hidden md:block absolute top-1/2 left-0 w-full h-px bg-slate-200 dark:bg-slate-800 -translate-y-12 z-0"></div>
-
-          {PROCESS_STEPS.map((step, index) => (
+        {/* 4 Connected Milestone Nodes Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 relative">
+          {deliveryPhases.map((step, idx) => (
             <div 
-              key={step.id} 
-              className={`relative z-10 flex flex-col items-center text-center transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-              style={{ transitionDelay: `${index * 150}ms` }}
+              key={idx}
+              onClick={() => setActiveStep(idx)}
+              className={`p-7 rounded-3xl transition-all duration-300 cursor-pointer flex flex-col justify-between border ${
+                activeStep === idx
+                  ? 'bg-white dark:bg-[#0C1222] border-[#38BDF8] shadow-xl shadow-sky-500/10 -translate-y-2'
+                  : 'bg-white/60 dark:bg-[#0A0F1D]/80 border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700'
+              }`}
             >
-              <div className="mb-6 relative group">
-                 <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-xl shadow-blue-500/5 group-hover:scale-110 group-hover:rotate-6 transition-transform">
-                    {iconMap[step.icon]}
-                 </div>
-                 <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-slate-900 dark:bg-blue-600 text-white text-xs font-bold flex items-center justify-center border-2 border-white dark:border-slate-900">
-                    {step.number}
-                 </div>
-              </div>
-              
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{step.title}</h4>
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-[200px] font-medium">
-                {step.description}
-              </p>
-
-              {index < PROCESS_STEPS.length - 1 && (
-                <div className="md:hidden flex justify-center py-6 text-slate-300">
-                  <ChevronRight className="rotate-90" />
+              <div>
+                {/* Node Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-2xl font-mono font-extrabold text-[#38BDF8]">
+                    {step.phase}
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center gap-1">
+                    <Clock size={12} />
+                    {step.turnaround}
+                  </span>
                 </div>
-              )}
+
+                {/* Title & Description */}
+                <h3 className="text-lg font-bold text-slate-950 dark:text-white mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-6 font-normal">
+                  {step.description}
+                </p>
+
+                {/* Deliverables Checklist */}
+                <div className="space-y-2 mb-6 pt-4 border-t border-slate-100 dark:border-slate-800/80">
+                  <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">Core Deliverables</p>
+                  {step.deliverables.map((del, i) => (
+                    <div key={i} className="flex items-start gap-2 text-xs font-mono text-slate-700 dark:text-slate-300">
+                      <CheckCircle2 size={13} className="text-[#10B981] shrink-0 mt-0.5" />
+                      <span className="leading-tight">{del}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quality Gate Badge */}
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80">
+                <div className="flex items-center gap-2 text-[11px] font-mono text-[#F59E0B] bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20">
+                  <ShieldCheck size={14} className="shrink-0" />
+                  <span className="truncate">{step.qualityGate}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>
-        
-        <div className="mt-20 p-6 sm:p-12 rounded-[2rem] sm:rounded-[3rem] md:rounded-[4rem] bg-blue-600 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl shadow-blue-500/30 overflow-hidden relative group transition-all duration-700 hover:shadow-blue-500/60">
-           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[marquee_3s_linear_infinite] pointer-events-none" />
-           <div className="max-w-xl relative z-10">
-             <h4 className="text-3xl md:text-4xl font-black mb-3 tracking-tight">Ready to start the discovery?</h4>
-             <p className="text-blue-100 text-lg font-medium">Schedule a 30-minute consultation with our lead architect to discuss your project requirements.</p>
-           </div>
-           <button 
-             onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
-             className="relative z-10 w-full md:w-auto px-12 py-6 bg-white text-blue-600 rounded-2xl md:rounded-3xl font-black text-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 active:scale-95 shadow-xl shadow-black/10 flex items-center justify-center gap-3 group/btn"
-           >
-             <Calendar size={24} className="group-hover/btn:rotate-12 transition-transform" />
-             Book Consultation
-           </button>
+
+        {/* Quality Gates Assurance Strip */}
+        <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800 shadow-2xl">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-2xl bg-[#10B981]/20 text-[#10B981]">
+              <Activity size={24} />
+            </div>
+            <div>
+              <h4 className="text-base font-bold">Automated CI/CD Quality Gates</h4>
+              <p className="text-xs font-mono text-slate-400 mt-0.5">Penetration Tested • SonarQube Audited • 99.9% Uptime Verified</p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => document.getElementById(SectionId.CONTACT)?.scrollIntoView({ behavior: 'smooth' })}
+            className="w-full md:w-auto px-6 py-3 rounded-full bg-[#38BDF8] hover:bg-[#0284c7] text-[#070A13] font-bold text-xs font-mono uppercase tracking-wider transition-all whitespace-nowrap"
+          >
+            Start Discovery Sprint
+          </button>
         </div>
+
       </div>
     </section>
   );
