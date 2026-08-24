@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Globe, Smartphone, PenTool, Cloud, Code2, Server, Database, Layers, Terminal, Users } from 'lucide-react';
@@ -31,6 +33,15 @@ export const Services: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
+    const handleTabKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'ArrowRight') {
+      const nextTab = document.getElementById(`tab-${TECH_DOMAINS[(index + 1) % TECH_DOMAINS.length].id}`);
+      if (nextTab) { nextTab.focus(); setActiveTab(TECH_DOMAINS[(index + 1) % TECH_DOMAINS.length].id); }
+    } else if (e.key === 'ArrowLeft') {
+      const prevTab = document.getElementById(`tab-${TECH_DOMAINS[(index - 1 + TECH_DOMAINS.length) % TECH_DOMAINS.length].id}`);
+      if (prevTab) { prevTab.focus(); setActiveTab(TECH_DOMAINS[(index - 1 + TECH_DOMAINS.length) % TECH_DOMAINS.length].id); }
+    }
+  };
   const handleOpenModal = (service: Service) => {
     setSelectedService(service);
     setIsModalOpen(true);
@@ -157,10 +168,10 @@ export const Services: React.FC = () => {
 
           <div className="bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[4rem] shadow-2xl dark:shadow-none border border-slate-200 dark:border-slate-800 overflow-hidden transition-all duration-500">
              <div className="grid grid-cols-2 lg:flex lg:flex-row border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 p-3 sm:p-5 gap-2.5 sm:gap-4 justify-center" role="tablist">
-                {TECH_DOMAINS.map((domain) => (
+                {TECH_DOMAINS.map((domain, idx) => (
                   <button 
                     key={domain.id} 
-                    onClick={() => setActiveTab(domain.id)} 
+                    id={`tab-${domain.id}`} tabIndex={activeTab === domain.id ? 0 : -1} onKeyDown={(e) => handleTabKeyDown(e, idx)} onClick={() => setActiveTab(domain.id)} 
                     role="tab" 
                     aria-selected={activeTab === domain.id} 
                     aria-label={`View ${domain.label} technologies`}
@@ -171,7 +182,7 @@ export const Services: React.FC = () => {
                 ))}
              </div>
              <div className="p-4 sm:p-8 md:p-14 min-h-[450px]" id="tech-skills-grid-wrapper">
-                {TECH_DOMAINS.map((domain) => (
+                {TECH_DOMAINS.map((domain, idx) => (
                   <div key={domain.id} className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 transition-all duration-700 ${activeTab === domain.id ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-8 absolute inset-0 pointer-events-none'}`} style={{ display: activeTab === domain.id ? 'grid' : 'none' }}>
                     {domain.skills.map((skill) => (
                       <div key={skill} className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 transition-all duration-500 group cursor-default hover:bg-blue-600 hover:text-white hover:scale-105 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/20 dark:hover:shadow-blue-900/30 transform-gpu will-change-transform">

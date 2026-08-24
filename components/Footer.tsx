@@ -1,3 +1,6 @@
+"use client";
+
+import { useTheme } from './ThemeProvider';
 import React, { useState, useEffect } from 'react';
 import { Github, Linkedin, Twitter, Facebook, Sun, Moon, MapPin, Loader2 } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS, SERVICES, ADDRESS } from '../constants';
@@ -27,7 +30,8 @@ const SocialLink = ({ href, icon: Icon, label }: { href: string; icon: any; labe
   </a>
 );
 
-export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
+export const Footer = () => {
+  const { theme, toggleTheme } = useTheme();
   const { language, t } = useLanguage();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);

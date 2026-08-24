@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState, useRef } from 'react';
 import { useLanguage } from './LanguageContext';
 import { Activity } from 'lucide-react';

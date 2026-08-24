@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'motion/react';
 import { 
@@ -348,5 +350,3 @@ export const ComingSoon: React.FC = () => {
     </div>
   );
 };
-
-

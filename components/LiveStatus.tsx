@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Activity, RefreshCw } from 'lucide-react';
 import { useLanguage } from './LanguageContext';

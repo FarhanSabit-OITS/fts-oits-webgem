@@ -1,4 +1,8 @@
+"use client";
+
+import { useTheme } from './ThemeProvider';
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Menu, X, Sun, Moon, Home, ChevronRight } from 'lucide-react';
 import { COMPANY_NAME, NAV_ITEMS } from '../constants';
 import { Button } from './ui/Button';
@@ -10,7 +14,8 @@ interface HeaderProps {
   toggleTheme: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
+export const Header = () => {
+  const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
@@ -22,15 +27,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-    }
-  };
 
   // Custom Logo Component for reusability within Header
   const BrandLogo = () => (
@@ -66,14 +62,14 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
       role="banner"
     >
       <div className="container mx-auto px-3 xs:px-4 sm:px-6 flex items-center justify-between">
-        <a 
+        <Link 
           href={`#${SectionId.HOME}`}
           className="group hover:opacity-90 transition-opacity min-w-0" 
-          onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
+          
           aria-label={`${COMPANY_NAME} homepage - scroll to top of the page`}
         >
           <BrandLogo />
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-2 xl:gap-3" aria-label="Main site navigation">
@@ -82,14 +78,14 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
               const labelKey = `nav_${item.label.toLowerCase()}`;
               return (
                 <li key={item.label}>
-                  <a 
+                  <Link 
                     href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
+                    onClick={() => setIsMobileMenuOpen(false)}
                     aria-label={`Jump to ${t(labelKey)} section`}
                     className="px-3 xl:px-4 py-2 rounded-full text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-700 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95"
                   >
                     {item.label === 'Home' ? <Home size={18} aria-label={t('nav_home')} /> : t(labelKey)}
-                  </a>
+                  </Link>
                 </li>
               );
             })}
@@ -192,14 +188,14 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                 const labelKey = `nav_${item.label.toLowerCase()}`;
                 return (
                   <li key={item.label}>
-                    <a 
+                    <Link 
                       href={item.href}
-                      onClick={(e) => handleNavClick(e, item.href)}
+                      onClick={() => setIsMobileMenuOpen(false)}
                       aria-label={`Jump to ${t(labelKey)} section`}
                       className="px-4 py-3 rounded-lg text-lg font-medium text-slate-800 dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 hover:text-blue-600 dark:hover:text-blue-400 transition-all active:scale-95 block"
                     >
                       {item.label === 'Home' ? t('nav_home') : t(labelKey)}
-                    </a>
+                    </Link>
                   </li>
                 );
               })}

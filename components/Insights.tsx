@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from './LanguageContext';
 import { ArrowUpRight, Calendar, User, Clock, ChevronRight, X, Sparkles, Loader2, BookOpen, Linkedin, Twitter, Send, Mail, CheckCircle2 } from 'lucide-react';
@@ -37,7 +39,7 @@ export const Insights: React.FC = () => {
 
   // Helper for social sharing
   const handleShare = (platform: 'linkedin' | 'twitter', article: Article) => {
-    const url = window.location.href;
+    const url = (typeof window !== 'undefined' ? window.location.href : '');
     const text = encodeURIComponent(`${article.title} - Insight from OITS Dhaka`);
     
     if (platform === 'linkedin') {

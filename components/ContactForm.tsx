@@ -1,5 +1,9 @@
+"use client";
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useToast } from './ToastContext';
+import { Confetti } from './Confetti';
 import { Mail, User, MessageSquare, Send, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
@@ -19,6 +23,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onClose, isModal = fal
   const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { showToast } = useToast();
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const validate = () => {
     const newErrors: { name?: string; email?: string; message?: string } = {};
@@ -68,6 +74,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onClose, isModal = fal
   };
 
   return (
+    <>
+      <Confetti active={showConfetti} />
     <div 
       role={isModal ? "dialog" : "region"}
       aria-labelledby="contact-form-title"
@@ -240,5 +248,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ onClose, isModal = fal
         )}
       </AnimatePresence>
     </div>
+    </>
   );
 };

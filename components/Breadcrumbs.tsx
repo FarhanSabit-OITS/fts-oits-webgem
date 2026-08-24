@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { ChevronRight, Home, ShieldCheck } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
