@@ -611,25 +611,67 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Mobile Toggle Bar */}
-        <div className="flex items-center gap-2.5 sm:hidden">
-          {/* Mobile Theme Toggle */}
+        <div className="flex items-center gap-1.5 sm:hidden">
+          {/* Mobile Services Icon */}
+          <Link
+            to="/services"
+            onClick={(e) => handleNavClick(e as any, '/services')}
+            className={`p-2 rounded-full transition-colors ${
+              activeSection === 'services' || window.location.pathname.startsWith('/services')
+                ? 'bg-[#38BDF8] text-slate-950 border border-[#38BDF8]'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
+            }`}
+            aria-label="Services"
+          >
+            <Layers size={18} />
+          </Link>
+
+          {/* Mobile Portfolio Icon */}
+          <Link
+            to="/portfolio"
+            onClick={(e) => handleNavClick(e as any, '/portfolio')}
+            className={`p-2 rounded-full transition-colors ${
+              activeSection === 'portfolio' || window.location.pathname.startsWith('/portfolio')
+                ? 'bg-[#38BDF8] text-slate-950 border border-[#38BDF8]'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
+            }`}
+            aria-label="Portfolio"
+          >
+            <Briefcase size={18} />
+          </Link>
+
+          {/* Mobile Contact Icon */}
+          <Link
+            to="/contact"
+            onClick={(e) => handleNavClick(e as any, '/contact')}
+            className={`p-2 rounded-full transition-colors ${
+              activeSection === 'contact' || window.location.pathname.startsWith('/contact')
+                ? 'bg-[#38BDF8] text-slate-950 border border-[#38BDF8]'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
+            }`}
+            aria-label="Contact"
+          >
+            <Mail size={18} />
+          </Link>
+
+          {/* Mobile Theme Toggle (Hidden per requirements) */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
+            className="hidden p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
             aria-label="Toggle theme"
           >
             {theme === 'dark' ? <Sun size={18} className="text-[#F59E0B]" /> : <Moon size={18} className="text-[#38BDF8]" />}
           </button>
 
-          {/* Hamburger Drawer Trigger (Touch Target ≥44px) */}
+          {/* Hamburger Drawer Trigger (Touch Target >=44px) */}
           <button 
-            className="w-11 h-11 flex items-center justify-center text-slate-800 dark:text-slate-100 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl transition-colors active:scale-95"
+            className="w-10 h-10 ml-1 flex items-center justify-center text-slate-800 dark:text-slate-100 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl transition-colors active:scale-95"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu-drawer"
           >
-            {isMobileMenuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
+            {isMobileMenuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
         </div>
       </div>
@@ -638,7 +680,7 @@ export const Header: React.FC = () => {
       {isMobileMenuOpen && (
         <div 
           id="mobile-menu-drawer"
-          className="fixed inset-0 top-[65px] z-50 bg-[#070A13]/60 backdrop-blur-xl lg:hidden flex flex-col justify-between p-6 animate-in fade-in-0 duration-200 overflow-y-auto"
+          className="fixed inset-0 top-[65px] z-[100] bg-[#070A13]/60 backdrop-blur-xl lg:hidden flex flex-col justify-between p-6 animate-in fade-in-0 duration-200 overflow-y-auto"
           role="dialog"
           aria-modal="true"
           aria-label="Mobile site navigation"
