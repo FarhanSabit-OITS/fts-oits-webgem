@@ -21,20 +21,20 @@ import { PROJECTS, COMPANY_NAME } from '../constants';
 import { SectionId, Project } from '../types';
 
 import { SectionWrapper } from './SectionWrapper';
+import { motion } from 'motion/react';
 
 export const Portfolio: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
-  const categories = ['All', 'Fintech', 'Enterprise SaaS', 'AI', 'HealthTech'];
+  const categories = ['All', 'Web Development', 'Cloud Infrastructure', 'Mobile Apps'];
 
   // Map or augment project domains
   const augmentedProjects: Project[] = PROJECTS.map((proj, idx) => {
-    let domain = 'Enterprise SaaS';
-    if (idx % 4 === 0) domain = 'Fintech';
-    else if (idx % 4 === 1) domain = 'AI';
-    else if (idx % 4 === 2) domain = 'HealthTech';
+    let domain = 'Web Development';
+    if (idx % 3 === 0) domain = 'Cloud Infrastructure';
+    else if (idx % 3 === 1) domain = 'Mobile Apps';
 
     return {
       ...proj,
@@ -52,6 +52,39 @@ export const Portfolio: React.FC = () => {
     <>
       <SectionWrapper id={SectionId.PORTFOLIO} className="bg-white dark:bg-[#070A13]">
         
+        {/* Summary Statistics Block */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-3xl bg-slate-50 dark:bg-[#0C1222] border border-slate-200 dark:border-slate-800 text-center"
+          >
+            <div className="text-4xl sm:text-5xl font-extrabold text-[#38BDF8] mb-2 font-mono">150+</div>
+            <div className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Projects Delivered</div>
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="p-8 rounded-3xl bg-slate-50 dark:bg-[#0C1222] border border-slate-200 dark:border-slate-800 text-center"
+          >
+            <div className="text-4xl sm:text-5xl font-extrabold text-[#10B981] mb-2 font-mono">1M+</div>
+            <div className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Code Lines Written</div>
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="p-8 rounded-3xl bg-slate-50 dark:bg-[#0C1222] border border-slate-200 dark:border-slate-800 text-center"
+          >
+            <div className="text-4xl sm:text-5xl font-extrabold text-[#B45309] mb-2 font-mono">99%</div>
+            <div className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Client Satisfaction</div>
+          </motion.div>
+        </div>
+
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="max-w-2xl">

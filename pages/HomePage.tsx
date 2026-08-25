@@ -1,6 +1,7 @@
 import React from 'react';
 import { Hero } from '../components/Hero';
 import { About } from '../components/About';
+import { WhyChooseUs } from '../components/WhyChooseUs';
 import { Services } from '../components/Services';
 import { Portfolio } from '../components/Portfolio';
 import { GlobalReach } from '../components/GlobalReach';
@@ -17,6 +18,8 @@ export const HomePage: React.FC = () => {
       <Hero />
       <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
       <About />
+      <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
+      <WhyChooseUs />
       <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
       <Services />
       <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />

@@ -15,6 +15,7 @@ import {
   Building2
 } from 'lucide-react';
 import { TESTIMONIALS } from '../constants';
+import { motion, AnimatePresence } from 'motion/react';
 
 export const Testimonials: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -145,29 +146,39 @@ export const Testimonials: React.FC = () => {
               </div>
             </div>
 
-            {/* Testimonial Quote */}
-            <p className="text-lg sm:text-xl md:text-2xl font-medium text-slate-900 dark:text-slate-100 leading-relaxed mb-8">
-              "{verifiedTestimonials[activeIndex].content}"
-            </p>
-
-            {/* Reviewer Profile */}
-            <div className="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-slate-800">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#38BDF8] to-[#10B981] flex items-center justify-center text-slate-950 font-bold font-mono text-base shrink-0 shadow-md">
-                {verifiedTestimonials[activeIndex].name.split(' ').map(n => n[0]).join('')}
-              </div>
-
-              <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="font-bold text-slate-950 dark:text-white text-base">
-                    {verifiedTestimonials[activeIndex].name}
-                  </h4>
-                  <CheckCircle2 size={16} className="text-[#10B981]" />
-                </div>
-                <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
-                  {verifiedTestimonials[activeIndex].role} • {verifiedTestimonials[activeIndex].company}
+            {/* Testimonial Quote & Profile with Transition */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <p className="text-lg sm:text-xl md:text-2xl font-medium text-slate-900 dark:text-slate-100 leading-relaxed mb-8">
+                  "{verifiedTestimonials[activeIndex].content}"
                 </p>
-              </div>
-            </div>
+
+                {/* Reviewer Profile */}
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#38BDF8] to-[#10B981] flex items-center justify-center text-slate-950 font-bold font-mono text-base shrink-0 shadow-md">
+                    {verifiedTestimonials[activeIndex].name.split(' ').map(n => n[0]).join('')}
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-bold text-slate-950 dark:text-white text-base">
+                        {verifiedTestimonials[activeIndex].name}
+                      </h4>
+                      <CheckCircle2 size={16} className="text-[#10B981]" />
+                    </div>
+                    <p className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                      {verifiedTestimonials[activeIndex].role} • {verifiedTestimonials[activeIndex].company}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 

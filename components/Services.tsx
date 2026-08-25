@@ -34,44 +34,53 @@ export const Services: React.FC = () => {
   const [selectedGaps, setSelectedGaps] = useState<string[]>([]);
   const [auditGenerated, setAuditGenerated] = useState(false);
 
-  const categories = ['All', 'Frontend', 'Backend', 'Infrastructure', 'Specialized'];
+  const categories = ['All', 'Web Application', 'Mobile App', 'Cloud', 'UI/UX', 'Custom Software'];
 
   const serviceOfferings = [
     {
-      id: 'frontend-arch',
-      category: 'Frontend',
-      title: 'Frontend Architecture',
-      description: 'Micro-frontends, ISR/SSR optimization, and high-performance React design systems built for global traffic.',
+      id: 'web-app',
+      category: 'Web Application',
+      title: 'Web Application Development',
+      description: 'High-performance, scalable web applications built to handle global traffic and complex business logic.',
       icon: <Globe className="w-6 h-6 text-blue-500" />,
-      techStack: ['React 18+', 'Next.js', 'Micro-frontends', 'Tailwind CSS'],
-      capabilities: ['Server-Side Rendering & ISR', 'State Orchestration with Zustand', 'Core Web Vitals 99+ Index', 'Atomic Component Design']
+      techStack: ['React/Next.js', 'Node.js', 'PostgreSQL'],
+      capabilities: ['Server-Side Rendering', 'Microservices Architecture', 'Global CDN Edge Delivery']
     },
     {
-      id: 'backend-services',
-      category: 'Backend',
-      title: 'Backend Services',
-      description: 'Distributed microservice clusters, event-driven data streaming, and acid-compliant database topologies.',
-      icon: <Database className="w-6 h-6 text-emerald-500" />,
-      techStack: ['Node.js/Express', 'Go', 'Spanner/PostgreSQL', 'Microservices'],
-      capabilities: ['Sub-30ms P99 API Response', 'Event Sourcing with Kafka', 'ACID Strict Database Replication', 'Zero-Trust Auth Gateways']
+      id: 'mobile-app',
+      category: 'Mobile App',
+      title: 'Mobile App Development',
+      description: 'Cross-platform native experiences delivering smooth, responsive, and secure mobile solutions.',
+      icon: <Smartphone className="w-6 h-6 text-emerald-500" />,
+      techStack: ['React Native', 'Flutter', 'Swift/Kotlin'],
+      capabilities: ['Offline-First Architecture', 'Real-time Push Notifications', 'Hardware Acceleration']
     },
     {
-      id: 'cloud-infra',
-      category: 'Infrastructure',
-      title: 'Cloud & Infrastructure',
-      description: 'Elastic Kubernetes orchestration, automated IaC pipelines, and multi-region failover clusters.',
+      id: 'cloud-solutions',
+      category: 'Cloud',
+      title: 'Cloud Solutions',
+      description: 'Elastic, secure, and auto-scaling cloud infrastructure built for 99.99% enterprise uptime.',
       icon: <Cloud className="w-6 h-6 text-amber-500" />,
-      techStack: ['Kubernetes', 'Docker', 'Terraform', 'CI/CD Pipelines'],
-      capabilities: ['Auto-scaling Container Clusters', 'Infrastructure as Code (IaC)', 'Zero-Downtime Blue/Green Rollouts', 'Multi-Region Replicas']
+      techStack: ['AWS', 'Google Cloud', 'Kubernetes'],
+      capabilities: ['Auto-scaling Clusters', 'Zero-Downtime Deployments', 'Multi-Region Failovers']
     },
     {
-      id: 'specialized-solutions',
-      category: 'Specialized',
-      title: 'Specialized Solutions',
-      description: 'Enterprise AI Gemini integrations, IoT real-time streaming, WebSockets, and Web-3 intelligent features.',
+      id: 'ui-ux',
+      category: 'UI/UX',
+      title: 'UI/UX Design',
+      description: 'Data-driven, user-centric interfaces meticulously designed for maximum engagement and conversion.',
+      icon: <Layout className="w-6 h-6 text-purple-500" />,
+      techStack: ['Figma', 'Framer Motion', 'Tailwind CSS'],
+      capabilities: ['Interactive Prototyping', 'Accessibility Compliance (WCAG)', 'Design System Architecture']
+    },
+    {
+      id: 'custom-software',
+      category: 'Custom Software',
+      title: 'Custom Software Development',
+      description: 'Bespoke enterprise software tailored to automate your unique workflows and scale your business operations.',
       icon: <Cpu className="w-6 h-6 text-rose-500" />,
-      techStack: ['Gemini AI Integration', 'IoT', 'WebSockets', 'Web-3'],
-      capabilities: ['Bespoke LLM RAG Pipelines', 'Real-Time Telemetry Socket Mesh', 'Edge AI Model Inference', 'Cryptographic Security']
+      techStack: ['Python', 'Go', 'Rust'],
+      capabilities: ['Legacy System Modernization', 'Workflow Automation', 'Enterprise Integration']
     }
   ];
 
