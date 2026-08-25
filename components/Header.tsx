@@ -263,8 +263,8 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           </Link>
 
           {/* Live Operational Status Indicator */}
-          <div className="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[#10B981] text-[11px] font-mono font-bold tracking-tight">
-            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+          <div className="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-[#38BDF8] text-[11px] font-mono font-bold tracking-tight">
+            <span className="w-2 h-2 rounded-full bg-[#38BDF8] animate-pulse"></span>
             <span>99.99% SLA</span>
           </div>
         </div>
@@ -278,9 +278,9 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
               <a 
                 href={`#${SectionId.HOME}`}
                 onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
-                className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#10B981]/60 ${
+                className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
                   activeSection === 'home'
-                    ? 'bg-[#10B981] text-slate-950 font-bold border-[#10B981] shadow-md'
+                    ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
                 aria-label={t('nav_home')}
@@ -312,9 +312,9 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                 aria-expanded={isServicesOpen}
                 aria-haspopup="true"
                 aria-controls="services-dropdown-panel"
-                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#10B981]/60 ${
+                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
                   activeSection === 'services' || isServicesOpen
-                    ? 'bg-[#10B981] text-slate-950 font-bold border-[#10B981] shadow-md'
+                    ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
               >
@@ -392,9 +392,9 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                 aria-expanded={isPortfolioOpen}
                 aria-haspopup="true"
                 aria-controls="portfolio-dropdown-panel"
-                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#10B981]/60 ${
+                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
                   activeSection === 'portfolio' || isPortfolioOpen
-                    ? 'bg-[#10B981] text-slate-950 font-bold border-[#10B981] shadow-md'
+                    ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
               >
@@ -472,9 +472,9 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
                 aria-expanded={isAboutOpen}
                 aria-haspopup="true"
                 aria-controls="about-dropdown-panel"
-                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#10B981]/60 ${
+                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
                   activeSection === 'about' || isAboutOpen
-                    ? 'bg-[#10B981] text-slate-950 font-bold border-[#10B981] shadow-md'
+                    ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
               >
@@ -535,9 +535,9 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
               <a 
                 href={`#${SectionId.CONTACT}`}
                 onClick={(e) => handleNavClick(e, `#${SectionId.CONTACT}`)}
-                className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#10B981]/60 ${
+                className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
                   activeSection === 'contact'
-                    ? 'bg-[#10B981] text-slate-950 font-bold border-[#10B981] shadow-md'
+                    ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
                 aria-label={t('nav_contact')}
@@ -554,13 +554,13 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
             {/* Accessible Theme Switcher */}
             <button
               onClick={toggleTheme}
-              className="group relative p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all active:rotate-12 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#38BDF8]"
+              className="group relative p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-[#B45309] hover:text-white dark:hover:text-slate-950 border border-[#B45309]/60 hover:border-[#B45309] transition-all active:rotate-12 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#B45309]"
               aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
             >
               {theme === 'dark' ? (
-                <Sun size={18} className="text-[#F59E0B] transition-transform group-hover:rotate-45" aria-hidden="true" />
+                <Sun size={18} className="text-[#F59E0B] group-hover:text-white dark:group-hover:text-slate-950 transition-colors" aria-hidden="true" />
               ) : (
-                <Moon size={18} className="text-[#38BDF8] transition-transform group-hover:-rotate-12" aria-hidden="true" />
+                <Moon size={18} className="text-[#B45309] group-hover:text-white dark:group-hover:text-slate-950 transition-colors" aria-hidden="true" />
               )}
               <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] px-2 py-1 rounded transition-opacity whitespace-nowrap pointer-events-none">
                 {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
@@ -569,10 +569,10 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
 
             {/* Workspace Access */}
             <button
-              className="group relative p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all focus-visible:ring-2 focus-visible:ring-[#38BDF8]"
+              className="group relative p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-[#B45309] hover:text-white dark:hover:text-slate-950 border border-[#B45309]/60 hover:border-[#B45309] transition-all focus-visible:ring-2 focus-visible:ring-[#B45309]"
               aria-label="Workspace Access"
             >
-              <UserCircle size={18} />
+              <UserCircle size={18} className="text-[#B45309] group-hover:text-white dark:group-hover:text-slate-950 transition-colors" />
               <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] px-2 py-1 rounded transition-opacity whitespace-nowrap pointer-events-none">
                 Workspace Portal
               </span>
@@ -581,10 +581,10 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
             {/* Schedule a Call / Free Consultation CTA */}
             <button
               onClick={() => setIsScheduleModalOpen(true)}
-              className="ml-1 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#10B981] bg-emerald-500/5 dark:bg-emerald-500/15 text-[#10B981] hover:border-amber-700 dark:hover:border-amber-600 hover:text-amber-700 dark:hover:text-amber-400 hover:bg-amber-500/10 font-bold text-xs uppercase tracking-wider shadow-lg transition-all whitespace-nowrap focus-visible:ring-2 focus-visible:ring-amber-500 group"
+              className="ml-1 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#10B981] bg-transparent text-emerald-600 dark:text-emerald-400 hover:bg-[#10B981] hover:text-slate-950 dark:hover:text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg transition-all whitespace-nowrap focus-visible:ring-2 focus-visible:ring-emerald-500 group"
             >
               <Calendar size={14} className="shrink-0 transition-transform group-hover:scale-110" aria-hidden="true" />
-              <span className="leading-none">Schedule a Call</span>
+              <span className="leading-none">Book Schedule</span>
             </button>
           </div>
         </nav>

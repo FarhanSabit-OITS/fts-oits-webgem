@@ -8,6 +8,14 @@
   --oits-sky: #38bdf8;
   --oits-emerald: #10b981;
   --oits-amber: #f59e0b;
+  --slate-dark: #1e293b;
+  --charcoal-text: #0f172a;
+  --slate-light: #f8fafc;
+  --indigo-depth: #312e81;
+  --oits-obsidian: #030712;
+  --sky-cyan: #38bdf8;
+  --emerald-glow: #10b981;
+  --bronze: #b45309;
 }
 
 @layer base {

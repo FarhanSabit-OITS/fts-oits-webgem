@@ -11,6 +11,14 @@ module.exports = {
         sans: ['Inter', 'sans-serif'],
       },
       colors: {
+        'slate-dark': '#1e293b',
+        'charcoal-text': '#0f172a',
+        'slate-light': '#f8fafc',
+        'indigo-depth': '#312e81',
+        'obsidian': '#030712',
+        'sky-cyan': '#38bdf8',
+        'emerald-glow': '#10b981',
+        'bronze': '#b45309',
         brand: {
           navy: '#1D2A68',
           'navy-dark': '#131B45',
