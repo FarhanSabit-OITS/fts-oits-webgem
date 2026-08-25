@@ -7,6 +7,7 @@ import { Portfolio } from './components/Portfolio';
 import { Process } from './components/Process';
 import { Testimonials } from './components/Testimonials';
 import { Contact } from './components/Contact';
+import { BrandPaletteShowcase } from './components/BrandPaletteShowcase';
 import { Footer } from './components/Footer';
 import { AiAssistant } from './components/AiAssistant';
 import { CursorSpotlight } from './components/CursorSpotlight';
@@ -71,6 +72,9 @@ function App() {
 
           {/* 8. Direct Contact & Consultation Section */}
           <Contact />
+
+          {/* 9. Brand Color Palette Component */}
+          <BrandPaletteShowcase />
         </main>
 
         {/* 9. Global Footer */}
