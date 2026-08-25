@@ -1,358 +1,516 @@
-import React, { useState, useEffect } from 'react';
-import { useLanguage } from './LanguageContext';
-import { ArrowUpRight, Calendar, User, Clock, ChevronRight, X, Sparkles, Loader2, BookOpen, Linkedin, Twitter, Send, Mail, CheckCircle2 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { 
+  Search, 
+  Clock, 
+  User, 
+  ArrowRight, 
+  Tag, 
+  Share2, 
+  BookOpen, 
+  Bookmark, 
+  Calendar, 
+  X, 
+  ChevronRight, 
+  MessageSquare,
+  Sparkles,
+  ShieldAlert,
+  Terminal,
+  Activity,
+  Heart
+} from 'lucide-react';
 
 export interface Article {
   id: string;
   title: string;
   excerpt: string;
   body: string;
-  category: string;
+  category: 'Architecture' | 'AI/ML' | 'DevOps' | 'Security';
   date: string;
   readTime: string;
-  author: string;
+  author: {
+    name: string;
+    role: string;
+    avatar: string;
+  };
   image: string;
-  originalCategory: 'web' | 'mobile' | 'design' | 'ai'; // for filtering
+  takeaways: string[];
 }
 
+const ARTICLES: Article[] = [
+  {
+    id: 'art-1',
+    title: 'Architecting Ultra-Low Latency Pipelines for Fintech Transactions',
+    excerpt: 'How OITS Dhaka engineered lock-free concurrent execution rings, stream telemetry under 200ms, and scaled in-memory cache replica nodes with zero packet leakage.',
+    body: `In today’s high-volume fintech ecosystem, a delay of 100 milliseconds can translate to millions in slippage and lost arbitrage opportunities. When transaction volume spikes, standard queue structures introduce locking bottlenecks that saturate the main event loops. This deep dive breaks down how OITS Dhaka engineered a multi-threaded execution queue in low-level Rust and TypeScript to bypass non-blocking I/O cycles, achieving sub-millisecond thread execution profiles.
+
+    By offloading database transaction queries to isolated background workers and establishing optimized Redis pipeline structures, we reduced write cycles to under 5ms. We also bypassed traditional multi-step serialization routines by using flat buffers directly in memory, which removed a massive amount of CPU overhead under load.
+
+    Key Strategic Pillars of Low-Latency Systems:
+    1. Event Loop Saturation Bypass via Worker Thread Offloading.
+    2. Standardizing Lock-Free Ring Buffers to eliminate deadlocks.
+    3. Granular Database Tuning and read-heavy caching paradigms.
+    
+    Ultimately, this architecture ensures high-frequency financial data stays clean, sequential, and fully durable even during catastrophic regional failover scenarios.`,
+    category: 'Architecture',
+    date: 'August 24, 2026',
+    readTime: '5 min read',
+    author: {
+      name: 'Tahmid Rahman',
+      role: 'Principal Architect',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120'
+    },
+    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800',
+    takeaways: [
+      'Lock-free ring buffers eliminate thread deadlocks.',
+      'Flat buffers eliminate costly serialization CPU cycles.',
+      'Offloading write heavy loops to background workers reduces main loop lag by 85%.'
+    ]
+  },
+  {
+    id: 'art-2',
+    title: 'Deploying Quantized Deep Learning Models Directly inside Mobile Devices',
+    excerpt: 'Techniques to compress heavy neural network layers, optimize on-device GPU inference frames, and protect user data privacy with zero external server dependencies.',
+    body: `The decentralization of machine learning is shifting intelligence from gargantuan server clusters directly to local, low-power edge processors. In this study, OITS Dhaka’s research lab explores methods for compressing large convolutional neural networks into highly compact formats that can run directly inside iOS and Android applications.
+    
+    Through advanced post-training quantization, we successfully converted 32-bit floating-point weights into highly optimized 8-bit integer formats. This resulted in a massive 75% reduction in overall file size while preserving 99.1% of baseline model accuracy.
+    
+    Running models directly on-device removes latency from cellular network round-trips. It also provides complete privacy, since sensitive user data never leaves the hardware container. By utilizing the Apple Neural Engine (ANE) and Android Neural Networks API (NNAPI) through unified compilation pipelines, we achieved real-time 60FPS classification loops without thermal throttling.`,
+    category: 'AI/ML',
+    date: 'August 18, 2026',
+    readTime: '7 min read',
+    author: {
+      name: 'Arif Zaman',
+      role: 'AI Guild Lead',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120'
+    },
+    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800',
+    takeaways: [
+      'Layer weight quantization trims package weight by 3/4 with zero accuracy drops.',
+      'Native hardware API direct binding prevents app thermal throttling.',
+      'On-device execution guarantees offline availability and absolute privacy.'
+    ]
+  },
+  {
+    id: 'art-3',
+    title: 'Zero-Downtime Multi-Region Replication Frameworks on AWS & GCP',
+    excerpt: 'A masterclass on scaling database nodes across geographical clusters with minimal consistency lag, automated failover routes, and self-healing systems.',
+    body: `High Availability is the hallmark of modern software systems. When designing enterprise applications, we must prepare for entire data center outages due to weather, fiber cuts, or cyberattacks. This technical guide outlines OITS Dhaka’s standard multi-region active-active database replication playbook.
+    
+    We rely on PostgreSQL with distributed replication managers paired with latency-based DNS routing. When a region goes offline, health check sensors instantly redirect global user traffic to the secondary cluster, completely transparently to the user.
+    
+    To combat consistency delay between continents, we implemented a custom write-ahead log (WAL) pre-shipper that resolves conflict conditions in real-time. This reduces the eventual consistency window from seconds down to less than 120ms.`,
+    category: 'DevOps',
+    date: 'August 12, 2026',
+    readTime: '6 min read',
+    author: {
+      name: 'Sayem Reza',
+      role: 'DevOps Director',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120'
+    },
+    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800',
+    takeaways: [
+      'DNS latency-based routing dynamically shifts traffic under 10 seconds.',
+      'Eventual consistency is minimized with synchronized local message streams.',
+      'Active-active cross-cloud infrastructure eliminates single point of failure limits.'
+    ]
+  },
+  {
+    id: 'art-4',
+    title: 'Zero-Trust API Hardening: Bypassing the OWASP Top 10 Vulnerabilities',
+    excerpt: 'An elite security briefing on enforcing JWT signing key rotation, restricting CORS headers, and preventing SQL injection vectors across modern microservices.',
+    body: `Modern API endpoints are the primary targets for corporate industrial espionage and data breaches. Standard perimeter security is no longer sufficient; enterprise apps must enforce a strict Zero-Trust Architecture. Every request must be authenticated, authorized, and deeply inspected.
+    
+    This briefing analyzes how OITS Dhaka secures microservices against injection attacks, broken object-level authorization, and data exposure. By utilizing cryptographically signed JSON Web Tokens (JWT) with automated 24-hour public-key rotation, we render compromised tokens instantly useless.
+    
+    Furthermore, we implement strict automated rate-limiting buckets based on client IP addresses and API keys to defend against denial-of-service attempts. All network payloads are strictly validated against JSON schema specs prior to reaching application routing logic.`,
+    category: 'Security',
+    date: 'August 05, 2026',
+    readTime: '8 min read',
+    author: {
+      name: 'Nusrat Jahan',
+      role: 'SecOps Architect',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120'
+    },
+    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800',
+    takeaways: [
+      'Automated key rotation locks out stale compromised tokens.',
+      'Schema boundary validation blocks malicious query injection.',
+      'IP rate limit throttling mitigates coordinated DDoS attacks.'
+    ]
+  },
+  {
+    id: 'art-5',
+    title: 'Designing Next-Gen Micro-Frontends for Massive Scale Portals',
+    excerpt: 'Decomposing large monolithic web apps into autonomous, lazy-loaded modules without layout shifts or style leakage.',
+    body: `When scaling software organizations, the frontend codebase can become a major development bottleneck. When hundreds of developers commit to a single monorepo, build pipelines slow down and regression issues proliferate. The solution is Micro-Frontends.
+    
+    By separating modular business sectors into isolated repositories and bundling them using Module Federation, OITS Dhaka enables autonomous product teams to deploy features independently. We use localized CSS variables and shadow DOM boundaries to completely eliminate CSS class collisions.
+    
+    This guide highlights how to manage shared application state without coupling micro-applications, and how to optimize shared package dependencies to ensure users only download shared modules once.`,
+    category: 'Architecture',
+    date: 'July 28, 2026',
+    readTime: '6 min read',
+    author: {
+      name: 'Tahmid Rahman',
+      role: 'Principal Architect',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120'
+    },
+    image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=800',
+    takeaways: [
+      'Webpack Module Federation enables atomic team feature rollouts.',
+      'Shadow DOM encapsulation prevents global layout shifts.',
+      'Shared dependency configuration reduces overall bundle payload size.'
+    ]
+  },
+  {
+    id: 'art-6',
+    title: 'Harnessing Retrieval-Augmented Generation for Business ERP Systems',
+    excerpt: 'Connecting enterprise databases safely to large language models using vector databases, semantic search embedding, and prompt engineering.',
+    body: `While Large Language Models (LLMs) are exceptionally powerful, they suffer from knowledge cutoff limits and hallucinations. In a corporate environment, absolute precision is critical. Retrieval-Augmented Generation (RAG) resolves this by augmenting the prompt with verified real-time database facts.
+    
+    This technical manual covers how OITS Dhaka designs secure RAG pipelines. We extract unstructured company PDF documentation, convert them into vector embeddings, and store them inside high-speed vector index nodes.
+    
+    When a staff member asks a question, we run a semantic cosine-similarity query to pull relevant paragraphs, inject them into the LLM prompt as ground facts, and guarantee factual, highly customized responses without leaking intellectual property.`,
+    category: 'AI/ML',
+    date: 'July 15, 2026',
+    readTime: '9 min read',
+    author: {
+      name: 'Arif Zaman',
+      role: 'AI Guild Lead',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120'
+    },
+    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800',
+    takeaways: [
+      'Semantic embeddings anchor LLM outputs to verifiable database records.',
+      'Secure vector indices block unauthorized user document access.',
+      'Cosine similarity lookup yields relevant context under 50 milliseconds.'
+    ]
+  }
+];
+
+const CATEGORIES = ['All', 'Architecture', 'AI/ML', 'DevOps', 'Security'] as const;
+
 export const Insights: React.FC = () => {
-  const { language, t } = useLanguage();
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
+  const [likedIds, setLikedIds] = useState<string[]>([]);
 
-  // Newsletter State
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [isSubscribing, setIsSubscribing] = useState(false);
-  const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  // Simple bookmarks toggler
+  const toggleBookmark = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setBookmarkedIds(prev => 
+      prev.includes(id) ? prev.filter(bId => bId !== id) : [...prev, id]
+    );
+  };
 
-  const categories = [
-    { id: 'all', label: t('insights_filter_all') },
-    { id: 'web', label: t('insights_filter_web') },
-    { id: 'mobile', label: t('insights_filter_mobile') },
-    { id: 'design', label: t('insights_filter_design') },
-    { id: 'ai', label: t('insights_filter_ai') }
-  ];
+  // Simple likes toggler
+  const toggleLike = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLikedIds(prev => 
+      prev.includes(id) ? prev.filter(lId => lId !== id) : [...prev, id]
+    );
+  };
 
-  // Helper for social sharing
-  const handleShare = (platform: 'linkedin' | 'twitter', article: Article) => {
-    const url = window.location.href;
-    const text = encodeURIComponent(`${article.title} - Insight from OITS Dhaka`);
-    
-    if (platform === 'linkedin') {
-      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+  // Share API fallback handler
+  const handleShare = (article: Article, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({
+        title: article.title,
+        text: article.excerpt,
+        url: window.location.href,
+      }).catch(() => {});
     } else {
-      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
+      navigator.clipboard.writeText(`${article.title} - ${window.location.href}`);
+      alert('Link copied to clipboard!');
     }
   };
 
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newsletterEmail) return;
-    
-    setIsSubscribing(true);
-    setSubscribeStatus('idle');
-    
-    try {
-      // Simulation of Newsletter Registration API
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setSubscribeStatus('success');
-      setNewsletterEmail('');
-    } catch (error) {
-      setSubscribeStatus('error');
-    } finally {
-      setIsSubscribing(false);
+  // Filter and search logic combined
+  const filteredArticles = useMemo(() => {
+    return ARTICLES.filter(art => {
+      const matchesCategory = selectedCategory === 'All' || art.category === selectedCategory;
+      const matchesSearch = art.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            art.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            art.category.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [selectedCategory, searchQuery]);
+
+  // Featured article (first one matching selected category or overall first)
+  const featuredArticle = useMemo(() => {
+    if (selectedCategory === 'All') {
+      return ARTICLES[0];
     }
-  };
+    return ARTICLES.find(art => art.category === selectedCategory) || ARTICLES[0];
+  }, [selectedCategory]);
 
-  // Mock Blog API Simulator
-  const fetchMockBlogAPI = (): Promise<Article[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockArticles: Article[] = [
-          {
-            id: 'art-1',
-            title: language === 'bn' 
-              ? 'ফিনটেক পেমেন্টে আল্ট্রা-লো লেটেন্সি আর্কিটেকচার ডিজাইন'
-              : 'Architecting Ultra-Low Latency Pipelines for Fintech Transactions',
-            excerpt: language === 'bn'
-              ? 'উচ্চ ক্ষমতাসম্পন্ন লেনদেনের ব্যাকএন্ডগুলিতে লেটেন্সি বা বিলম্বে পেমেন্ট প্রসেসিং কমানোর কার্যকর কৌশলসমূহ।'
-              : 'How to optimize database transaction queries, stream streaming telemetry data under 200ms, and scale backend memory models.',
-            body: language === 'bn'
-              ? 'আজকের পরিশীলিত আর্থিক অবকাঠামোয় বিলম্ব বা লেটেন্সি কেবল একটি সংযোগ সমস্যা নয়; এটি বড় ধরনের রেভিনিউ ক্ষতি করতে পারে। এই ডিটেইল্ড গাইডে ওআইটিএস ঢাকার সিনিয়র ইঞ্জিনিয়াররা দেখিয়েছেন কীভাবে লাইটওয়েট নোড ক্লাস্টার, রাস্ট রেপ্লিক্যান্টস এবং ইন-মেমোরি রেডিস ডাটা ট্র্যাকিং ব্যবহার করে ট্রানজেকশন ক্যোয়ারী ১ মিলিসেকেন্ডের নিচে নামিয়ে আনা যায় উনত্রিশ শতাংশ বুস্ট নিয়ে। \n\nমূল ফোকাস এরিয়া:\n১. ব্যাকপ্রেশার ম্যানেজমেন্ট ও পাইপলাইনিং।\n২. ডাটাবেস টিউনিং এবং নো-লক ট্রানজেকশন ক্যোয়ারী স্ট্যান্ডার্ডস。\n৩. গ্লোবাল মেমোরি রেপ্লিকেশন অপ্টিমাইজেশন।'
-              : 'In today’s high-volume fintech ecosystem, a delay of 100 milliseconds can translate to millions in slippage and lost arbitrage opportunities. This deep dive breaks down how OITS Dhaka engineered a multi-threaded execution queue in low-level Rust to bypass non-blocking I/O cycles, achieving sub-millisecond thread execution profiles in real-world environments.\n\nKey Strategic Pillars:\n- Event Loop Saturation Bypass via Worker Thread Offloading.\n- Standardizing Lock-Free Ring Buffers to eliminate deadlocks.\n- Granular Database Tuning and read-heavy caching paradigms.',
-            category: language === 'bn' ? 'ওয়েব ইঞ্জিনিয়ারিং' : 'Web Engineering',
-            originalCategory: 'web',
-            date: language === 'bn' ? '১৩ জুন, ২০২৬' : 'June 13, 2026',
-            readTime: language === 'bn' ? '৫ মিনিট পাঠ' : '5 min read',
-            author: language === 'bn' ? 'তাহমিদ রহমান, টিম লিড' : 'Tahmid Rahman, Principal Engineer',
-            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800'
-          },
-          {
-            id: 'art-2',
-            title: language === 'bn'
-              ? 'মোবাইল ইকোসিস্টেমে এজ ক্লাউড কম্পিউটিং এবং এআই মডেল ডেপ্লয়মেন্ট'
-              : 'Deploying Modern Edge AI Models directly inside Mobile Applications',
-            excerpt: language === 'bn'
-              ? 'ডিভাইসে সরাসরি অন-ডিভাইস ডিপ লার্নিং মডেল রানের মাধ্যমে ডাটা ট্রান্সমিশন বা নেটওয়ার্ক ডিপেন্ডেন্সি কমানো।'
-              : 'Techniques to compress neural network layers, run on-device inference without sacrificing UI rendering frames, and reduce cloud costs.',
-            body: language === 'bn'
-              ? 'অনলাইন সংযোগ বা স্পিডের উপর নির্ভর না করে সরাসরি নেটিভ ডিভাইসে ডিপ লার্নিং মডেল রান করানো এখন মোবাইল প্রযুক্তির এক বিশাল অর্জনের অংশ। ওআইটিএস ঢাকা রিসার্চ ল্যাবের তৈরি এই ব্লগে আমরা পোটেনশিয়াল নিউরাল নেটওয়ার্ক লাইব্রেরি ও কম্প্রেসড পাইটর্চ প্যাকেজের ব্যবহার সম্পর্কে বিশদ আলোচনা করেছি। এটি অ্যাপস্টোর ও গুগল প্লে স্টোরে সহজে সাবমিট করা যায় এবং ইউজার প্রাইভেসী শতভাগ রক্ষা করে।\n\nপ্রধান উপাদানসমূহ:\n১. অন-ডিভাইস এনপিইউ (NPU) অ্যাক্সিলারেশন অপ্টিমাইজেশন।\n২. লেয়ার কোয়ান্টাইজেশন মেথডোলজি。\n৩. মেমোরি থ্রেশহোল্ড মনিটরিং।'
-              : 'The decentralization of machine learning is shifting intelligence from gargantuan server clusters to local, low-power edge processors. This article details OITS Dhaka’s engineering patterns using CoreML and TensorFlow Lite underneath cross-platform layers to achieve lightning-fast object detection and offline translation.\n\nKey Strategic Pillars:\n- Core Model Quantization to decrease weights by up to 75%.\n- Asynchronous inference engines utilizing direct neural hardware.\n- Zero cloud dependencies ensuring extreme user data privacy.',
-            category: language === 'bn' ? 'এআই ও প্রযুক্তি' : 'AI & Frontier Tech',
-            originalCategory: 'ai',
-            date: language === 'bn' ? '১০ জুন, ২০২৬' : 'June 10, 2026',
-            readTime: language === 'bn' ? '৭ মিনিট পাঠ' : '7 min read',
-            author: language === 'bn' ? 'আরিফ জামান, এআই আর্কিটেক্ট' : 'Arif Zaman, AI Research Lead',
-            image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800'
-          },
-          {
-            id: 'art-3',
-            title: language === 'bn'
-              ? 'ক্লাউড নেটওয়ার্কের অটোমেটেড সিআই/সিডি এবং জিরো-ডাউনটাইম রেপ্লিকেশন'
-              : 'Zero-Downtime Multi-Region Replication Frameworks on AWS & GCP',
-            excerpt: language === 'bn'
-              ? 'রিয়েল-টাইম ডাটা সিঙ্কিং এবং কুবারনেটস ইন্টিগ্রেশন প্যাটার্নস যা গ্যারান্টি দেয় নিরবচ্ছিন্ন ইউজার এক্সপেরিয়েন্স।'
-              : 'A step-by-step masterclass on scaling database nodes across geographical clusters with minimal consistency lag.',
-            body: language === 'bn'
-              ? 'এন্টারপ্রাইজ সল্যুশনের নির্ভরযোগ্যতা রক্ষা করার জন্য কুবারনেটস ক্লাস্টার এবং ডকারাইজড কন্টেইনার আর্কিটেকচার এখন বেঞ্চমার্ক। ওআইটিএস ঢাকা টিম কীভাবে বিশ্বের বিভিন্ন জোনে ডাটা সিঙ্ক করার সময় রাইট-এন্ড-রীড অ্যাক্সেস ব্যালেন্স করেছে, তা এখানে বিশদ তুলে ধরা হয়েছে।\n\nমূল কৌশল:\n১. অ্যাক্টিভ-অ্যাক্টিভ মাল্টি-রিল মেথডলজি।\n২. লেটেন্সি-ভিত্তিক ক্লাউড ট্রাফিক রাউটিং এবং গ্লোবাল লোড ব্যালেন্সিং।\n৩. কুবারনেটস হেলথ ইন্ডিকেটর কনফিগারেশন।'
-              : 'High Availability is the hallmark of modern software systems. Enterprise systems must design for complete geographical failure mitigation. This technical reference manual provides the infrastructure configuration scripts to implement automated read-replica handshakes on modern cloud providers under intense stress conditions.\n\nKey Strategic Pillars:\n- Utilizing active-active PostgreSQL databases paired with distributed message queues.\n- Route-53 Latency-Based Failover strategies to mask data center outages.\n- Self-healing Kubernetes microservice designs with zero packet drops.',
-            category: language === 'bn' ? 'ওয়েব ইঞ্জিনিয়ারিং' : 'Web Engineering',
-            originalCategory: 'web',
-            date: language === 'bn' ? '০৫ জুন, ২০২৬' : 'June 05, 2026',
-            readTime: language === 'bn' ? '৬ মিনিট পাঠ' : '6 min read',
-            author: language === 'bn' ? 'সায়েম রেজা, ক্লাউড স্পেশালিস্ট' : 'Sayem Reza, DevOps Architect',
-            image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800'
-          },
-          {
-            id: 'art-4',
-            title: language === 'bn'
-              ? 'সলিড রিয়্যাক্ট ১৯ আর্কিটেকচার এবং নতুন হাই-পারফরম্যান্স ওয়েব আর্ট'
-              : 'React 19 Server Components & Concurrent Render Enhancements',
-            excerpt: language === 'bn'
-              ? 'নতুন রিয়্যাক্ট কম্পাইলার এবং অ্যাসিঙ্ক অ্যাকশন ব্যবহারের মাধ্যমে চমৎকার ব্রাউজার অপ্টিমাইজেশন।'
-              : 'How the new compiler eliminates redundant re-renders, leverages action transitions, and boosts Core Web Vitals.',
-            body: language === 'bn'
-              ? 'ওয়েব অ্যাপ্লিকেশনের পারফরম্যান্স বৃদ্ধিতে রিয়্যাক্ট ১৯ (React 19) বিশ্বজুড়ে এক নতুন মাত্রা যোগ করেছে। মেমোরি ম্যানেজমেন্ট অপ্টিমাইজড করে রিয়্যাক্ট অটোমেটেড কম্পাইলার চালু করায়, এখন আর ইউজমেমো বা ইউজকলব্যাক নিয়ে মাথা ঘামাতে হবে না সিনিয়র ডেভেলপারদের। আমাদের অভিজ্ঞ ডেভেলপমেন্ট স্টুডিও কীভাবে এই কনসেপ্ট ব্যবহার করেছে তা জেনে নিন।\n\nরিসার্চের প্রধান হাইলাইটস:\n১. ডাবল রেন্ডার সাইক্লিং ট্র্যাকিং এবং প্রিভেন্টিং।\n২. ইউজ-হুকস মেমরি সলিউশন এবং সার্ভার অ্যাকশন টিউনিং।\n৩. স্টাইলশীট ও স্ক্রিপ্ট রিসোর্স প্রি-লোডিং।'
-              : 'React 19 introduces structural shifts in state propagation, async transitions, and server components. By relying on the brand-new React Compiler to natively strip redundant re-renders, OITS Dhaka’s engineering studio achieved 40% improvements in baseline Lighthouse metrics.\n\nKey Strategic Pillars:\n- Seamless transition to compiler-directed memoization pipelines.\n- Harnessing Action Hooks to simplify form bindings and state loaders.\n- Client-side pre-fetching configurations optimized to slash server load.',
-            category: language === 'bn' ? 'প্রোডাক্ট ডিজাইন' : 'Product Design',
-            originalCategory: 'design',
-            date: language === 'bn' ? '৩০ মে, ২০২৬' : 'May 30, 2026',
-            readTime: language === 'bn' ? '৪ মিনিট পাঠ' : '4 min read',
-            author: language === 'bn' ? 'সাকিব আবদুল্লাহ, সিনিয়র ডেভেলপার' : 'Sakib Abdullah, Front-End Guild Lead',
-            image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800'
-          }
-        ];
-        resolve(mockArticles);
-      }, 1500); // realistic latency check
-    });
-  };
-
-  useEffect(() => {
-    setLoading(true);
-    fetchMockBlogAPI().then((data) => {
-      setArticles(data);
-      setLoading(false);
-    });
-  }, [language]);
-
-  const filteredArticles = activeCategory === 'all' 
-    ? articles 
-    : articles.filter(art => art.originalCategory === activeCategory);
-
-  const sectionTitle = language === 'bn' ? 'জ্ঞানের মহড়া ও প্রযুক্তিগত প্রবন্ধ' : 'Thought Leadership & Technical Articles';
-  const sectionSubtitle = language === 'bn' ? 'ওআইটিএস ঢাকা কলাম' : 'OITS DHAKA INSIGHTS';
-  const sectionDesc = language === 'bn' 
-    ? 'আমাদের সিনিয়র সফটওয়্যার ইঞ্জিনিয়ারদের গভীর কারিগরি টিপস, স্টাডি এবং স্থাপত্য সংক্রান্ত বাস্তব অভিজ্ঞতা অন্বেষণ করুন।' 
-    : 'We don’t just build code; we push engineering boundaries. Read our deep analytical guides covering scalable design patterns, edge microservices, and specialized computing blueprints.';
+  // Rest of articles in grid (exclude featured article)
+  const gridArticles = useMemo(() => {
+    return filteredArticles.filter(art => art.id !== featuredArticle.id);
+  }, [filteredArticles, featuredArticle]);
 
   return (
-    <section id="insights" className="py-24 bg-white dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-500 relative border-t border-slate-100 dark:border-slate-900 overflow-hidden">
-      
-      {/* Structural background accent */}
-      <div className="absolute top-1/2 left-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl translate-y-[-50%] pointer-events-none" />
-
-      <div className="container mx-auto px-6 relative z-10">
+    <section 
+      id="insights" 
+      className="py-24 bg-white dark:bg-[#070A13] text-slate-900 dark:text-slate-100 border-t border-slate-200/80 dark:border-slate-800 transition-colors duration-500 relative"
+    >
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
         
-        {/* Header Section */}
-        <div className="max-w-3xl mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-800 dark:text-blue-300 text-[10px] font-black uppercase tracking-widest font-mono">
-            <BookOpen size={12} /> {sectionSubtitle}
+        {/* Section Header */}
+        <div id="insights-hub" className="space-y-6 mb-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="space-y-3">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-slate-500 block">
+                ENGINEERING JOURNAL & TELEMETRY INSIGHTS
+              </span>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-none text-slate-950 dark:text-white">
+                Thought Leadership Hub
+              </h2>
+            </div>
+
+            {/* Real-time Search Input */}
+            <div className="relative w-full md:w-80">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                <Search size={16} />
+              </span>
+              <input 
+                type="text"
+                placeholder="Search telemetry articles..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 text-xs font-mono text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/30 transition-all placeholder:text-slate-400"
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
           </div>
-          <h3 className="text-4xl md:text-5xl font-black tracking-tight leading-none text-slate-950 dark:text-white">
-            {sectionTitle}
-          </h3>
-          <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg leading-relaxed font-medium">
-            {sectionDesc}
-          </p>
-        </div>
 
-        {/* Categories Filtering Header */}
-        <div className="flex flex-wrap items-center gap-2 mb-12 pb-6 border-b border-slate-100 dark:border-slate-900">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`px-5 py-2.5 rounded-full text-xs font-black tracking-tight font-mono transition-all duration-300 active:scale-95 border ${
-                activeCategory === cat.id
-                  ? 'bg-slate-950 text-white dark:bg-blue-600 dark:border-blue-600 border-slate-950 shadow-md'
-                  : 'bg-slate-50 text-slate-600 dark:bg-slate-900 dark:text-slate-400 border-slate-200/60 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Loading Skeleton Simulation Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {Array.from({ length: 4 }).map((_, idx) => (
-              <div key={idx} className="flex flex-col justify-between h-full bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-900/80 rounded-3xl p-5 animate-pulse">
-                <div className="space-y-4">
-                  {/* Image Aspect ratio frame */}
-                  <div className="aspect-[4/3] w-full rounded-2xl bg-slate-200/80 dark:bg-slate-800/80" />
-                  {/* Date and Readtime metadata */}
-                  <div className="flex gap-3">
-                    <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-1/3" />
-                    <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-1/4" />
-                  </div>
-                  {/* Title */}
-                  <div className="space-y-2">
-                    <div className="h-4 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-5/6" />
-                    <div className="h-4 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-2/3" />
-                  </div>
-                  {/* Excerpt */}
-                  <div className="space-y-1.5 pt-1.5">
-                    <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-full" />
-                    <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-4/5" />
-                  </div>
-                </div>
-                {/* Footer Read Interface Arrow */}
-                <div className="pt-6 border-t border-slate-100 dark:border-slate-800/60 mt-6 flex justify-between items-center">
-                  <div className="h-3 bg-slate-200/80 dark:bg-slate-800/80 rounded-md w-1/3" />
-                  <div className="w-8 h-8 rounded-full bg-slate-200/80 dark:bg-slate-800/80" />
-                </div>
-              </div>
+          {/* Category Filter Chips */}
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-b border-slate-100 dark:border-slate-900 pb-4">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  // Reset search query on filter click to avoid confusing empty states
+                  setSearchQuery('');
+                }}
+                className={`px-4 py-2 rounded-xl text-[10px] font-mono uppercase tracking-wider transition-all duration-200 border ${
+                  selectedCategory === cat
+                    ? 'bg-slate-950 dark:bg-sky-500 text-white border-slate-950 dark:border-sky-500 font-bold'
+                    : 'bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 border-slate-200/60 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700'
+                }`}
+              >
+                {cat}
+              </button>
             ))}
           </div>
+        </div>
+
+        {/* Empty Search State */}
+        {filteredArticles.length === 0 ? (
+          <div className="py-16 text-center space-y-4 border border-dashed border-slate-200 dark:border-slate-800 rounded-3xl">
+            <span className="p-4 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-400 dark:text-slate-600 inline-block">
+              <Search size={24} />
+            </span>
+            <p className="font-mono text-xs text-slate-500">
+              No articles matching "{searchQuery}" under {selectedCategory} category.
+            </p>
+            <button 
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedCategory('All');
+              }}
+              className="px-4 py-2 rounded-xl bg-slate-950 dark:bg-sky-500 text-white text-[10px] font-mono uppercase tracking-wider font-bold"
+            >
+              Reset Filters
+            </button>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {filteredArticles.map((art) => (
-              <article 
-                key={art.id}
-                onClick={() => setSelectedArticle(art)}
-                className="group cursor-pointer flex flex-col justify-between h-full bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-900/80 rounded-3xl p-5 hover:border-blue-500/20 hover:bg-slate-100/50 dark:hover:bg-slate-900 transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl"
+          <div className="space-y-12">
+            
+            {/* 1. Featured Post Banner (Top Grid Unit) */}
+            {/* Show featured banner only if no specific search query filters are applied */}
+            {!searchQuery && (
+              <div 
+                onClick={() => setSelectedArticle(featuredArticle)}
+                className="group cursor-pointer border border-slate-200/80 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/10 rounded-[2rem] p-6 lg:p-8 transition-all duration-500 hover:border-sky-500/40 hover:-translate-y-1 hover:shadow-2xl"
               >
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                   
-                  {/* Aspect ratio frame with fast image optimisation params */}
-                  <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden relative bg-slate-200 dark:bg-slate-800">
+                  {/* Left Column (7 cols) - High-resolution aspect ratio thumbnail */}
+                  <div className="lg:col-span-7 relative overflow-hidden rounded-2xl aspect-[16/10] bg-slate-100 dark:bg-slate-800">
                     <img 
-                      src={`${art.image}&auto=format&fit=crop&q=80&w=600`}
-                      alt={art.title}
+                      src={`${featuredArticle.image}&auto=format&fit=crop&q=80&w=1200`} 
+                      alt={featuredArticle.title}
                       loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/90 dark:bg-slate-950/90 text-slate-800 dark:text-slate-200 text-[9px] font-black uppercase font-mono tracking-wider shadow-sm backdrop-blur-[4px]">
-                      {art.category}
+                    {/* Category overlay & Read time */}
+                    <div className="absolute top-4 left-4 flex gap-2">
+                      <span className="px-3 py-1 rounded-full bg-slate-950/80 text-white text-[9px] font-mono font-bold uppercase tracking-wider backdrop-blur-[4px] border border-white/10">
+                        {featuredArticle.category}
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-sky-500/80 text-white text-[9px] font-mono font-bold uppercase tracking-wider backdrop-blur-[4px]">
+                        {featuredArticle.readTime}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Date and Readtime metadata */}
-                  <div className="flex items-center gap-3 text-slate-400 dark:text-slate-500 text-[10px] font-mono font-black uppercase">
-                    <span className="flex items-center gap-1"><Calendar size={11} /> {art.date}</span>
-                    <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                    <span className="flex items-center gap-1"><Clock size={11} /> {art.readTime}</span>
+                  {/* Right Column (5 cols) - Author metadata,Published date,Title,Excerpt */}
+                  <div className="lg:col-span-5 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <img 
+                        src={featuredArticle.author.avatar} 
+                        alt={featuredArticle.author.name} 
+                        className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 object-cover"
+                      />
+                      <div>
+                        <span className="font-mono text-[10px] font-bold text-slate-800 dark:text-slate-200 block leading-none">
+                          {featuredArticle.author.name}
+                        </span>
+                        <span className="font-mono text-[9px] text-slate-400 block mt-1">
+                          {featuredArticle.author.role}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 font-mono text-[9px] uppercase tracking-wider">
+                        <Calendar size={12} /> {featuredArticle.date}
+                        <span>•</span>
+                        <span className="text-emerald-500">FEATURED TELEMETRY</span>
+                      </div>
+                      <h3 className="text-2xl lg:text-3xl font-black text-slate-950 dark:text-white leading-tight tracking-tight group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors duration-300">
+                        {featuredArticle.title}
+                      </h3>
+                      <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm leading-relaxed line-clamp-3">
+                        {featuredArticle.excerpt}
+                      </p>
+                    </div>
+
+                    <div className="pt-2">
+                      <span className="inline-flex items-center gap-2 text-[10px] font-mono font-bold text-slate-950 dark:text-white uppercase tracking-widest border-b border-slate-900 dark:border-white pb-1 group-hover:gap-4 transition-all">
+                        Read Article <ArrowRight size={12} />
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Title */}
-                  <h4 className="text-md font-black tracking-tight leading-snug text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
-                    {art.title}
-                  </h4>
-
-                  {/* Excerpt */}
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium">
-                    {art.excerpt}
-                  </p>
-
                 </div>
+              </div>
+            )}
 
-                {/* Read Interface Arrow */}
-                <div className="pt-6 border-t border-slate-100 dark:border-slate-800/60 mt-6 flex justify-between items-center text-xs font-black uppercase font-mono tracking-wider text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  <span>{language === 'bn' ? 'আর্টিকেলটি পড়ুন' : 'Read Article'}</span>
-                  <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all transform group-hover:rotate-45">
-                    <ArrowUpRight size={14} />
+            {/* 2. Articles Bento Grid (3-column responsive) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {gridArticles.map((art) => (
+                <div 
+                  key={art.id}
+                  onClick={() => setSelectedArticle(art)}
+                  className="group cursor-pointer flex flex-col justify-between h-full bg-slate-50/20 dark:bg-slate-950/20 border border-slate-200/80 dark:border-slate-800 rounded-[1.5rem] p-5 hover:border-sky-500/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500"
+                >
+                  <div className="space-y-4">
+                    
+                    {/* Thumbnail Container */}
+                    <div className="relative overflow-hidden rounded-xl aspect-[16/10] bg-slate-100 dark:bg-slate-800">
+                      <img 
+                        src={`${art.image}&auto=format&fit=crop&q=80&w=600`} 
+                        alt={art.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                      {/* Monospaced Category overlay */}
+                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-slate-950/90 dark:bg-slate-900/90 text-white text-[8px] font-mono font-bold uppercase tracking-wider backdrop-blur-[2px] border border-white/10">
+                        {art.category}
+                      </span>
+                    </div>
+
+                    {/* Metadata */}
+                    <div className="flex items-center gap-3 text-slate-400 dark:text-slate-500 font-mono text-[9px] uppercase tracking-wider">
+                      <span className="flex items-center gap-1"><Calendar size={10} /> {art.date}</span>
+                      <span>•</span>
+                      <span className="flex items-center gap-1"><Clock size={10} /> {art.readTime}</span>
+                    </div>
+
+                    {/* Title & Excerpt */}
+                    <div className="space-y-2">
+                      <h4 className="text-md font-bold tracking-tight text-slate-950 dark:text-white line-clamp-2 leading-snug group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors">
+                        {art.title}
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3">
+                        {art.excerpt}
+                      </p>
+                    </div>
+
                   </div>
-                </div>
 
-              </article>
-            ))}
+                  {/* Footer Bar with Action Triggers */}
+                  <div className="pt-5 border-t border-slate-100 dark:border-slate-900 mt-5 flex items-center justify-between">
+                    {/* Author block */}
+                    <div className="flex items-center gap-2.5">
+                      <img 
+                        src={art.author.avatar} 
+                        alt={art.author.name} 
+                        className="w-6 h-6 rounded-full object-cover border border-slate-200 dark:border-slate-800"
+                      />
+                      <span className="font-mono text-[9px] font-bold text-slate-500 dark:text-slate-400">
+                        {art.author.name}
+                      </span>
+                    </div>
+
+                    {/* Action icons */}
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={(e) => toggleLike(art.id, e)}
+                        className={`p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors ${
+                          likedIds.includes(art.id) ? 'text-rose-500' : 'text-slate-400 hover:text-rose-500'
+                        }`}
+                        aria-label="Like insight"
+                      >
+                        <Heart size={14} fill={likedIds.includes(art.id) ? 'currentColor' : 'none'} />
+                      </button>
+                      <button 
+                        onClick={(e) => toggleBookmark(art.id, e)}
+                        className={`p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors ${
+                          bookmarkedIds.includes(art.id) ? 'text-sky-500' : 'text-slate-400 hover:text-sky-500'
+                        }`}
+                        aria-label="Bookmark insight"
+                      >
+                        <Bookmark size={14} fill={bookmarkedIds.includes(art.id) ? 'currentColor' : 'none'} />
+                      </button>
+                      <button 
+                        onClick={(e) => handleShare(art, e)}
+                        className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                        aria-label="Share insight link"
+                      >
+                        <Share2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+
           </div>
         )}
 
-        {/* Newsletter Subscription Pod */}
-        <div className="mt-32 pt-20 border-t border-slate-100 dark:border-slate-900">
-          <div className="bg-slate-950 dark:bg-blue-600 rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12 group">
-            {/* Visual texture */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3" />
-            
-            <div className="max-w-md relative z-10 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-black uppercase tracking-widest font-mono">
-                <Mail size={12} /> {t('insights_newsletter_title')}
-              </div>
-              <h4 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-none">
-                {language === 'bn' ? 'সরাসরি আপনার ইনবক্সে শ্রেষ্ঠ প্রকৌশল নিবন্ধ পান' : 'Engineering Insights Delivered to Your Inbox'}
-              </h4>
-              <p className="text-slate-400 dark:text-blue-100/70 font-medium text-sm md:text-base">
-                {t('insights_newsletter_desc')}
-              </p>
-            </div>
-
-            <div className="w-full max-w-sm relative z-10">
-              <form onSubmit={handleNewsletterSubmit} className="space-y-4">
-                <div className="relative group">
-                  <input 
-                    type="email" 
-                    required
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    placeholder={t('insights_newsletter_placeholder')}
-                    className="w-full bg-white/10 border border-white/20 rounded-2xl px-6 py-5 pr-14 text-white placeholder:text-slate-500 focus:outline-none focus:border-white/50 transition-all font-bold backdrop-blur-md"
-                    disabled={isSubscribing || subscribeStatus === 'success'}
-                  />
-                  <button 
-                    type="submit"
-                    disabled={isSubscribing || subscribeStatus === 'success'}
-                    className="absolute right-2 top-2 bottom-2 aspect-square bg-white text-slate-900 rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
-                  >
-                    {isSubscribing ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
-                  </button>
-                </div>
-
-                {subscribeStatus === 'success' && (
-                  <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold animate-in fade-in slide-in-from-bottom-2">
-                    <CheckCircle2 size={14} /> {t('insights_newsletter_success')}
-                  </div>
-                )}
-                {subscribeStatus === 'error' && (
-                  <div className="text-red-400 text-xs font-bold">
-                    {t('insights_newsletter_error')}
-                  </div>
-                )}
-              </form>
-            </div>
-          </div>
-        </div>
-
       </div>
 
-      {/* Full Article Modal Overlay */}
+      {/* 3. Interactive Modal / Drawer Reader */}
       {selectedArticle && (
         <div 
-          className="fixed inset-0 z-[110] bg-slate-950/80 backdrop-blur-[6px] flex justify-end items-stretch animate-in fade-in duration-300"
+          className="fixed inset-0 z-[110] bg-slate-950/80 backdrop-blur-md flex justify-end items-stretch"
           role="dialog"
           aria-modal="true"
           onClick={() => setSelectedArticle(null)}
@@ -360,87 +518,97 @@ export const Insights: React.FC = () => {
             if (e.key === 'Escape') setSelectedArticle(null);
           }}
         >
-          {/* Scrollable Container Panel */}
+          {/* Slider Panel container */}
           <div 
-            className="w-full max-w-2xl bg-white dark:bg-slate-950 h-full overflow-y-auto p-6 sm:p-12 shadow-2xl border-l border-slate-200 dark:border-slate-900 flex flex-col justify-between animate-in slide-in-from-right duration-500"
+            className="w-full max-w-2xl bg-white dark:bg-[#070A13] h-full overflow-y-auto p-6 sm:p-12 shadow-2xl border-l border-slate-200 dark:border-slate-800 flex flex-col justify-between"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="space-y-10">
+            <div className="space-y-8">
               
-              {/* Overlay Top Controls */}
+              {/* Header bar controls */}
               <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-900 pb-5">
-                <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase font-mono tracking-widest">
+                <span className="px-3.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-sky-400 text-[9px] font-mono font-bold uppercase tracking-widest border border-slate-200/50 dark:border-slate-800/80">
                   {selectedArticle.category}
                 </span>
-                <div className="flex items-center gap-3">
-                   <div className="flex items-center gap-2 pr-4 border-r border-slate-100 dark:border-slate-800">
-                      <span className="text-[9px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest hidden sm:block">Share:</span>
-                      <button 
-                        onClick={() => handleShare('linkedin', selectedArticle)}
-                        className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-400 hover:text-blue-600 transition-all"
-                        aria-label="Share on LinkedIn"
-                      >
-                        <Linkedin size={16} />
-                      </button>
-                      <button 
-                        onClick={() => handleShare('twitter', selectedArticle)}
-                        className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-400 hover:text-slate-950 dark:hover:text-white transition-all"
-                        aria-label="Share on X"
-                      >
-                        <Twitter size={16} />
-                      </button>
-                   </div>
-                   <button 
+                
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[9px] text-slate-400 mr-2 uppercase tracking-wider">{selectedArticle.readTime}</span>
+                  <button 
                     onClick={() => setSelectedArticle(null)}
-                    className="p-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900 transition-all font-mono active:scale-95"
-                    aria-label="Close modal slider"
+                    className="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+                    aria-label="Close panel"
                   >
                     <X size={16} />
                   </button>
                 </div>
               </div>
 
-              {/* Image Banner Header */}
+              {/* Title & Author card */}
+              <div className="space-y-4">
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight leading-snug">
+                  {selectedArticle.title}
+                </h3>
+
+                <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/40 dark:border-slate-800/40 p-3 rounded-2xl">
+                  <img 
+                    src={selectedArticle.author.avatar} 
+                    alt={selectedArticle.author.name} 
+                    className="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 object-cover"
+                  />
+                  <div>
+                    <span className="font-mono text-[10px] font-bold text-slate-900 dark:text-white block leading-none">
+                      {selectedArticle.author.name}
+                    </span>
+                    <span className="font-mono text-[9px] text-slate-400 block mt-1">
+                      {selectedArticle.author.role}
+                    </span>
+                  </div>
+                  <span className="ml-auto font-mono text-[9px] text-slate-500">{selectedArticle.date}</span>
+                </div>
+              </div>
+
+              {/* Aspect Ratio Banner */}
               <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden relative bg-slate-100 dark:bg-slate-800">
                 <img 
                   src={`${selectedArticle.image}&auto=format&fit=crop&q=80&w=1200`} 
                   alt={selectedArticle.title}
                   className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
                 />
               </div>
 
-              {/* Meta information row */}
-              <div className="flex gap-4 flex-wrap items-center text-[10px] font-mono font-black uppercase text-slate-400 dark:text-slate-500">
-                <span className="flex items-center gap-1"><Calendar size={12} /> {selectedArticle.date}</span>
-                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                <span className="flex items-center gap-1"><Clock size={12} /> {selectedArticle.readTime}</span>
-                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-                <span className="flex items-center gap-1"><User size={12} /> {selectedArticle.author}</span>
+              {/* Excerpt callout */}
+              <p className="text-slate-600 dark:text-slate-300 text-sm italic font-medium border-l-4 border-sky-500 dark:border-sky-500 pl-4 py-1 leading-relaxed bg-slate-50 dark:bg-slate-900/10">
+                "{selectedArticle.excerpt}"
+              </p>
+
+              {/* Content body with standard layout */}
+              <div className="prose dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed text-sm space-y-4 whitespace-pre-line font-medium">
+                {selectedArticle.body}
               </div>
 
-              {/* Title & Body content */}
-              <div className="space-y-6">
-                <h3 className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight leading-snug">
-                  {selectedArticle.title}
-                </h3>
-                <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed font-medium whitespace-pre-line border-l-4 border-blue-500 pl-4 py-1 italic bg-blue-50/20 dark:bg-blue-900/5 rounded-r-lg">
-                  {selectedArticle.excerpt}
-                </p>
-                <div className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-bold space-y-4 whitespace-pre-line pt-4">
-                  {selectedArticle.body}
+              {/* Key takeaways callout box */}
+              {selectedArticle.takeaways && selectedArticle.takeaways.length > 0 && (
+                <div className="bg-slate-50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800 p-6 rounded-2xl space-y-3">
+                  <h4 className="font-mono text-[10px] uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 font-bold">
+                    <Sparkles size={14} className="text-sky-500" /> Key Architectural Takeaways:
+                  </h4>
+                  <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 list-disc pl-5">
+                    {selectedArticle.takeaways.map((takeaway, i) => (
+                      <li key={i}>{takeaway}</li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
+              )}
 
             </div>
 
-            {/* Bottom Back Button */}
-            <div className="border-t border-slate-100 dark:border-slate-900 pt-8 mt-12">
+            {/* Modal Bottom control */}
+            <div className="border-t border-slate-100 dark:border-slate-900 pt-8 mt-12 flex gap-4">
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="w-full py-4 rounded-xl bg-slate-900 dark:bg-blue-600 text-white font-mono text-xs font-black uppercase tracking-widest hover:bg-slate-800 dark:hover:bg-blue-500 transition-all active:scale-95"
+                className="flex-1 py-4 rounded-xl bg-slate-950 dark:bg-sky-500 text-white font-mono text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
               >
-                {language === 'bn' ? 'আর্টিকেলে ফিরুন' : 'Back to Insights'}
+                Return to Journal
               </button>
             </div>
 

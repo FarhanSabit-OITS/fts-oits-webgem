@@ -4,8 +4,10 @@ import { Hero } from './components/Hero';
 import { About } from './components/About';
 import { Services } from './components/Services';
 import { Portfolio } from './components/Portfolio';
+import { GlobalReach } from './components/GlobalReach';
 import { Process } from './components/Process';
 import { Testimonials } from './components/Testimonials';
+import { Insights } from './components/Insights';
 import { Contact } from './components/Contact';
 import { BrandPaletteShowcase } from './components/BrandPaletteShowcase';
 import { Footer } from './components/Footer';
@@ -64,11 +66,17 @@ function App() {
           {/* 5. Portfolio & Case Studies Section */}
           <Portfolio />
 
+          {/* 5.5 Global Geographic Reach Node Network */}
+          <GlobalReach />
+
           {/* 6. Process & Delivery Timeline Section */}
           <Process />
 
           {/* 7. Social Proof & Tech Ecosystem Section */}
           <Testimonials />
+
+          {/* 7.5 Intellectual Engineering Journal Insights */}
+          <Insights />
 
           {/* 8. Direct Contact & Consultation Section */}
           <Contact />
