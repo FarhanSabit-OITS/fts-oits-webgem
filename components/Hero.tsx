@@ -23,6 +23,7 @@ import {
 import { SectionId } from '../types';
 import { PROJECTS } from '../constants';
 import { motion, AnimatePresence } from 'motion/react';
+import { MiniGlobe } from './MiniGlobe';
 
 export const Hero: React.FC = () => {
   const [activeMode, setActiveMode] = useState<'globe' | 'portfolio'>('globe');
@@ -169,18 +170,10 @@ export const Hero: React.FC = () => {
                         transition={{ duration: 0.3 }}
                         className="w-full h-full min-h-[340px] flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-6 relative overflow-hidden"
                       >
-                        {/* Animated Globe Graphic */}
-                        <div className="relative w-48 h-48 rounded-full border border-blue-500/20 flex items-center justify-center bg-blue-100/50 dark:bg-blue-950/20 shadow-2xl shadow-blue-500/10 mb-6">
-                          <div className="absolute inset-0 rounded-full border border-dashed border-blue-400/40 animate-[spin_20s_linear_infinite]" />
-                          <div className="absolute inset-3 rounded-full border border-emerald-500/30 animate-[spin_15s_linear_infinite_reverse]" />
-                          <Globe size={72} className="text-blue-500 dark:text-blue-400 animate-pulse" />
-                          
-                          {/* Active Location Nodes */}
-                          <div className="absolute top-4 right-8 w-2.5 h-2.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-ping" />
-                          <div className="absolute bottom-6 left-6 w-2.5 h-2.5 rounded-full bg-blue-500 dark:bg-blue-400 animate-ping" />
-                        </div>
+                        {/* 3D amCharts Interactive Globe */}
+                        <MiniGlobe />
 
-                        <div className="text-center space-y-1">
+                        <div className="text-center space-y-1 mt-2">
                           <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-bold block">
                             GLOBAL COMPUTE MESH
                           </span>
