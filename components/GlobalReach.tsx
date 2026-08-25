@@ -185,8 +185,8 @@ export const GlobalReach: React.FC = () => {
       am5map.MapPolygonSeries.new(root, {})
     );
     backgroundSeries.mapPolygons.template.setAll({
-      fill: am5.color(0x020617), // Deep oceanic slate black
-      fillOpacity: 0.75,
+      fill: am5.color(0xe8ecef), // Light clean gray ocean
+      fillOpacity: 1.0,
       strokeOpacity: 0
     });
     backgroundSeries.data.push({
@@ -198,8 +198,8 @@ export const GlobalReach: React.FC = () => {
       am5map.GraticuleSeries.new(root, {})
     );
     graticuleSeries.mapLines.template.setAll({
-      strokeOpacity: 0.08,
-      stroke: am5.color(0x38bdf8) // subtle sky blue graticule
+      strokeOpacity: 0.2,
+      stroke: am5.color(0x64748b) // soft slate graticule lines
     });
 
     // Create main polygon series for detailed country landmasses
@@ -211,9 +211,9 @@ export const GlobalReach: React.FC = () => {
 
     // Style the country borders & fill
     polygonSeries.mapPolygons.template.setAll({
-      fill: am5.color(0x0f172a), // slate-900 land
-      fillOpacity: 0.9,
-      stroke: am5.color(0x1e293b), // slate-800 crisp razor-sharp borders
+      fill: am5.color(0x5078c0), // solid medium slate blue
+      fillOpacity: 1.0,
+      stroke: am5.color(0xdbe2ed), // fine light country border outlines
       strokeWidth: 0.6,
       tooltipText: "[font-mono text-[10px] uppercase tracking-wider]{name}[/]",
       toggleKey: "active",
@@ -222,9 +222,9 @@ export const GlobalReach: React.FC = () => {
 
     // Custom hover state
     polygonSeries.mapPolygons.template.states.create("hover", {
-      fill: am5.color(0x1e293b), // slate-800 on hover
-      stroke: am5.color(0x38bdf8),
-      strokeWidth: 1
+      fill: am5.color(0x3b5fa0), // darker slate blue on hover
+      stroke: am5.color(0xdbe2ed),
+      strokeWidth: 0.8
     });
 
     // Trigger state feedback on clicking regions
@@ -311,7 +311,7 @@ export const GlobalReach: React.FC = () => {
         am5.Circle.new(root, {
           radius: isHQ ? 5 : 4,
           fill: isHQ ? am5.color(0x38bdf8) : am5.color(0x10b981),
-          stroke: am5.color(0x020617),
+          stroke: am5.color(0xffffff),
           strokeWidth: 1.5
         })
       );
