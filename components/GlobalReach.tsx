@@ -4,140 +4,111 @@ import * as am5map from '@amcharts/amcharts5/map';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import am5geodata_worldLow from '@amcharts/amcharts5-geodata/worldLow';
 import { 
-  Globe as GlobeIcon, 
-  Cpu, 
-  Database, 
-  Shield, 
-  Activity, 
-  TrendingUp, 
-  MapPin, 
-  Radio,
-  Play,
-  Pause,
-  Compass
+  Globe, 
+  RotateCcw, 
+  Play, 
+  Pause, 
+  Activity,
+  MapPin,
+  Cpu,
+  Database,
+  Shield
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
-interface HubNode {
+export interface ClientLocation {
   id: string;
-  name: string;
+  city: string;
   country: string;
-  coordinates: [number, number]; // [longitude, latitude]
-  sla: string;
-  clusterType: string;
-  architecture: string;
-  latency: string;
-  bandwidth: string;
-  status: 'online' | 'optimizing' | 'maintenance';
+  longitude: number;
+  latitude: number;
+  clientName: string;
+  projectType: string;
+  impactMetrics: string;
+  isHq?: boolean;
 }
 
-const HUBS: HubNode[] = [
+const CLIENT_LOCATIONS: ClientLocation[] = [
   {
     id: 'dhaka',
-    name: 'Dhaka HQ',
+    city: 'Dhaka',
     country: 'Bangladesh',
-    coordinates: [90.4125, 23.8103],
-    sla: '99.99%',
-    clusterType: 'Primary Command Core',
-    architecture: 'Multi-Region Edge Gateway',
-    latency: '< 1ms',
-    bandwidth: '40 Gbps',
-    status: 'online'
-  },
-  {
-    id: 'sf',
-    name: 'San Francisco',
-    country: 'United States',
-    coordinates: [-122.4194, 37.7749],
-    sla: '99.98%',
-    clusterType: 'US-West Cluster',
-    architecture: 'Kubernetes Multi-Cloud',
-    latency: '142ms',
-    bandwidth: '10 Gbps',
-    status: 'online'
+    longitude: 90.4125,
+    latitude: 23.8103,
+    clientName: 'OITS Dhaka HQ',
+    projectType: 'Engineering Command Hub',
+    impactMetrics: 'Central Operations Command / 50+ Certified Architects',
+    isHq: true
   },
   {
     id: 'nyc',
-    name: 'New York City',
-    country: 'United States',
-    coordinates: [-74.0060, 40.7128],
-    sla: '99.98%',
-    clusterType: 'US-East Cluster',
-    architecture: 'Hybrid Cloud Bare-Metal',
-    latency: '115ms',
-    bandwidth: '10 Gbps',
-    status: 'online'
+    city: 'New York',
+    country: 'USA',
+    longitude: -74.0060,
+    latitude: 40.7128,
+    clientName: 'Apex Capital Analytics',
+    projectType: 'FinTech Analytics Engine',
+    impactMetrics: '< 200ms Processing Latency index fulfilled'
   },
   {
     id: 'london',
-    name: 'London',
-    country: 'United Kingdom',
-    coordinates: [-0.1276, 51.5074],
-    sla: '99.97%',
-    clusterType: 'EU-West Cluster',
-    architecture: 'Zero-Trust Proxy Gateway',
-    latency: '98ms',
-    bandwidth: '10 Gbps',
-    status: 'online'
-  },
-  {
-    id: 'berlin',
-    name: 'Berlin',
-    country: 'Germany',
-    coordinates: [13.4050, 52.5200],
-    sla: '99.99%',
-    clusterType: 'EU-Central Cluster',
-    architecture: 'Sovereign Node Protocol',
-    latency: '108ms',
-    bandwidth: '10 Gbps',
-    status: 'online'
-  },
-  {
-    id: 'dubai',
-    name: 'Dubai',
-    country: 'UAE',
-    coordinates: [55.2708, 25.2048],
-    sla: '99.95%',
-    clusterType: 'ME-East Cluster',
-    architecture: 'Edge Server Array',
-    latency: '45ms',
-    bandwidth: '5 Gbps',
-    status: 'optimizing'
-  },
-  {
-    id: 'singapore',
-    name: 'Singapore',
-    country: 'Singapore',
-    coordinates: [103.8198, 1.3521],
-    sla: '99.99%',
-    clusterType: 'APAC-South Cluster',
-    architecture: 'Subsea Fiber Edge Node',
-    latency: '32ms',
-    bandwidth: '20 Gbps',
-    status: 'online'
+    city: 'London',
+    country: 'UK',
+    longitude: -0.1278,
+    latitude: 51.5074,
+    clientName: 'SecurePay International',
+    projectType: 'Payment Gateway Core',
+    impactMetrics: '18% Checkout Conversion multiplier tracked'
   },
   {
     id: 'tokyo',
-    name: 'Tokyo',
+    city: 'Tokyo',
     country: 'Japan',
-    coordinates: [139.6917, 35.6762],
-    sla: '99.98%',
-    clusterType: 'APAC-North Cluster',
-    architecture: 'Low-Latency Micro-DC',
-    latency: '68ms',
-    bandwidth: '10 Gbps',
-    status: 'online'
+    longitude: 139.6503,
+    latitude: 35.6762,
+    clientName: 'Nippon Freight Systems',
+    projectType: 'Logistics Routing Scheduler',
+    impactMetrics: '35% ETA Prediction accuracy improvement'
+  },
+  {
+    id: 'berlin',
+    city: 'Berlin',
+    country: 'Germany',
+    longitude: 13.4050,
+    latitude: 52.5200,
+    clientName: 'EduTrack Europe',
+    projectType: 'Distributed LMS Platform',
+    impactMetrics: '10k+ Simultaneous Active Peers verified'
   },
   {
     id: 'sydney',
-    name: 'Sydney',
+    city: 'Sydney',
     country: 'Australia',
-    coordinates: [151.2093, -33.8688],
-    sla: '99.96%',
-    clusterType: 'OCE-South Cluster',
-    architecture: 'Cloud-Native Pop',
-    latency: '124ms',
-    bandwidth: '5 Gbps',
-    status: 'online'
+    longitude: 151.2093,
+    latitude: -33.8688,
+    clientName: 'Luma Healthcare Hub',
+    projectType: 'Telemedicine P2P Portals',
+    impactMetrics: '50k+ Remote Patient Consultations facilitated'
+  },
+  {
+    id: 'dubai',
+    city: 'Dubai',
+    country: 'UAE',
+    longitude: 55.2708,
+    latitude: 25.2048,
+    clientName: 'Al-Maktoum Logistics',
+    projectType: 'Customs Clearance Engine',
+    impactMetrics: '45% Freight turnaround acceleration index'
+  },
+  {
+    id: 'singapore',
+    city: 'Singapore',
+    country: 'Singapore',
+    longitude: 103.8198,
+    latitude: 1.3521,
+    clientName: 'Apex Asian Clearing House',
+    projectType: 'Automated settlement pipeline',
+    impactMetrics: '< 50ms clearing confirmation latency rate'
   }
 ];
 
@@ -145,533 +116,472 @@ export const GlobalReach: React.FC = () => {
   const chartDivRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<am5map.MapChart | null>(null);
   const spinRef = useRef<any>(null);
-  const lineSeriesRef = useRef<am5map.MapLineSeries | null>(null);
 
-  const [selectedHub, setSelectedHub] = useState<HubNode>(HUBS[0]);
-  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
-  const [horizontalOffset, setHorizontalOffset] = useState<number>(0);
+  const [selectedLocation, setSelectedLocation] = useState<ClientLocation>(CLIENT_LOCATIONS[0]);
+  const [hoveredLocation, setHoveredLocation] = useState<ClientLocation | null>(null);
+  const [rotationX, setRotationX] = useState<number>(0);
   const [isSpinning, setIsSpinning] = useState<boolean>(true);
+
+  const pinClickRef = useRef<(loc: ClientLocation) => void>(() => {});
+  const pinHoverRef = useRef<(loc: ClientLocation) => void>(() => {});
+
+  // Keep these handlers current to avoid amCharts capturing stale closures
+  useEffect(() => {
+    pinClickRef.current = (location: ClientLocation) => {
+      setSelectedLocation(location);
+      if (chartRef.current) {
+        if (spinRef.current) {
+          spinRef.current.stop();
+          spinRef.current = null;
+        }
+        setIsSpinning(false);
+        chartRef.current.animate({
+          key: 'rotationX',
+          to: -location.longitude,
+          duration: 1000,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+        chartRef.current.animate({
+          key: 'rotationY',
+          to: -location.latitude,
+          duration: 1000,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    pinHoverRef.current = (location: ClientLocation) => {
+      setHoveredLocation(location);
+    };
+  }, []);
 
   // Initialize amCharts 5 Globe
   useEffect(() => {
     if (!chartDivRef.current) return;
 
-    // Create Root element
+    // Initialize amCharts 5 Root element
     const root = am5.Root.new(chartDivRef.current);
-
-    // Apply high-performance transitions theme
     root.setThemes([am5themes_Animated.new(root)]);
 
-    // Create the map chart
+    // Create MapChart with Orthographic 3D Globe Projection
     const chart = root.container.children.push(
       am5map.MapChart.new(root, {
-        panX: "rotateX",
-        panY: "rotateY",
+        panX: 'rotateX',
+        panY: 'rotateY',
         projection: am5map.geoOrthographic(),
-        paddingBottom: 20,
-        paddingTop: 20,
-        paddingLeft: 20,
+        paddingBottom: 20, 
+        paddingTop: 20, 
+        paddingLeft: 20, 
         paddingRight: 20,
-        boxZoom: "shift",
-        animationDuration: 800,
-        dx: horizontalOffset
+        wheelY: 'zoom',
+        animationDuration: 800
       })
     );
 
     chartRef.current = chart;
 
-    // Create series for ocean background fill
-    const backgroundSeries = chart.series.push(
-      am5map.MapPolygonSeries.new(root, {})
-    );
+    // Background Ocean Sphere Polygon Series (Light Gray Ocean Fill)
+    const backgroundSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {}));
     backgroundSeries.mapPolygons.template.setAll({
-      fill: am5.color(0xe8ecef), // Light clean gray ocean
-      fillOpacity: 1.0,
-      strokeOpacity: 0
+      fill: am5.color(0xe8ecef),
+      fillOpacity: 1,
+      stroke: am5.color(0xcbd5e1),
+      strokeOpacity: 0.8,
+      strokeWidth: 1
     });
     backgroundSeries.data.push({
       geometry: am5map.getGeoRectangle(90, 180, -90, -180)
     });
 
-    // Create graticule series for longitude/latitude grid overlay
-    const graticuleSeries = chart.series.push(
-      am5map.GraticuleSeries.new(root, {})
-    );
+    // Graticule Series (Dotted Lat/Long Overlay)
+    const graticuleSeries = chart.series.push(am5map.GraticuleSeries.new(root, {}));
     graticuleSeries.mapLines.template.setAll({
-      strokeOpacity: 0.2,
-      stroke: am5.color(0x64748b) // soft slate graticule lines
+      strokeOpacity: 0.25,
+      stroke: am5.color(0x64748b)
     });
 
-    // Create main polygon series for detailed country landmasses
+    // Main Country Polygons Series (Solid Slate Blue Landmass)
     const polygonSeries = chart.series.push(
       am5map.MapPolygonSeries.new(root, {
         geoJSON: am5geodata_worldLow
       })
     );
 
-    // Style the country borders & fill
     polygonSeries.mapPolygons.template.setAll({
-      fill: am5.color(0x5078c0), // solid medium slate blue
-      fillOpacity: 1.0,
-      stroke: am5.color(0xdbe2ed), // fine light country border outlines
-      strokeWidth: 0.6,
-      tooltipText: "[font-mono text-[10px] uppercase tracking-wider]{name}[/]",
-      toggleKey: "active",
-      interactive: true
-    });
-
-    // Custom hover state
-    polygonSeries.mapPolygons.template.states.create("hover", {
-      fill: am5.color(0x3b5fa0), // darker slate blue on hover
+      tooltipText: '{name}',
+      toggleKey: 'active',
+      interactive: true,
+      fill: am5.color(0x5078c0),
       stroke: am5.color(0xdbe2ed),
-      strokeWidth: 0.8
+      strokeOpacity: 0.7,
+      strokeWidth: 0.5
     });
 
-    // Trigger state feedback on clicking regions
-    polygonSeries.mapPolygons.template.events.on("click", (ev) => {
-      const dataContext = ev.target.dataItem?.dataContext as any;
-      if (dataContext && dataContext.name) {
-        setHoveredCountry(dataContext.name);
-      }
+    polygonSeries.mapPolygons.template.states.create('hover', {
+      fill: am5.color(0x2563eb),
+      fillOpacity: 0.95
     });
 
-    // Create Line Series for flight connection arcs
-    const lineSeries = chart.series.push(
-      am5map.MapLineSeries.new(root, {})
-    );
-    lineSeriesRef.current = lineSeries;
+    // Point Bullet Series for OITS Client Nodes
+    const pointSeries = chart.series.push(am5map.MapPointSeries.new(root, {}));
 
-    lineSeries.mapLines.template.setAll({
-      stroke: am5.color(0x38bdf8),
-      strokeWidth: 1.2,
-      strokeOpacity: 0.45,
-      strokeDasharray: [3, 3]
+    CLIENT_LOCATIONS.forEach((location) => {
+      pointSeries.pushDataItem({
+        geometry: { type: 'Point', coordinates: [location.longitude, location.latitude] },
+        title: location.city,
+        locationData: location
+      } as any);
     });
 
-    // Populate flight lines connecting Dhaka HQ to other nodes
-    const dhakaCoords = HUBS[0].coordinates;
-    const lineData = HUBS.slice(1).map(hub => {
-      return {
-        geometry: {
-          type: "LineString",
-          coordinates: [
-            dhakaCoords, // Dhaka origin
-            hub.coordinates // Target client node
-          ]
-        },
-        hubId: hub.id
-      };
-    });
-    lineSeries.data.setAll(lineData);
+    pointSeries.bullets.push((bulletRoot, series, dataItem) => {
+      const data = (dataItem.dataContext as any)?.locationData as ClientLocation | undefined;
+      const isHq = data?.isHq;
 
-    // Create Point Series for Hub Node Markers
-    const pointSeries = chart.series.push(
-      am5map.MapPointSeries.new(root, {
-        idField: "id"
-      })
-    );
+      const container = am5.Container.new(bulletRoot, { cursorOverStyle: 'pointer' });
 
-    // Draw customized nodes with animated radar rings
-    pointSeries.bullets.push((root, series, dataItem) => {
-      const container = am5.Container.new(root, {
-        tooltipText: "[font-mono text-[10px] uppercase tracking-widest]{name}[/]",
-        cursorOverStyle: "pointer"
-      });
-
-      const isHQ = dataItem.get("id") === "dhaka";
-
-      // Animated pulsating ring
-      const pingCircle = container.children.push(
-        am5.Circle.new(root, {
-          radius: isHQ ? 8 : 6,
-          fill: isHQ ? am5.color(0x38bdf8) : am5.color(0x10b981),
-          strokeOpacity: 0,
-          opacity: 0.6
-        })
-      );
-
-      pingCircle.animate({
-        key: "scale",
-        from: 1,
-        to: 3.2,
-        duration: 1800,
-        loops: Infinity
-      });
-
-      pingCircle.animate({
-        key: "opacity",
-        from: 0.8,
-        to: 0,
-        duration: 1800,
-        loops: Infinity
-      });
-
-      // Core anchor point
+      // Outer Pulse Ring Bullet
       container.children.push(
-        am5.Circle.new(root, {
-          radius: isHQ ? 5 : 4,
-          fill: isHQ ? am5.color(0x38bdf8) : am5.color(0x10b981),
-          stroke: am5.color(0xffffff),
-          strokeWidth: 1.5
+        am5.Circle.new(bulletRoot, {
+          radius: isHq ? 14 : 9,
+          fill: am5.color(isHq ? 0x2563eb : 0x38bdf8),
+          fillOpacity: 0.35,
+          strokeOpacity: 0
         })
       );
 
-      // Bind node clicks to details state
-      container.events.on("click", () => {
-        const hub = HUBS.find(h => h.id === dataItem.get("id"));
-        if (hub) {
-          handleHubClick(hub);
-        }
-      });
+      // Inner Core Bullet Node
+      container.children.push(
+        am5.Circle.new(bulletRoot, {
+          radius: isHq ? 7 : 4.5,
+          fill: am5.color(isHq ? 0x2563eb : 0x3b82f6),
+          stroke: am5.color(0xffffff),
+          strokeWidth: 1.5,
+          tooltipText: `[bold]${data?.city ?? ''} (${data?.country ?? ''})[/]\n${data?.clientName ?? ''}`
+        })
+      );
 
-      return am5.Bullet.new(root, {
-        sprite: container
-      });
+      container.events.on('click', () => { if (data) pinClickRef.current(data); });
+      container.events.on('pointerover', () => { if (data) pinHoverRef.current(data); });
+      container.events.on('pointerout', () => { setHoveredLocation(null); });
+
+      return am5.Bullet.new(bulletRoot, { sprite: container });
     });
 
-    // Bind Hub items directly
-    pointSeries.data.setAll(HUBS.map(hub => ({
-      id: hub.id,
-      name: hub.name,
-      longitude: hub.coordinates[0],
-      latitude: hub.coordinates[1]
-    })));
-
-    // Continuous auto rotation (completes 1 rotation per 30 seconds)
+    // Auto-Rotation Animation Loop (30 seconds per 360° turn)
     const spin = chart.animate({
-      key: "rotationX",
+      key: 'rotationX',
       from: 0,
       to: 360,
       duration: 30000,
-      loops: Infinity
+      loops: Infinity,
+      easing: am5.ease.linear
     });
     spinRef.current = spin;
 
-    // Pause rotation on user pointer down (interaction)
-    chart.events.on("pointerdown", () => {
-      spin.pause();
+    // Track Rotation Angle for Slider Synchronization
+    chart.events.on('boundschanged', () => {
+      const rot = chart.get('rotationX', 0);
+      setRotationX(Math.round(((rot % 360) + 360) % 360 - 180));
+    });
+
+    // Pause spin rotation on map interaction
+    chart.events.on('pointerdown', () => {
+      if (spinRef.current) {
+        spinRef.current.stop();
+        spinRef.current = null;
+      }
       setIsSpinning(false);
     });
 
-    // Zoom controls HUD
-    const zoomControl = chart.set("zoomControl", am5map.ZoomControl.new(root, {}));
-    zoomControl.homeButton.set("visible", true);
-    zoomControl.homeButton.events.on("click", () => {
-      spin.stop();
-      setIsSpinning(false);
-    });
-
-    // Clean up amCharts root strictly on unmount to prevent double roots
+    // Clean Disposal on Component Unmount
     return () => {
       root.dispose();
     };
   }, []);
 
-  // Highlight active flight path on selected node change
-  useEffect(() => {
-    if (lineSeriesRef.current) {
-      lineSeriesRef.current.mapLines.each((line) => {
-        const context = line.dataItem?.dataContext as any;
-        if (context && context.hubId === selectedHub.id) {
-          line.setAll({
-            stroke: am5.color(0x10b981), // emerald green active path highlight
-            strokeWidth: 2,
-            strokeDasharray: [4, 4],
-            strokeOpacity: 0.9
-          });
-        } else {
-          line.setAll({
-            stroke: am5.color(0x38bdf8),
-            strokeWidth: 1.2,
-            strokeDasharray: [3, 3],
-            strokeOpacity: 0.45
-          });
-        }
-      });
-    }
-  }, [selectedHub]);
-
-  // Smoothly align map projection center to a chosen node
-  const handleHubClick = (hub: HubNode) => {
-    setSelectedHub(hub);
-    
-    // Pause ambient spin animation on node alignment
-    if (spinRef.current) {
-      spinRef.current.pause();
-      setIsSpinning(false);
-    }
-
-    if (chartRef.current) {
-      chartRef.current.animate({
-        key: "rotationX",
-        to: -hub.coordinates[0],
-        duration: 1100,
-        easing: am5.ease.out(am5.ease.cubic)
-      });
-      chartRef.current.animate({
-        key: "rotationY",
-        to: -hub.coordinates[1],
-        duration: 1100,
-        easing: am5.ease.out(am5.ease.cubic)
-      });
-    }
-  };
-
-  // Toggle ambient continuous spin state manually
-  const toggleSpinState = () => {
-    if (spinRef.current) {
-      if (isSpinning) {
-        spinRef.current.pause();
-      } else {
-        spinRef.current.play();
-      }
-      setIsSpinning(!isSpinning);
-    }
-  };
-
-  // Slider change modifies chart's DX property on-the-fly
+  // Slider Control Handler (handleSliderChange)
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    setHorizontalOffset(val);
+    const val = parseFloat(e.target.value);
+    setRotationX(val);
     if (chartRef.current) {
-      chartRef.current.set("dx", val);
+      if (spinRef.current) {
+        spinRef.current.stop();
+        spinRef.current = null;
+      }
+      setIsSpinning(false);
+      chartRef.current.set('rotationX', val);
     }
+  };
+
+  // Play/Pause Toggle Handler (toggleSpin)
+  const toggleSpin = () => {
+    if (!chartRef.current) return;
+    if (isSpinning) {
+      if (spinRef.current) {
+        spinRef.current.stop();
+        spinRef.current = null;
+      }
+      setIsSpinning(false);
+    } else {
+      const currentRot = chartRef.current.get('rotationX', 0);
+      spinRef.current = chartRef.current.animate({
+        key: 'rotationX',
+        from: currentRot,
+        to: currentRot + 360,
+        duration: 30000,
+        loops: Infinity,
+        easing: am5.ease.linear
+      });
+      setIsSpinning(true);
+    }
+  };
+
+  // Reset View Handler (resetView)
+  const resetView = () => {
+    if (chartRef.current) {
+      chartRef.current.goHome();
+      chartRef.current.set('rotationX', 0);
+      chartRef.current.set('rotationY', 0);
+      setRotationX(0);
+      
+      if (spinRef.current) {
+        spinRef.current.stop();
+        spinRef.current = null;
+      }
+
+      spinRef.current = chartRef.current.animate({
+        key: 'rotationX',
+        from: 0,
+        to: 360,
+        duration: 30000,
+        loops: Infinity,
+        easing: am5.ease.linear
+      });
+      setIsSpinning(true);
+    }
+  };
+
+  const activeLocation = hoveredLocation || selectedLocation;
+
+  const handlePinClick = (location: ClientLocation) => {
+    pinClickRef.current(location);
   };
 
   return (
     <section 
       id="global-reach" 
-      className="py-24 bg-[#05080F] text-slate-100 border-t border-slate-900 transition-colors duration-500 overflow-hidden relative"
+      className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-500"
     >
-      {/* Structural subtle telemetry grid background */}
+      {/* Top gradient hairline */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent" />
+      
+      {/* Subtle grid pattern dot overlay */}
       <div 
-        className="absolute inset-0 opacity-[0.02] pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(#38BDF8 1px, transparent 1px)`,
-          backgroundSize: '36px 36px'
-        }}
+        className="absolute inset-0 bg-[radial-gradient(currentColor_1.2px,transparent_1.2px)] bg-[size:24px_24px] text-slate-300 dark:text-slate-800 opacity-25 pointer-events-none" 
       />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-6 relative z-10 max-w-7xl">
         
-        {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 pb-8 border-b border-slate-900">
+        {/* Header & Metric Badge Rail */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 pb-8 border-b border-slate-200 dark:border-slate-900">
           <div className="space-y-4 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-[#38BDF8] text-[10px] font-mono font-bold tracking-widest uppercase">
-              <Radio size={12} className="animate-pulse" /> GLOBAL REACH NETWORK
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100/60 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 text-[10px] font-mono font-bold uppercase tracking-[0.2em] rounded-full">
+              <Globe size={11} className="animate-[spin_12s_linear_infinite]" /> GLOBAL REACH NETWORK
             </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-none text-white">
-              Interactive 3D Earth projection Engine
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
+              Global Scale, Local Excellence
             </h2>
-            <p className="text-slate-400 text-sm md:text-base max-w-xl leading-relaxed">
-              Tracking real-time deployment routing nodes, core software distribution, and active server health statistics from Dhaka core HQ out to global client clusters.
+            <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm md:text-base leading-relaxed">
+              OITS Dhaka drives robust software, logistics, and medical pipelines deployed on distributed nodes across the world's most dynamic target markets.
             </p>
           </div>
 
-          {/* Quick Metrics Rail */}
           <div className="flex flex-wrap items-center gap-6 lg:gap-12">
             <div className="space-y-1">
-              <span className="font-mono text-[10px] tracking-wider text-slate-500 uppercase block">Total Active Nodes</span>
-              <span className="text-2xl font-black text-white font-mono block">9+ Key Hubs</span>
+              <span className="font-mono text-[9px] tracking-wider text-slate-400 dark:text-slate-500 uppercase block">ACTIVE CLIENT CLUSTERS</span>
+              <span className="text-xl md:text-2xl font-black text-slate-900 dark:text-white font-mono block">9+ Key Hubs</span>
             </div>
-            <div className="h-8 w-[1px] bg-slate-900 hidden sm:block" />
+            <div className="h-8 w-[1px] bg-slate-200 dark:bg-slate-800 hidden sm:block" />
             <div className="space-y-1">
-              <span className="font-mono text-[10px] tracking-wider text-slate-500 uppercase block">Global Average Latency</span>
-              <span className="text-2xl font-black text-emerald-400 font-mono block">82.4ms</span>
-            </div>
-            <div className="h-8 w-[1px] bg-slate-900 hidden sm:block" />
-            <div className="space-y-1">
-              <span className="font-mono text-[10px] tracking-wider text-slate-500 uppercase block">Network Reliability Index</span>
-              <span className="text-2xl font-black text-[#38BDF8] font-mono block">99.98% SLA</span>
+              <span className="font-mono text-[9px] tracking-wider text-slate-400 dark:text-slate-500 uppercase block">NETWORK PERFORMANCE RATE</span>
+              <span className="text-xl md:text-2xl font-black text-blue-600 dark:text-blue-400 font-mono block">99.98% SLA</span>
             </div>
           </div>
         </div>
 
-        {/* Core Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        {/* Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Globe Canvas Column (8 cols) */}
-          <div className="lg:col-span-8 flex flex-col items-center justify-center relative">
+          {/* Globe Canvas Column */}
+          <div className="lg:col-span-8 bg-white dark:bg-slate-900/40 border border-slate-200/70 dark:border-slate-800/60 rounded-[2rem] p-4 md:p-6 shadow-sm relative flex flex-col justify-between">
             
-            {/* Control HUD Overlays */}
-            <div className="absolute top-4 left-4 z-20 bg-slate-950/80 border border-slate-900 p-4 rounded-2xl backdrop-blur-md max-w-xs space-y-3 font-mono">
+            {/* Top Controls Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800/60 font-mono text-[10px] text-slate-500 dark:text-slate-400 z-10">
               <div className="flex items-center gap-2">
-                <GlobeIcon size={14} className="text-[#38BDF8] animate-spin-slow" />
-                <span className="text-[10px] font-bold text-white tracking-wider uppercase">Projection System</span>
+                <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+                <span className="uppercase tracking-widest font-bold text-slate-800 dark:text-slate-200">
+                  amCharts 5 • Auto-Rotating 3D Globe
+                </span>
               </div>
-              <div className="space-y-1.5 text-[9px] text-slate-400">
-                <p>PROVIDER: <span className="text-[#38BDF8]">AMCHARTS 5 GLOBAL</span></p>
-                <p>PROJECTION: <span className="text-emerald-400">ORTHOGRAPHIC 3D</span></p>
-                <p>POLYGONS: <span className="text-white">HIGH-FIDELITY WORLD</span></p>
-                {hoveredCountry && (
-                  <p>LAST SECTOR: <span className="text-amber-400">{hoveredCountry}</span></p>
-                )}
+
+              {/* Action buttons */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={toggleSpin}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-600 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  title={isSpinning ? "Pause ambient spin" : "Start ambient spin"}
+                >
+                  {isSpinning ? <Pause size={12} /> : <Play size={12} />}
+                  <span>{isSpinning ? 'PAUSE' : 'SPIN'}</span>
+                </button>
+
+                <button
+                  onClick={resetView}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-600 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  title="Reset projection center"
+                >
+                  <RotateCcw size={12} />
+                  <span>RESET</span>
+                </button>
               </div>
             </div>
 
-            {/* Rotation Control HUD Overlay */}
-            <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2.5 bg-slate-950/80 border border-slate-900 p-2.5 rounded-2xl backdrop-blur-md">
-              <button 
-                onClick={toggleSpinState}
-                className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-[#38BDF8] hover:bg-slate-800 hover:text-white transition-all"
-                title={isSpinning ? "Pause auto rotation" : "Play auto rotation"}
-              >
-                {isSpinning ? <Pause size={14} /> : <Play size={14} />}
-              </button>
-              <div className="h-5 w-[1px] bg-slate-900" />
-              <span className="font-mono text-[9px] uppercase text-slate-400 flex items-center gap-1">
-                <Compass size={12} className={isSpinning ? "animate-spin" : ""} />
-                {isSpinning ? "Ambient rotation" : "Rotation paused"}
+            {/* amCharts 5 Target Div */}
+            <div className="w-full flex justify-center py-6 relative">
+              <div 
+                ref={chartDivRef} 
+                id="chartdiv" 
+                className="w-full h-full min-h-[420px] sm:min-h-[480px] md:min-h-[520px] relative drop-shadow-[0_0_24px_rgba(37,99,235,0.04)]" 
+              />
+            </div>
+
+            {/* Bottom Horizontal Rotation Slider */}
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-50 dark:bg-slate-950/60 border border-slate-200/50 dark:border-slate-800/40 rounded-2xl">
+              <span className="font-mono text-[10px] text-slate-400 uppercase tracking-wider whitespace-nowrap">
+                ROTATE SECTOR (LONGITUDE):
+              </span>
+              <input 
+                type="range" 
+                min="-180" 
+                max="180" 
+                value={rotationX} 
+                onChange={handleSliderChange} 
+                className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-400" 
+              />
+              <span className="font-mono text-[10px] text-blue-600 dark:text-blue-400 font-bold bg-blue-50 dark:bg-blue-950/40 px-2 py-1 rounded border border-blue-100 dark:border-blue-900/30 whitespace-nowrap min-w-[50px] text-center">
+                {rotationX}°
               </span>
             </div>
 
-            {/* Earth Canvas Container */}
-            <div className="w-full flex flex-col items-center justify-center border border-slate-900 rounded-[2rem] bg-slate-950/40 p-6 relative min-h-[500px]">
-              
-              <div 
-                ref={chartDivRef} 
-                className="w-full h-[520px] max-w-full drop-shadow-[0_0_40px_rgba(56,189,248,0.06)]"
-              />
-
-              {/* Slider for adjusting horizontal offset */}
-              <div className="w-full max-w-md mt-4 px-4 py-3 bg-slate-950/80 border border-slate-900 rounded-2xl flex items-center justify-between gap-4 font-mono z-10">
-                <span className="text-[9px] text-slate-500 uppercase tracking-wider whitespace-nowrap">SHIFT HORIZONTAL:</span>
-                <input 
-                  type="range" 
-                  min="-150" 
-                  max="150" 
-                  value={horizontalOffset} 
-                  onChange={handleSliderChange}
-                  className="w-full h-1 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-[#38BDF8] border border-slate-800"
-                />
-                <span className="text-[10px] text-emerald-400 font-bold w-12 text-right">{horizontalOffset}px</span>
-              </div>
-
-            </div>
-
-            {/* Interactive Hub selectors */}
+            {/* Interactive Hub Selector Buttons underneath */}
             <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-              {HUBS.map((hub) => (
+              {CLIENT_LOCATIONS.map((loc) => (
                 <button
-                  key={hub.id}
-                  onClick={() => handleHubClick(hub)}
+                  key={loc.id}
+                  onClick={() => handlePinClick(loc)}
                   className={`px-3 py-1.5 rounded-xl text-[10px] font-mono uppercase tracking-wider transition-all border ${
-                    hub.id === selectedHub.id
-                      ? 'bg-sky-500/10 text-[#38BDF8] border-[#38BDF8] font-bold'
-                      : 'bg-slate-950/50 text-slate-500 border-slate-900 hover:border-slate-800 hover:text-slate-300'
+                    loc.id === selectedLocation.id
+                      ? 'bg-blue-600 text-white border-blue-600 dark:bg-blue-500/20 dark:text-blue-400 dark:border-blue-500/40 font-bold'
+                      : 'bg-white dark:bg-slate-900/50 text-slate-500 border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-800 dark:hover:text-slate-200'
                   }`}
                 >
-                  {hub.name}
+                  {loc.city}
                 </button>
               ))}
             </div>
 
           </div>
 
-          {/* Telemetry Card Inspector (4 cols) */}
-          <div className="lg:col-span-4 h-full flex flex-col justify-center">
-            
-            <div className="bg-slate-950/50 border border-slate-900 rounded-[2rem] p-6 sm:p-8 space-y-6 relative overflow-hidden flex flex-col justify-between h-full min-h-[460px]">
-              
-              {/* Background abstract overlay grid */}
-              <div 
-                className="absolute inset-0 opacity-[0.01] pointer-events-none"
-                style={{
-                  backgroundImage: `radial-gradient(#10B981 1px, transparent 1px)`,
-                  backgroundSize: '16px 16px'
-                }}
-              />
-
-              <div className="space-y-6 relative z-10">
-                {/* Hub title */}
-                <div className="space-y-2">
+          {/* Telemetry Card Inspector */}
+          <div className="lg:col-span-4 bg-white dark:bg-slate-900/40 border border-slate-200/70 dark:border-slate-800/60 rounded-[2rem] p-6 shadow-sm h-full relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeLocation.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6 flex flex-col justify-between h-full min-h-[420px]"
+              >
+                <div className="space-y-6">
+                  {/* Status badge */}
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block">Active Node telemetry</span>
-                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider ${
-                      selectedHub.status === 'online' 
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                        : 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
-                    }`}>
-                      {selectedHub.status}
+                    <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-slate-500 block">
+                      NODE TELEMETRY
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="font-mono text-[9px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                        {activeLocation.isHq ? 'HQ GLOBAL GATEWAY' : 'REMOTE NODE VERIFIED'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* City & Country & Lat/Long Coordinates */}
+                  <div className="space-y-2">
+                    <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none uppercase">
+                      {activeLocation.city}
+                    </h3>
+                    <div className="flex items-center justify-between font-mono text-[10px] text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800/80 pb-3">
+                      <span>{activeLocation.country}</span>
+                      <span className="text-blue-600 dark:text-blue-400 font-bold">
+                        LAT: {activeLocation.latitude.toFixed(4)}° / LNG: {activeLocation.longitude.toFixed(4)}°
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Deployment Info Rows */}
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-slate-500 block">
+                        AUTHORIZED CLIENT CLUSTER
+                      </span>
+                      <p className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight">
+                        {activeLocation.clientName}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-slate-500 block">
+                        DEPLOYMENT ARCHITECTURE
+                      </span>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
+                        {activeLocation.projectType}
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-900/40">
+                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-slate-500 block">
+                        REAL-TIME IMPACT METRICS
+                      </span>
+                      <p className="text-xs font-mono text-blue-600 dark:text-blue-400 leading-relaxed font-semibold">
+                        {activeLocation.impactMetrics}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom status rail */}
+                <div className="pt-6 border-t border-slate-100 dark:border-slate-800/80 mt-auto">
+                  <div className="flex items-center justify-between font-mono text-[10px] text-slate-400 dark:text-slate-500">
+                    <span className="uppercase tracking-widest flex items-center gap-1">
+                      <Activity size={12} className="text-emerald-500 animate-pulse" /> NODE STATUS
+                    </span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">
+                      ONLINE • SLA VERIFIED
                     </span>
                   </div>
-                  <h3 className="text-2xl font-black text-white leading-tight">
-                    {selectedHub.name}
-                  </h3>
-                  <p className="text-slate-400 text-xs flex items-center gap-1">
-                    <MapPin size={12} className="text-sky-400" /> {selectedHub.country}
-                  </p>
-                </div>
-
-                <hr className="border-slate-900" />
-
-                {/* Coordinates & Location detail */}
-                <div className="grid grid-cols-2 gap-4 font-mono text-[10px]">
-                  <div className="space-y-1">
-                    <span className="text-slate-500 block uppercase tracking-widest">Longitude</span>
-                    <span className="text-white font-bold block">{selectedHub.coordinates[0].toFixed(4)}° E</span>
-                  </div>
-                  <div className="space-y-1">
-                    <span className="text-slate-500 block uppercase tracking-widest">Latitude</span>
-                    <span className="text-white font-bold block">{selectedHub.coordinates[1].toFixed(4)}° N</span>
+                  
+                  {/* Watermark */}
+                  <div className="mt-4 flex items-center justify-between text-[8px] font-mono text-slate-300 dark:text-slate-700 uppercase tracking-[0.15em] border-t border-slate-100/50 dark:border-slate-900/50 pt-2.5">
+                    <span>SYSTEM: OITS-DAC-GRID</span>
+                    <span>VER: 5.2.0-AM</span>
                   </div>
                 </div>
-
-                <hr className="border-slate-900" />
-
-                {/* Telemetry metadata rows */}
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 mt-0.5">
-                      <Cpu size={14} />
-                    </div>
-                    <div>
-                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block">Node classification</span>
-                      <span className="text-xs text-white font-bold leading-none">{selectedHub.clusterType}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 mt-0.5">
-                      <Database size={14} />
-                    </div>
-                    <div>
-                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block">Systems deployment</span>
-                      <span className="text-xs text-white font-bold leading-none">{selectedHub.architecture}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 mt-0.5">
-                      <Shield size={14} />
-                    </div>
-                    <div>
-                      <span className="font-mono text-[9px] uppercase tracking-widest text-slate-500 block">SLA index</span>
-                      <span className="text-xs text-emerald-400 font-bold leading-none">{selectedHub.sla} Guaranteed</span>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Real-time stats footer block */}
-              <div className="pt-6 border-t border-slate-900 font-mono text-[10px] space-y-3 relative z-10">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-500 uppercase tracking-widest flex items-center gap-1">
-                    <Activity size={12} className="text-rose-500 animate-pulse" /> Edge Latency
-                  </span>
-                  <span className="text-white font-bold">{selectedHub.latency}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-500 uppercase tracking-widest flex items-center gap-1">
-                    <TrendingUp size={12} className="text-sky-500" /> Active Bandwidth
-                  </span>
-                  <span className="text-white font-bold">{selectedHub.bandwidth}</span>
-                </div>
-              </div>
-
-            </div>
-
+              </motion.div>
+            </AnimatePresence>
           </div>
 
         </div>
