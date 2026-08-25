@@ -303,24 +303,27 @@ export const Contact: React.FC = () => {
               </div>
             </div>
 
-            {/* Google Maps Embed */}
-            <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-[350px] sm:h-[450px] overflow-hidden border-t border-b border-slate-200 dark:border-slate-800 shadow-sm">
-              <iframe
-                title="OITS Dhaka Studio Location"
-                src="https://maps.google.com/maps?q=Dhanmondi%20Dhaka%20Bangladesh&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-
           </div>
 
         </div>
 
       </div>
+
+      {/* Google Maps Embed - Full Viewport Width */}
+      <div className="w-[100vw] relative left-1/2 -translate-x-1/2 mt-16 sm:mt-24 h-[350px] sm:h-[500px]">
+        <iframe
+          title="OITS Dhaka Studio Location"
+          src="https://maps.google.com/maps?q=Dhanmondi%20Dhaka%20Bangladesh&t=&z=13&ie=UTF8&iwloc=&output=embed"
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-700 pointer-events-auto"
+        />
+        <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-slate-900/10 dark:ring-white/10" />
+      </div>
+
     </section>
   );
 };

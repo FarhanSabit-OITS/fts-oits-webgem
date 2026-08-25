@@ -3,22 +3,19 @@ import {
   Github, 
   Linkedin, 
   Twitter, 
-  Mail, 
   Globe, 
   MapPin, 
   ShieldCheck, 
   Activity, 
-  CheckCircle2, 
-  ArrowUpRight,
   Cpu,
   Layers,
   Terminal,
   Zap,
-  Check,
   X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { COMPANY_NAME, CONTACT_EMAIL, ADDRESS } from '../constants';
+import { Link, useNavigate } from 'react-router-dom';
+import { COMPANY_NAME, ADDRESS } from '../constants';
 import { SectionId } from '../types';
 import { BrandLogo } from './BrandLogo';
 import { CopyEmailButton } from './CopyEmailButton';
@@ -26,8 +23,7 @@ import { useTheme } from './ThemeContext';
 
 export const Footer: React.FC = () => {
   const { theme } = themeContextUnpackHelper();
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const navigate = useNavigate();
   const [isCreditsOpen, setIsCreditsOpen] = useState(false);
 
   // Interval-based Real-time Performance Telemetry Monitor state
@@ -78,18 +74,9 @@ export const Footer: React.FC = () => {
     };
   }, []);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
     e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 5000);
-    }
-  };
-
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    navigate(path);
   };
 
   return (
@@ -147,24 +134,24 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs font-mono">
               <li>
-                <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/services" onClick={(e) => handleNavClick(e as any, '/services')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Web & SaaS Apps
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/services" onClick={(e) => handleNavClick(e as any, '/services')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Cloud & Kubernetes
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/services" onClick={(e) => handleNavClick(e as any, '/services')} className="hover:text-sky-500 transition-colors block py-0.5">
                   AI / ML Pipelines
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.SERVICES}`} onClick={(e) => scrollToSection(e, SectionId.SERVICES)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/services" onClick={(e) => handleNavClick(e as any, '/services')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Native Mobile Apps
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -176,24 +163,24 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs font-mono">
               <li>
-                <a href={`#${SectionId.ABOUT}`} onClick={(e) => scrollToSection(e, SectionId.ABOUT)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/about" onClick={(e) => handleNavClick(e as any, '/about')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Zero-Trust Security
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.ABOUT}`} onClick={(e) => scrollToSection(e, SectionId.ABOUT)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/about" onClick={(e) => handleNavClick(e as any, '/about')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Elastic Scaling
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.PROCESS}`} onClick={(e) => scrollToSection(e, SectionId.PROCESS)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/#process" onClick={(e) => handleNavClick(e as any, '/#process')} className="hover:text-sky-500 transition-colors block py-0.5">
                   4-Phase Lifecycle
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.PROCESS}`} onClick={(e) => scrollToSection(e, SectionId.PROCESS)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/#process" onClick={(e) => handleNavClick(e as any, '/#process')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Quality Gates
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -205,24 +192,24 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2 text-xs font-mono">
               <li>
-                <a href={`#${SectionId.PORTFOLIO}`} onClick={(e) => scrollToSection(e, SectionId.PORTFOLIO)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/portfolio" onClick={(e) => handleNavClick(e as any, '/portfolio')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Case Studies
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.INSIGHTS}`} onClick={(e) => scrollToSection(e, SectionId.INSIGHTS)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/#insights" onClick={(e) => handleNavClick(e as any, '/#insights')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Engineering Journal
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.CONTACT}`} onClick={(e) => scrollToSection(e, SectionId.CONTACT)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/contact" onClick={(e) => handleNavClick(e as any, '/contact')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Book Consultation
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={`#${SectionId.CONTACT}`} onClick={(e) => scrollToSection(e, SectionId.CONTACT)} className="hover:text-sky-500 transition-colors block py-0.5">
+                <Link to="/contact" onClick={(e) => handleNavClick(e as any, '/contact')} className="hover:text-sky-500 transition-colors block py-0.5">
                   Project Estimator
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

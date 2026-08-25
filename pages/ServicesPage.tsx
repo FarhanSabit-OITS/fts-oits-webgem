@@ -19,8 +19,8 @@ import {
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { CONTACT_EMAIL, COMPANY_NAME } from '../constants';
-import { CopyEmailButton } from './CopyEmailButton';
-import { SectionWrapper } from './SectionWrapper';
+import { CopyEmailButton } from '../components/CopyEmailButton';
+import { SectionWrapper } from '../components/SectionWrapper';
 
 // Define the Agile pipeline stages data model
 export interface ProcessStage {

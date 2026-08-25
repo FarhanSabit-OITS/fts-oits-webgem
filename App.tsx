@@ -1,16 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
-import { About } from './components/About';
-import { Services } from './components/Services';
-import { Portfolio } from './components/Portfolio';
-import { GlobalReach } from './components/GlobalReach';
-import { Process } from './components/Process';
-import { TechStackSection } from './components/TechStackSection';
-import { Testimonials } from './components/Testimonials';
-import { Insights } from './components/Insights';
-import { Contact } from './components/Contact';
-import { BrandPaletteShowcase } from './components/BrandPaletteShowcase';
 import { Footer } from './components/Footer';
 import { AiAssistant } from './components/AiAssistant';
 import { CursorSpotlight } from './components/CursorSpotlight';
@@ -18,74 +8,65 @@ import { ExitIntentModal } from './components/ExitIntentModal';
 import { BackToTop } from './components/BackToTop';
 import { LanguageProvider } from './components/LanguageContext';
 
+// Pages
+import { HomePage } from './pages/HomePage';
+import { ServicesPage } from './pages/ServicesPage';
+import { PortfolioPage } from './pages/PortfolioPage';
+import { AboutPage } from './pages/AboutPage';
+import { ContactPage } from './pages/ContactPage';
+import { DashboardPage } from './pages/DashboardPage';
+
+function ScrollToHash() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      setTimeout(() => {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          
+          // Optionally add a temporary highlight
+          element.classList.add('ring-2', 'ring-[#38BDF8]');
+          setTimeout(() => element.classList.remove('ring-2', 'ring-[#38BDF8]'), 2000);
+        }
+      }, 300); // Wait for page to render
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+
+  return null;
+}
+
 function App() {
   return (
     <LanguageProvider>
       <div className="min-h-screen bg-slate-50 dark:bg-[#070A13] text-slate-900 dark:text-slate-100 selection:bg-[#38BDF8]/20 selection:text-[#38BDF8] transition-colors duration-300 relative flex flex-col font-sans">
         
+        {/* Scroll handler */}
+        <ScrollToHash />
+
         {/* Dynamic Cursor Spotlight Effect */}
         <CursorSpotlight />
 
-        {/* 1. Global Navigation Header */}
+        {/* Global Navigation Header */}
         <Header />
 
-        {/* Main Content Sections */}
+        {/* Main Content Sections (Routed) */}
         <main className="flex-1">
-          {/* 2. Hero Section - Immediate Load */}
-          <Hero />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 3. About & Engineering Philosophy Section */}
-          <About />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 4. Enterprise Services Section */}
-          <Services />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 5. Portfolio & Case Studies Section */}
-          <Portfolio />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 5.5 Global Geographic Reach Node Network */}
-          <GlobalReach />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 6. Process & Delivery Timeline Section */}
-          <Process />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 6.5 Technology Ecosystem Adoption Radar */}
-          <TechStackSection />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 7. Social Proof & Tech Ecosystem Section */}
-          <Testimonials />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 7.5 Intellectual Engineering Journal Insights */}
-          <Insights />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 8. Direct Contact & Consultation Section */}
-          <Contact />
-
-          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
-
-          {/* 9. Brand Color Palette Component */}
-          <BrandPaletteShowcase />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/portfolio" element={<PortfolioPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Routes>
         </main>
 
-        {/* 9. Global Footer */}
+        {/* Global Footer */}
         <Footer />
 
         {/* Interactive Overlays */}

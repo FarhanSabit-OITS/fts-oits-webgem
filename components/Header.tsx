@@ -23,13 +23,15 @@ import {
   Briefcase,
   Calendar
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { COMPANY_NAME, NAV_ITEMS, SERVICES } from '../constants';
 import { Button } from './ui/Button';
 import { SectionId } from '../types';
 import { useLanguage } from './LanguageContext';
 import { ScheduleCallModal } from './ScheduleCallModal';
+import { AuthModal } from './AuthModal';
 import { useTheme } from './ThemeContext';
+import { BrandLogo } from './BrandLogo';
 
 export const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -39,6 +41,8 @@ export const Header: React.FC = () => {
   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('home');
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobilePortfolioOpen, setMobilePortfolioOpen] = useState(false);
@@ -47,6 +51,8 @@ export const Header: React.FC = () => {
   const servicesDropdownRef = useRef<HTMLLIElement>(null);
   const portfolioDropdownRef = useRef<HTMLLIElement>(null);
   const aboutDropdownRef = useRef<HTMLLIElement>(null);
+
+  const navigate = useNavigate();
 
   // Monitor scroll for sticky header and active section highlight
   useEffect(() => {
@@ -102,23 +108,36 @@ export const Header: React.FC = () => {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-      setIsServicesOpen(false);
-      setIsPortfolioOpen(false);
-      setIsAboutOpen(false);
+    setIsMobileMenuOpen(false);
+    setIsServicesOpen(false);
+    setIsPortfolioOpen(false);
+    setIsAboutOpen(false);
+    
+    if (href.startsWith('#')) {
+      if (window.location.pathname !== '/') {
+        navigate('/' + href);
+      } else {
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    } else {
+      navigate(href);
     }
   };
 
   const handleServiceClick = (serviceId: string) => {
-    const element = document.getElementById(SectionId.SERVICES);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsServicesOpen(false);
-      setIsMobileMenuOpen(false);
-      
+    setIsServicesOpen(false);
+    setIsMobileMenuOpen(false);
+    
+    if (window.location.pathname !== '/services') {
+      navigate('/services#' + serviceId);
+    } else {
+      const element = document.getElementById(serviceId) || document.getElementById(SectionId.SERVICES);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
       setTimeout(() => {
         const card = document.getElementById(`service-card-${serviceId}`);
         if (card) {
@@ -130,20 +149,30 @@ export const Header: React.FC = () => {
   };
 
   const handlePortfolioClick = (domainId: string) => {
-    const element = document.getElementById(SectionId.PORTFOLIO);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsPortfolioOpen(false);
-      setIsMobileMenuOpen(false);
+    setIsPortfolioOpen(false);
+    setIsMobileMenuOpen(false);
+    
+    if (window.location.pathname !== '/portfolio') {
+      navigate('/portfolio#' + domainId);
+    } else {
+      const element = document.getElementById(domainId) || document.getElementById(SectionId.PORTFOLIO);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
   const handleAboutClick = (aboutId: string) => {
-    const element = document.getElementById(SectionId.ABOUT);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsAboutOpen(false);
-      setIsMobileMenuOpen(false);
+    setIsAboutOpen(false);
+    setIsMobileMenuOpen(false);
+    
+    if (window.location.pathname !== '/about') {
+      navigate('/about#' + aboutId);
+    } else {
+      const element = document.getElementById(aboutId) || document.getElementById(SectionId.ABOUT);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -248,14 +277,13 @@ export const Header: React.FC = () => {
             className="group hover:opacity-95 transition-all flex items-center gap-3 focus-visible:ring-2 focus-visible:ring-[#38BDF8] rounded-xl outline-none" 
             onClick={(e) => {
               if (window.location.hash === '' || window.location.hash === `#${SectionId.HOME}`) {
-                handleNavClick(e as any, `#${SectionId.HOME}`);
+                handleNavClick(e as any, '/');
               }
             }}
             aria-label={`${COMPANY_NAME} homepage`}
           >
             <div className="h-8 sm:h-10 md:h-11 flex items-center">
-              <img src="/Logo.png" alt="OITS Dhaka Light" className="dark:hidden h-full w-auto max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
-              <img src="/Logo-White.png" alt="OITS Dhaka Dark" className="hidden dark:block h-full w-auto max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+              <BrandLogo height="100%" />
             </div>
           </Link>
 
@@ -272,11 +300,15 @@ export const Header: React.FC = () => {
             
             {/* Home Link (Icon Only) */}
             <li>
-              <a 
-                href={`#${SectionId.HOME}`}
-                onClick={(e) => handleNavClick(e, `#${SectionId.HOME}`)}
+              <Link 
+                to="/"
+                onClick={(e) => {
+                  if (window.location.pathname === '/') {
+                    handleNavClick(e as any, `#${SectionId.HOME}`);
+                  }
+                }}
                 className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
-                  activeSection === 'home'
+                  activeSection === 'home' && window.location.pathname === '/'
                     ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
@@ -284,7 +316,7 @@ export const Header: React.FC = () => {
                 title={t('nav_home')}
               >
                 <Home size={18} aria-hidden="true" />
-              </a>
+              </Link>
             </li>
 
             {/* Services with Dropdown Trigger */}
@@ -298,19 +330,14 @@ export const Header: React.FC = () => {
               }}
               onMouseLeave={() => setIsServicesOpen(false)}
             >
-              <button
-                type="button"
-                onClick={() => {
-                  const nextState = !isServicesOpen;
-                  setIsServicesOpen(nextState);
-                  setIsPortfolioOpen(false);
-                  setIsAboutOpen(false);
-                }}
+              <Link
+                to="/services"
+                onClick={(e) => handleNavClick(e as any, '/services')}
                 aria-expanded={isServicesOpen}
                 aria-haspopup="true"
                 aria-controls="services-dropdown-panel"
                 className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
-                  activeSection === 'services' || isServicesOpen
+                  activeSection === 'services' || isServicesOpen || window.location.pathname.startsWith('/services')
                     ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
@@ -318,7 +345,7 @@ export const Header: React.FC = () => {
                 <Layers size={18} aria-hidden="true" />
                 <span className="hidden sm:inline">{t('nav_services')}</span>
                 <ChevronDown size={14} className={`transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
-              </button>
+              </Link>
 
               {/* Categorized Multi-Column Services Dropdown */}
               {isServicesOpen && (
@@ -355,13 +382,13 @@ export const Header: React.FC = () => {
 
                   <div className="col-span-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
                     <span className="text-slate-500 font-mono">Custom enterprise specs available</span>
-                    <a
-                      href={`#${SectionId.SERVICES}`}
-                      onClick={(e) => handleNavClick(e, `#${SectionId.SERVICES}`)}
+                    <Link
+                      to="/services"
+                      onClick={(e) => handleNavClick(e as any, '/services')}
                       className="text-[#38BDF8] hover:underline font-bold flex items-center gap-1"
                     >
                       View all capabilities <ChevronRight size={14} />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -378,19 +405,14 @@ export const Header: React.FC = () => {
               }}
               onMouseLeave={() => setIsPortfolioOpen(false)}
             >
-              <button
-                type="button"
-                onClick={() => {
-                  const nextState = !isPortfolioOpen;
-                  setIsPortfolioOpen(nextState);
-                  setIsServicesOpen(false);
-                  setIsAboutOpen(false);
-                }}
+              <Link
+                to="/portfolio"
+                onClick={(e) => handleNavClick(e as any, '/portfolio')}
                 aria-expanded={isPortfolioOpen}
                 aria-haspopup="true"
                 aria-controls="portfolio-dropdown-panel"
                 className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
-                  activeSection === 'portfolio' || isPortfolioOpen
+                  activeSection === 'portfolio' || isPortfolioOpen || window.location.pathname.startsWith('/portfolio')
                     ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
@@ -398,7 +420,7 @@ export const Header: React.FC = () => {
                 <Briefcase size={18} aria-hidden="true" />
                 <span className="hidden sm:inline">{t('nav_portfolio')}</span>
                 <ChevronDown size={14} className={`transition-transform duration-200 ${isPortfolioOpen ? 'rotate-180' : ''}`} />
-              </button>
+              </Link>
 
               {/* Categorized Multi-Column Portfolio Dropdown */}
               {isPortfolioOpen && (
@@ -435,13 +457,13 @@ export const Header: React.FC = () => {
 
                   <div className="col-span-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
                     <span className="text-slate-500 font-mono">Enterprise case studies & metrics</span>
-                    <a
-                      href={`#${SectionId.PORTFOLIO}`}
-                      onClick={(e) => handleNavClick(e, `#${SectionId.PORTFOLIO}`)}
+                    <Link
+                      to="/portfolio"
+                      onClick={(e) => handleNavClick(e as any, '/portfolio')}
                       className="text-[#38BDF8] hover:underline font-bold flex items-center gap-1"
                     >
                       View all case studies <ChevronRight size={14} />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -458,19 +480,14 @@ export const Header: React.FC = () => {
               }}
               onMouseLeave={() => setIsAboutOpen(false)}
             >
-              <button
-                type="button"
-                onClick={() => {
-                  const nextState = !isAboutOpen;
-                  setIsAboutOpen(nextState);
-                  setIsServicesOpen(false);
-                  setIsPortfolioOpen(false);
-                }}
+              <Link
+                to="/about"
+                onClick={(e) => handleNavClick(e as any, '/about')}
                 aria-expanded={isAboutOpen}
                 aria-haspopup="true"
                 aria-controls="about-dropdown-panel"
                 className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
-                  activeSection === 'about' || isAboutOpen
+                  activeSection === 'about' || isAboutOpen || window.location.pathname.startsWith('/about')
                     ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
@@ -478,7 +495,7 @@ export const Header: React.FC = () => {
                 <Info size={18} aria-hidden="true" />
                 <span className="hidden sm:inline">{t('nav_about')}</span>
                 <ChevronDown size={14} className={`transition-transform duration-200 ${isAboutOpen ? 'rotate-180' : ''}`} />
-              </button>
+              </Link>
 
               {/* Categorized Multi-Column About Us Dropdown */}
               {isAboutOpen && (
@@ -515,13 +532,13 @@ export const Header: React.FC = () => {
 
                   <div className="col-span-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
                     <span className="text-slate-500 font-mono">Our engineering history & culture</span>
-                    <a
-                      href={`#${SectionId.ABOUT}`}
-                      onClick={(e) => handleNavClick(e, `#${SectionId.ABOUT}`)}
+                    <Link
+                      to="/about"
+                      onClick={(e) => handleNavClick(e as any, '/about')}
                       className="text-[#38BDF8] hover:underline font-bold flex items-center gap-1"
                     >
                       Explore About Us <ChevronRight size={14} />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -529,11 +546,11 @@ export const Header: React.FC = () => {
 
             {/* Contact (Icon Only) */}
             <li>
-              <a 
-                href={`#${SectionId.CONTACT}`}
-                onClick={(e) => handleNavClick(e, `#${SectionId.CONTACT}`)}
+              <Link 
+                to="/contact"
+                onClick={(e) => handleNavClick(e as any, '/contact')}
                 className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#38BDF8] border border-[#38BDF8]/60 ${
-                  activeSection === 'contact'
+                  activeSection === 'contact' || window.location.pathname.startsWith('/contact')
                     ? 'bg-[#38BDF8] text-slate-950 font-bold border-[#38BDF8] shadow-md'
                     : 'text-slate-700 dark:text-slate-200 hover:text-[#38BDF8] dark:hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 }`}
@@ -541,7 +558,7 @@ export const Header: React.FC = () => {
                 title={t('nav_contact')}
               >
                 <Mail size={18} aria-hidden="true" />
-              </a>
+              </Link>
             </li>
           </ul>
           
@@ -564,8 +581,15 @@ export const Header: React.FC = () => {
               </span>
             </button>
 
-            {/* Workspace Access */}
+            {/* Workspace Access (User Account) */}
             <button
+              onClick={() => {
+                if (isLoggedIn) {
+                  navigate('/dashboard');
+                } else {
+                  setIsAuthModalOpen(true);
+                }
+              }}
               className="group relative p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-[#B45309] hover:text-white dark:hover:text-slate-950 border border-[#B45309]/60 hover:border-[#B45309] transition-all focus-visible:ring-2 focus-visible:ring-[#B45309]"
               aria-label="Workspace Access"
             >
@@ -581,7 +605,7 @@ export const Header: React.FC = () => {
               className="ml-1 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#10B981] bg-transparent text-emerald-600 dark:text-emerald-400 hover:bg-[#10B981] hover:text-slate-950 dark:hover:text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg transition-all whitespace-nowrap focus-visible:ring-2 focus-visible:ring-emerald-500 group"
             >
               <Calendar size={14} className="shrink-0 transition-transform group-hover:scale-110" aria-hidden="true" />
-              <span className="leading-none">Book Schedule</span>
+              <span className="leading-none">Get a Quote</span>
             </button>
           </div>
         </nav>
@@ -656,14 +680,14 @@ export const Header: React.FC = () => {
                 }
 
                 return (
-                  <a 
+                  <Link 
                     key={item.label}
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
+                    to={item.href}
+                    onClick={(e) => handleNavClick(e as any, item.href)}
                     className="min-h-[44px] flex items-center px-4 py-3 rounded-2xl text-lg font-bold text-slate-900 dark:text-white hover:text-[#38BDF8] hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors active:scale-98"
                   >
                     {item.label === 'Home' ? t('nav_home') : t(labelKey)}
-                  </a>
+                  </Link>
                 );
               })}
             </nav>
@@ -679,7 +703,7 @@ export const Header: React.FC = () => {
               className="w-full min-h-[48px] flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm uppercase tracking-wider shadow-lg active:scale-98"
             >
               <Calendar size={16} />
-              <span>Schedule a Call</span>
+              <span>Get a Quote</span>
             </button>
 
             <div className="flex items-center justify-between text-xs font-mono text-slate-500 pt-2">
@@ -694,6 +718,12 @@ export const Header: React.FC = () => {
       <ScheduleCallModal 
         isOpen={isScheduleModalOpen} 
         onClose={() => setIsScheduleModalOpen(false)} 
+      />
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
       />
     </header>
   );
