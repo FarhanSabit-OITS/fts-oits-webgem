@@ -274,7 +274,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-3 h-full">
           <Link 
             to="/"
-            className="group hover:opacity-95 transition-all flex items-center gap-3 focus-visible:ring-2 focus-visible:ring-[#38BDF8] rounded-xl outline-none" 
+            className="group hover:opacity-95 transition-all flex items-center gap-3 focus-visible:ring-2 focus-visible:ring-[#38BDF8] rounded-xl outline-none shrink-0" 
             onClick={(e) => {
               if (window.location.hash === '' || window.location.hash === `#${SectionId.HOME}`) {
                 handleNavClick(e as any, '/');
@@ -343,7 +343,7 @@ export const Header: React.FC = () => {
                 }`}
               >
                 <Layers size={18} aria-hidden="true" />
-                <span className="hidden sm:inline">{t('nav_services')}</span>
+                <span className="hidden lg:inline">{t('nav_services')}</span>
                 <ChevronDown size={14} className={`transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`} />
               </Link>
 
@@ -418,7 +418,7 @@ export const Header: React.FC = () => {
                 }`}
               >
                 <Briefcase size={18} aria-hidden="true" />
-                <span className="hidden sm:inline">{t('nav_portfolio')}</span>
+                <span className="hidden lg:inline">{t('nav_portfolio')}</span>
                 <ChevronDown size={14} className={`transition-transform duration-200 ${isPortfolioOpen ? 'rotate-180' : ''}`} />
               </Link>
 
@@ -493,7 +493,7 @@ export const Header: React.FC = () => {
                 }`}
               >
                 <Info size={18} aria-hidden="true" />
-                <span className="hidden sm:inline">{t('nav_about')}</span>
+                <span className="hidden lg:inline">{t('nav_about')}</span>
                 <ChevronDown size={14} className={`transition-transform duration-200 ${isAboutOpen ? 'rotate-180' : ''}`} />
               </Link>
 
@@ -640,6 +640,9 @@ export const Header: React.FC = () => {
             <Briefcase size={18} />
           </Link>
 
+          {/* Vertical Divider */}
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-0.5" aria-hidden="true" />
+
           {/* Mobile Contact Icon */}
           <Link
             to="/contact"
@@ -653,6 +656,21 @@ export const Header: React.FC = () => {
           >
             <Mail size={18} />
           </Link>
+
+          {/* Mobile Workspace Access (User Account) */}
+          <button
+            onClick={() => {
+              if (isLoggedIn) {
+                navigate('/dashboard');
+              } else {
+                setIsAuthModalOpen(true);
+              }
+            }}
+            className="p-2 rounded-full text-slate-700 dark:text-slate-200 hover:bg-[#B45309] hover:text-white dark:hover:text-slate-950 border border-[#B45309]/60 hover:border-[#B45309] transition-all"
+            aria-label="Workspace Access"
+          >
+            <UserCircle size={18} className="text-[#B45309] transition-colors" />
+          </button>
 
           {/* Mobile Theme Toggle (Hidden per requirements) */}
           <button
