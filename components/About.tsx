@@ -13,6 +13,7 @@ import {
   ArrowRight 
 } from 'lucide-react';
 import { SectionId } from '../types';
+import { SectionWrapper } from './SectionWrapper';
 
 export const About: React.FC = () => {
   const [imgError, setImgError] = useState(false);
@@ -52,14 +53,11 @@ export const About: React.FC = () => {
   ];
 
   return (
-    <section 
-      id={SectionId.ABOUT} 
-      className="py-28 bg-white dark:bg-[#070A13] text-slate-900 dark:text-white transition-colors duration-300 relative overflow-hidden"
-    >
+    <SectionWrapper id={SectionId.ABOUT} className="bg-white dark:bg-[#070A13]">
       {/* Background Subtle Accent */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-[#38BDF8]/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="relative z-10">
         
         {/* Section Header */}
         <div className="max-w-3xl mb-16 sm:mb-20">
@@ -169,6 +167,6 @@ export const About: React.FC = () => {
         </div>
 
       </div>
-    </section>
+    </SectionWrapper>
   );
 };

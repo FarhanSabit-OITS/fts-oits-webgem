@@ -17,7 +17,6 @@ import { CursorSpotlight } from './components/CursorSpotlight';
 import { ExitIntentModal } from './components/ExitIntentModal';
 import { BackToTop } from './components/BackToTop';
 import { LanguageProvider } from './components/LanguageContext';
-import { ScrollAnimationWrapper } from './components/ScrollAnimationWrapper';
 
 function App() {
   return (
@@ -35,55 +34,55 @@ function App() {
           {/* 2. Hero Section - Immediate Load */}
           <Hero />
 
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
+
           {/* 3. About & Engineering Philosophy Section */}
-          <ScrollAnimationWrapper>
-            <About />
-          </ScrollAnimationWrapper>
+          <About />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 4. Enterprise Services Section */}
-          <ScrollAnimationWrapper>
-            <Services />
-          </ScrollAnimationWrapper>
+          <Services />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 5. Portfolio & Case Studies Section */}
-          <ScrollAnimationWrapper>
-            <Portfolio />
-          </ScrollAnimationWrapper>
+          <Portfolio />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 5.5 Global Geographic Reach Node Network */}
-          <ScrollAnimationWrapper>
-            <GlobalReach />
-          </ScrollAnimationWrapper>
+          <GlobalReach />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 6. Process & Delivery Timeline Section */}
-          <ScrollAnimationWrapper>
-            <Process />
-          </ScrollAnimationWrapper>
+          <Process />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 6.5 Technology Ecosystem Adoption Radar */}
-          <ScrollAnimationWrapper>
-            <TechStackSection />
-          </ScrollAnimationWrapper>
+          <TechStackSection />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 7. Social Proof & Tech Ecosystem Section */}
-          <ScrollAnimationWrapper>
-            <Testimonials />
-          </ScrollAnimationWrapper>
+          <Testimonials />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 7.5 Intellectual Engineering Journal Insights */}
-          <ScrollAnimationWrapper>
-            <Insights />
-          </ScrollAnimationWrapper>
+          <Insights />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 8. Direct Contact & Consultation Section */}
-          <ScrollAnimationWrapper>
-            <Contact />
-          </ScrollAnimationWrapper>
+          <Contact />
+
+          <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
 
           {/* 9. Brand Color Palette Component */}
-          <ScrollAnimationWrapper>
-            <BrandPaletteShowcase />
-          </ScrollAnimationWrapper>
+          <BrandPaletteShowcase />
         </main>
 
         {/* 9. Global Footer */}

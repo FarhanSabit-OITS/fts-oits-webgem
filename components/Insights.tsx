@@ -19,6 +19,8 @@ import {
   Heart
 } from 'lucide-react';
 
+import { SectionWrapper } from './SectionWrapper';
+
 export interface Article {
   id: string;
   title: string;
@@ -253,11 +255,8 @@ export const Insights: React.FC = () => {
   }, [filteredArticles, featuredArticle]);
 
   return (
-    <section 
-      id="insights" 
-      className="py-24 bg-white dark:bg-[#070A13] text-slate-900 dark:text-slate-100 border-t border-slate-200/80 dark:border-slate-800 transition-colors duration-500 relative"
-    >
-      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+    <>
+      <SectionWrapper id="insights" className="bg-white dark:bg-[#070A13]">
         
         {/* Section Header */}
         <div id="insights-hub" className="space-y-6 mb-16">
@@ -504,8 +503,7 @@ export const Insights: React.FC = () => {
 
           </div>
         )}
-
-      </div>
+      </SectionWrapper>
 
       {/* 3. Interactive Modal / Drawer Reader */}
       {selectedArticle && (
@@ -616,6 +614,6 @@ export const Insights: React.FC = () => {
         </div>
       )}
 
-    </section>
+    </>
   );
 };

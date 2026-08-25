@@ -20,6 +20,8 @@ import {
 import { PROJECTS, COMPANY_NAME } from '../constants';
 import { SectionId, Project } from '../types';
 
+import { SectionWrapper } from './SectionWrapper';
+
 export const Portfolio: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -47,11 +49,8 @@ export const Portfolio: React.FC = () => {
     : augmentedProjects.filter(p => p.category === activeCategory);
 
   return (
-    <section 
-      id={SectionId.PORTFOLIO} 
-      className="py-28 bg-white dark:bg-[#070A13] text-slate-900 dark:text-white transition-colors duration-300 relative overflow-hidden"
-    >
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+    <>
+      <SectionWrapper id={SectionId.PORTFOLIO} className="bg-white dark:bg-[#070A13]">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -159,8 +158,7 @@ export const Portfolio: React.FC = () => {
             </div>
           ))}
         </div>
-
-      </div>
+      </SectionWrapper>
 
       {/* Interactive Project Architecture Modal */}
       {selectedProject && (
@@ -244,6 +242,6 @@ export const Portfolio: React.FC = () => {
           </div>
         </div>
       )}
-    </section>
+    </>
   );
 };

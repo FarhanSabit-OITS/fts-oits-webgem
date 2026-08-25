@@ -12,9 +12,14 @@ import {
   MapPin,
   Cpu,
   Database,
-  Shield
+  Shield,
+  X,
+  Server,
+  Terminal,
+  Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { SectionWrapper } from './SectionWrapper';
 
 export interface ClientLocation {
   id: string;
@@ -27,6 +32,82 @@ export interface ClientLocation {
   impactMetrics: string;
   isHq?: boolean;
 }
+
+export interface NodeSpec {
+  loadBalancer: string;
+  computeInstance: string;
+  databaseReplicas: string;
+  redisCache: string;
+  containerRuntime: string;
+  securityProtocol: string;
+}
+
+export const NODE_SPECS: Record<string, NodeSpec> = {
+  dhaka: {
+    loadBalancer: 'NGINX Plus Multi-Master Regional Gateway / Route 53',
+    computeInstance: 'Bare-Metal KVM Enterprise Clusters / 128 Core Nodes',
+    databaseReplicas: 'Firestore Dedicated Command Hub with multi-region backup',
+    redisCache: 'Distributed Redis cluster with 120GB RAM memory footprint',
+    containerRuntime: 'Docker CE / Bare-Metal Kubernetes Orchestrated Engine',
+    securityProtocol: 'Mutual TLS (mTLS) with Hardware Security Module encryption keys'
+  },
+  nyc: {
+    loadBalancer: 'Cloudflare Enterprise Load Balancer with ultra-low latency profiles',
+    computeInstance: 'Google Cloud Run Autoscale Instance / Max 800 Concurrent Cores',
+    databaseReplicas: 'Cloud SQL PostgreSQL Primary Engine with 3 read replicas',
+    redisCache: 'Regional GCP MemoryStore Cache / 32GB RAM instance',
+    containerRuntime: 'GCP Google Kubernetes Engine (GKE) Autopilot',
+    securityProtocol: 'Zero-Trust Cloudflare Access Tunnel / AES-256 GCM payload encryptor'
+  },
+  london: {
+    loadBalancer: 'AWS Application Load Balancer (ALB) across 3 Availability Zones',
+    computeInstance: 'AWS EC2 c6i.4xlarge compute cluster / Autoscaling Group',
+    databaseReplicas: 'Amazon Aurora PostgreSQL Serverless v2 cluster',
+    redisCache: 'AWS ElastiCache Redis cluster / 16GB Node size',
+    containerRuntime: 'AWS Elastic Container Service (ECS) with AWS Fargate serverless server',
+    securityProtocol: 'IAM Role boundary verification / End-to-end TLS 1.3 protocol'
+  },
+  tokyo: {
+    loadBalancer: 'Regional Edge Gateway with latency routing policies',
+    computeInstance: 'Azure Container Apps / Scale-to-Zero microservices',
+    databaseReplicas: 'Azure Cosmos DB global replication with sub-10ms write latency',
+    redisCache: 'Azure Cache for Redis Premium tier / 24GB active nodes',
+    containerRuntime: 'Azure Kubernetes Service (AKS) cluster',
+    securityProtocol: 'VNet isolation protocols / Azure Key Vault state storage integration'
+  },
+  berlin: {
+    loadBalancer: 'NGINX Ingress Controller with custom rate limiting',
+    computeInstance: 'DigitalOcean Premium AMD Droplets cluster',
+    databaseReplicas: 'DigitalOcean Managed PostgreSQL with localized standbys',
+    redisCache: 'Managed Redis database cluster / 8GB instances',
+    containerRuntime: 'DigitalOcean Kubernetes (DOKS) managed cluster',
+    securityProtocol: 'Strict GDPR compliance isolation / Cryptographic hash verification'
+  },
+  sydney: {
+    loadBalancer: 'Cloudflare Magic Transit DDoS Shielded edge router',
+    computeInstance: 'Vultr Cloud Compute AMD High Performance servers',
+    databaseReplicas: 'Supabase PostgreSQL Cloud cluster with replication pools',
+    redisCache: 'Upstash Serverless Redis caches / Regional clusters',
+    containerRuntime: 'Docker Swarm with custom high-availability health checks',
+    securityProtocol: 'ISO-27001 compliant networks / Hardware SSH physical keys'
+  },
+  dubai: {
+    loadBalancer: 'F5 BIG-IP Local Traffic Manager virtual appliances',
+    computeInstance: 'Private Cloud OpenStack hypervisor arrays',
+    databaseReplicas: 'Oracle Real Application Clusters (RAC) high-availability pools',
+    redisCache: 'Redis Enterprise Cluster with multi-master setups',
+    containerRuntime: 'OpenShift Container Platform Cluster v4.12',
+    securityProtocol: 'AEAD AES-256 data volume disk locks / Biometric node guard access'
+  },
+  singapore: {
+    loadBalancer: 'AWS Network Load Balancer (NLB) with static IP allocation',
+    computeInstance: 'AWS EC2 Hpc6a compute clusters for cleared settlements',
+    databaseReplicas: 'AWS DynamoDB with global tables active-active sync',
+    redisCache: 'AWS ElastiCache Redis Multi-AZ cluster / 32GB sizes',
+    containerRuntime: 'AWS Elastic Kubernetes Service (EKS) instance',
+    securityProtocol: 'PCI-DSS Level 1 audit profiles / AWS KMS key-rotation vaults'
+  }
+};
 
 const CLIENT_LOCATIONS: ClientLocation[] = [
   {
@@ -121,9 +202,70 @@ export const GlobalReach: React.FC = () => {
   const [hoveredLocation, setHoveredLocation] = useState<ClientLocation | null>(null);
   const [rotationX, setRotationX] = useState<number>(0);
   const [isSpinning, setIsSpinning] = useState<boolean>(true);
+  
+  // Real-time Spec panel and dynamic status cycling states
+  const [isSpecOpen, setIsSpecOpen] = useState<boolean>(false);
+  const [nodeStatuses, setNodeStatuses] = useState<Record<string, 'Online' | 'Syncing' | 'Degraded'>>({});
 
   const pinClickRef = useRef<(loc: ClientLocation) => void>(() => {});
   const pinHoverRef = useRef<(loc: ClientLocation) => void>(() => {});
+
+  // Real-time Node Status interval-based state cycling
+  useEffect(() => {
+    const initialStatuses: Record<string, 'Online' | 'Syncing' | 'Degraded'> = {};
+    CLIENT_LOCATIONS.forEach(loc => {
+      initialStatuses[loc.id] = loc.id === 'dhaka' ? 'Online' : (Math.random() > 0.4 ? 'Online' : 'Syncing');
+    });
+    setNodeStatuses(initialStatuses);
+
+    const statusInterval = setInterval(() => {
+      setNodeStatuses(prev => {
+        const next = { ...prev };
+        const ids = CLIENT_LOCATIONS.map(loc => loc.id);
+        const randomId = ids[Math.floor(Math.random() * ids.length)];
+        
+        if (randomId === 'dhaka') {
+          next[randomId] = 'Online'; // HQ stays Online
+        } else {
+          const rand = Math.random();
+          next[randomId] = rand > 0.85 ? 'Degraded' : (rand > 0.5 ? 'Syncing' : 'Online');
+        }
+        return next;
+      });
+    }, 4500);
+
+    return () => clearInterval(statusInterval);
+  }, []);
+
+  // Passive Scroll-linked Parallax Zoom Level for Globe
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (chartDivRef.current && chartRef.current) {
+            const rect = chartDivRef.current.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            // Check if element is inside viewport bounds
+            if (rect.top < viewportHeight && rect.bottom > 0) {
+              const totalDist = viewportHeight + rect.height;
+              const progress = 1 - (rect.top + rect.height) / totalDist;
+              // Safe parallax zoom factor: between 1.0 (minimum) and 1.15 (maximum)
+              const zoomFactor = 1.0 + Math.max(0, Math.min(0.15, progress * 0.15));
+              chartRef.current.set("zoomLevel", zoomFactor);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Keep these handlers current to avoid amCharts capturing stale closures
   useEffect(() => {
@@ -241,24 +383,32 @@ export const GlobalReach: React.FC = () => {
 
       const container = am5.Container.new(bulletRoot, { cursorOverStyle: 'pointer' });
 
-      // Outer Pulse Ring Bullet
+      // Outer Pulse Ring Bullet with custom canvas soft-glow filter properties
       container.children.push(
         am5.Circle.new(bulletRoot, {
           radius: isHq ? 14 : 9,
           fill: am5.color(isHq ? 0x2563eb : 0x38bdf8),
           fillOpacity: 0.35,
-          strokeOpacity: 0
+          strokeOpacity: 0,
+          shadowColor: am5.color(isHq ? 0x2563eb : 0x38bdf8),
+          shadowBlur: 14,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0
         })
       );
 
-      // Inner Core Bullet Node
+      // Inner Core Bullet Node with custom canvas soft-glow filter properties
       container.children.push(
         am5.Circle.new(bulletRoot, {
           radius: isHq ? 7 : 4.5,
           fill: am5.color(isHq ? 0x2563eb : 0x3b82f6),
           stroke: am5.color(0xffffff),
           strokeWidth: 1.5,
-          tooltipText: `[bold]${data?.city ?? ''} (${data?.country ?? ''})[/]\n${data?.clientName ?? ''}`
+          tooltipText: `[bold]${data?.city ?? ''} (${data?.country ?? ''})[/]\n${data?.clientName ?? ''}`,
+          shadowColor: am5.color(0x3b82f6),
+          shadowBlur: 8,
+          shadowOffsetX: 0,
+          shadowOffsetY: 0
         })
       );
 
@@ -370,19 +520,20 @@ export const GlobalReach: React.FC = () => {
   };
 
   return (
-    <section 
-      id="global-reach" 
-      className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-500"
-    >
-      {/* Top gradient hairline */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent" />
-      
-      {/* Subtle grid pattern dot overlay */}
-      <div 
-        className="absolute inset-0 bg-[radial-gradient(currentColor_1.2px,transparent_1.2px)] bg-[size:24px_24px] text-slate-300 dark:text-slate-800 opacity-25 pointer-events-none" 
-      />
+    <>
+      <SectionWrapper 
+        id="global-reach" 
+        className="bg-slate-50 dark:bg-slate-950 transition-colors duration-500"
+      >
+        {/* Top gradient hairline */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent" />
+        
+        {/* Subtle grid pattern dot overlay */}
+        <div 
+          className="absolute inset-0 bg-[radial-gradient(currentColor_1.2px,transparent_1.2px)] bg-[size:24px_24px] text-slate-300 dark:text-slate-800 opacity-25 pointer-events-none" 
+        />
 
-      <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+        <div className="relative z-10">
         
         {/* Header & Metric Badge Rail */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 pb-8 border-b border-slate-200 dark:border-slate-900">
@@ -565,13 +716,30 @@ export const GlobalReach: React.FC = () => {
 
                 {/* Bottom status rail */}
                 <div className="pt-6 border-t border-slate-100 dark:border-slate-800/80 mt-auto">
-                  <div className="flex items-center justify-between font-mono text-[10px] text-slate-400 dark:text-slate-500">
-                    <span className="uppercase tracking-widest flex items-center gap-1">
-                      <Activity size={12} className="text-emerald-500 animate-pulse" /> NODE STATUS
+                  <div className="flex items-center justify-between font-mono text-[10px]">
+                    <span className="uppercase tracking-widest flex items-center gap-1 text-slate-400 dark:text-slate-500">
+                      <Activity size={12} className={`animate-pulse ${
+                        (nodeStatuses[activeLocation.id] || 'Online') === 'Online' ? 'text-emerald-500' :
+                        (nodeStatuses[activeLocation.id] || 'Online') === 'Syncing' ? 'text-amber-500' : 'text-rose-500'
+                      }`} /> NODE STATUS
                     </span>
-                    <span className="text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider">
-                      ONLINE • SLA VERIFIED
+                    <span className={`font-bold uppercase tracking-wider ${
+                      (nodeStatuses[activeLocation.id] || 'Online') === 'Online' ? 'text-emerald-600 dark:text-emerald-400' :
+                      (nodeStatuses[activeLocation.id] || 'Online') === 'Syncing' ? 'text-amber-500' : 'text-rose-500 animate-pulse'
+                    }`}>
+                      {nodeStatuses[activeLocation.id] || 'Online'} • SLA VERIFIED
                     </span>
+                  </div>
+
+                  {/* Technical Spec Trigger Button */}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => setIsSpecOpen(true)}
+                      className="w-full py-2.5 px-4 rounded-xl bg-slate-950 dark:bg-blue-600 hover:bg-slate-900 dark:hover:bg-blue-500 text-white font-mono text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                    >
+                      <Cpu size={12} />
+                      <span>View Detailed Spec</span>
+                    </button>
                   </div>
                   
                   {/* Watermark */}
@@ -587,6 +755,167 @@ export const GlobalReach: React.FC = () => {
         </div>
 
       </div>
-    </section>
-  );
+    </SectionWrapper>
+
+    {/* Slide-in Detailed Technical Specifications Side Panel */}
+    <AnimatePresence>
+      {isSpecOpen && (
+        <>
+          {/* Backdrop Overlay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSpecOpen(false)}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[110]"
+          />
+
+          {/* Side Drawer */}
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed right-0 top-0 bottom-0 w-full max-w-md sm:max-w-lg bg-white dark:bg-[#0B0F19] shadow-2xl z-[120] border-l border-slate-200 dark:border-slate-900 flex flex-col justify-between"
+            role="dialog"
+            aria-modal="true"
+          >
+            {/* Header */}
+            <div className="p-6 border-b border-slate-100 dark:border-slate-900 flex items-center justify-between">
+              <div className="space-y-1">
+                <span className="font-mono text-[9px] uppercase tracking-widest text-slate-400 dark:text-slate-500 block">
+                  ACTIVE NODE METADATA SPEC
+                </span>
+                <h3 className="text-xl font-black text-slate-950 dark:text-white uppercase tracking-tight">
+                  {activeLocation.city} Technical Stack
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsSpecOpen(false)}
+                className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
+                aria-label="Close panel"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Specs Content */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
+              
+              {/* Node Identity Info */}
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-900/60 space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+                    <Server size={18} />
+                  </span>
+                  <div>
+                    <span className="font-mono text-[8px] text-slate-400 block uppercase">NODE ARCHETYPE</span>
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-100">
+                      {activeLocation.isHq ? 'Central Command Core Hub' : 'Regional Edge Compute Node'}
+                    </span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 pt-3 border-t border-slate-100 dark:border-slate-900/50">
+                  <div>
+                    <span className="font-mono text-[8px] text-slate-400 block uppercase">SLA COMPLIANCE</span>
+                    <span className="text-xs font-mono font-bold text-emerald-500">99.997% ACC</span>
+                  </div>
+                  <div>
+                    <span className="font-mono text-[8px] text-slate-400 block uppercase">NODE PEERING</span>
+                    <span className="text-xs font-mono font-bold text-blue-500">DIRECT PEER</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tech Specs List */}
+              <div className="space-y-5">
+                <h4 className="font-mono text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold">
+                  SYSTEM COMPOSITION MATRIX
+                </h4>
+
+                {/* Load Balancer */}
+                <div className="space-y-1.5 border-l-2 border-blue-500 pl-4">
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+                    <Settings size={12} />
+                    <span className="uppercase">Traffic Load Balancing</span>
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                    {NODE_SPECS[activeLocation.id]?.loadBalancer || 'Distributed Cloudflare/AWS Global Load Balancer'}
+                  </p>
+                </div>
+
+                {/* Compute Instance */}
+                <div className="space-y-1.5 border-l-2 border-blue-500 pl-4">
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+                    <Cpu size={12} />
+                    <span className="uppercase">High-Performance Compute</span>
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                    {NODE_SPECS[activeLocation.id]?.computeInstance || 'Auto-scaling Microservices Server Pool'}
+                  </p>
+                </div>
+
+                {/* Container Runtime */}
+                <div className="space-y-1.5 border-l-2 border-blue-500 pl-4">
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+                    <Terminal size={12} />
+                    <span className="uppercase">Container Engine</span>
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                    {NODE_SPECS[activeLocation.id]?.containerRuntime || 'Docker Orchestration & Cluster Services'}
+                  </p>
+                </div>
+
+                {/* Database Replicas */}
+                <div className="space-y-1.5 border-l-2 border-blue-500 pl-4">
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+                    <Database size={12} />
+                    <span className="uppercase">Durable Database Clones</span>
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                    {NODE_SPECS[activeLocation.id]?.databaseReplicas || 'Distributed Relational Replica Sync Engine'}
+                  </p>
+                </div>
+
+                {/* Redis Cache */}
+                <div className="space-y-1.5 border-l-2 border-blue-500 pl-4">
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+                    <Activity size={12} />
+                    <span className="uppercase">Memory / Redis Cache</span>
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                    {NODE_SPECS[activeLocation.id]?.redisCache || 'Regional High-Speed Cache Ring'}
+                  </p>
+                </div>
+
+                {/* Security Protocol */}
+                <div className="space-y-1.5 border-l-2 border-blue-500 pl-4">
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
+                    <Shield size={12} />
+                    <span className="uppercase">Cryptographic Firewall Security</span>
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                    {NODE_SPECS[activeLocation.id]?.securityProtocol || 'Zero-Trust mTLS Network Access Shield'}
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* Footer Control */}
+            <div className="p-6 border-t border-slate-100 dark:border-slate-900">
+              <button
+                onClick={() => setIsSpecOpen(false)}
+                className="w-full py-3.5 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-mono text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all"
+              >
+                Close Specification
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  </>
+);
 };
