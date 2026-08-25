@@ -13,6 +13,7 @@ import {
   Sparkles,
   Loader2
 } from 'lucide-react';
+import { CopyEmailButton } from './CopyEmailButton';
 import { CONTACT_EMAIL, ADDRESS, COMPANY_NAME } from '../constants';
 import { SectionId } from '../types';
 
@@ -257,26 +258,7 @@ export const Contact: React.FC = () => {
               </h3>
 
               {/* Direct Email */}
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-sky-500/10 text-[#38BDF8] shrink-0">
-                  <Mail size={20} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-1">Direct Inquiries</p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-mono font-bold text-slate-900 dark:text-white truncate">
-                      {CONTACT_EMAIL}
-                    </span>
-                    <button
-                      onClick={handleCopyEmail}
-                      className="p-1 rounded-md text-slate-400 hover:text-[#38BDF8]"
-                      title="Copy email"
-                    >
-                      {copied ? <Check size={14} className="text-[#10B981]" /> : <Copy size={14} />}
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <CopyEmailButton />
 
               {/* Studio HQ */}
               <div className="flex items-start gap-4">
