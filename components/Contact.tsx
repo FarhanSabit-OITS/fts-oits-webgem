@@ -304,7 +304,7 @@ export const Contact: React.FC = () => {
             </div>
 
             {/* Google Maps Embed */}
-            <div className="rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 aspect-[16/9] shadow-sm">
+            <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-[350px] sm:h-[450px] overflow-hidden border-t border-b border-slate-200 dark:border-slate-800 shadow-sm">
               <iframe
                 title="OITS Dhaka Studio Location"
                 src="https://maps.google.com/maps?q=Dhanmondi%20Dhaka%20Bangladesh&t=&z=13&ie=UTF8&iwloc=&output=embed"

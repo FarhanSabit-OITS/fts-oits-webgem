@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from './components/ThemeContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -21,8 +20,6 @@ import { LanguageProvider } from './components/LanguageContext';
 import { ScrollAnimationWrapper } from './components/ScrollAnimationWrapper';
 
 function App() {
-  const { theme, toggleTheme } = useTheme();
-
   return (
     <LanguageProvider>
       <div className="min-h-screen bg-slate-50 dark:bg-[#070A13] text-slate-900 dark:text-slate-100 selection:bg-[#38BDF8]/20 selection:text-[#38BDF8] transition-colors duration-300 relative flex flex-col font-sans">
@@ -31,7 +28,7 @@ function App() {
         <CursorSpotlight />
 
         {/* 1. Global Navigation Header */}
-        <Header theme={theme} toggleTheme={toggleTheme} />
+        <Header />
 
         {/* Main Content Sections */}
         <main className="flex-1">
@@ -90,7 +87,7 @@ function App() {
         </main>
 
         {/* 9. Global Footer */}
-        <Footer theme={theme} toggleTheme={toggleTheme} />
+        <Footer />
 
         {/* Interactive Overlays */}
         <AiAssistant />

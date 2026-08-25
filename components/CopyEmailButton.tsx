@@ -6,15 +6,21 @@ import { CONTACT_EMAIL } from '../constants';
 interface CopyEmailButtonProps {
   className?: string;
   showIconBg?: boolean;
+  variant?: 'standard' | 'compact';
 }
 
 export const CopyEmailButton: React.FC<CopyEmailButtonProps> = ({ 
   className = '', 
-  showIconBg = true 
+  showIconBg = true,
+  variant = 'standard'
 }) => {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
+  const handleCopy = async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     try {
       await navigator.clipboard.writeText(CONTACT_EMAIL);
       setCopied(true);
@@ -23,6 +29,43 @@ export const CopyEmailButton: React.FC<CopyEmailButtonProps> = ({
       console.error('Failed to copy text: ', err);
     }
   };
+
+  if (variant === 'compact') {
+    return (
+      <div className={`relative inline-flex items-center ${className}`}>
+        <button
+          onClick={handleCopy}
+          id="copy-email-footer-trigger"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all font-mono text-[10px] select-all cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+          aria-label="Copy contact email address to clipboard"
+        >
+          {copied ? (
+            <Check size={14} className="text-emerald-500 animate-pulse stroke-[2.5]" />
+          ) : (
+            <Mail size={14} className="text-[#38BDF8]" />
+          )}
+          <span>{CONTACT_EMAIL}</span>
+        </button>
+
+        {/* Elegant Floating Toast/Tooltip */}
+        <AnimatePresence>
+          {copied && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: -36, scale: 1 }}
+              exit={{ opacity: 0, y: 5, scale: 0.95 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+              className="absolute left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-2.5 py-1 rounded-lg text-[9px] font-mono font-bold uppercase tracking-widest shadow-xl border border-slate-800 dark:border-slate-100 pointer-events-none flex items-center gap-1.5 whitespace-nowrap z-50"
+            >
+              <Check size={9} className="text-emerald-500 dark:text-emerald-600 stroke-[3]" />
+              <span>Copied!</span>
+              <div className="absolute top-full left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-slate-900 dark:bg-white border-r border-b border-slate-800 dark:border-slate-100 rotate-45 -mt-0.5" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   return (
     <div className={`relative inline-flex items-center gap-3 ${className}`}>

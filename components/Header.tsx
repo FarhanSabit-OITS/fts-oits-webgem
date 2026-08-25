@@ -29,13 +29,10 @@ import { Button } from './ui/Button';
 import { SectionId } from '../types';
 import { useLanguage } from './LanguageContext';
 import { ScheduleCallModal } from './ScheduleCallModal';
+import { useTheme } from './ThemeContext';
 
-interface HeaderProps {
-  theme: 'light' | 'dark';
-  toggleTheme: () => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
+export const Header: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);

@@ -14,13 +14,11 @@ import {
 import { COMPANY_NAME, CONTACT_EMAIL, ADDRESS } from '../constants';
 import { SectionId } from '../types';
 import { BrandLogo } from './BrandLogo';
+import { CopyEmailButton } from './CopyEmailButton';
+import { useTheme } from './ThemeContext';
 
-interface FooterProps {
-  theme: 'light' | 'dark';
-  toggleTheme: () => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
+export const Footer: React.FC = () => {
+  const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -70,13 +68,7 @@ export const Footer: React.FC<FooterProps> = ({ theme, toggleTheme }) => {
               <Globe size={14} className="text-[#38BDF8]" />
               <span>oitsdhaka.com</span>
             </a>
-            <a 
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-sky-500 dark:hover:border-sky-500 transition-colors"
-            >
-              <Mail size={14} className="text-[#38BDF8]" />
-              <span>{CONTACT_EMAIL}</span>
-            </a>
+            <CopyEmailButton variant="compact" />
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
               <MapPin size={14} className="text-[#38BDF8]" />
               <span>Dhaka, BD</span>
