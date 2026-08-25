@@ -235,7 +235,7 @@ export const Header: React.FC = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 h-16 sm:h-18 md:h-20 ${
         isScrolled 
           ? 'bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-lg' 
-          : 'bg-transparent border-b border-transparent'
+          : 'bg-white/80 dark:bg-transparent backdrop-blur-md sm:backdrop-blur-none border-b border-slate-200/40 dark:border-transparent'
       }`}
       role="banner"
     >

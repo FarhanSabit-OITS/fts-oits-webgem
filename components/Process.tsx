@@ -307,17 +307,17 @@ export const Process: React.FC = () => {
         </div>
 
         {/* Quality Gates Assurance Strip */}
-        <div className="p-6 sm:p-8 rounded-[2rem] bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800 shadow-2xl mt-12 relative overflow-hidden">
+        <div className="p-6 sm:p-8 rounded-[2rem] bg-slate-50 dark:bg-slate-900 text-slate-950 dark:text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-200/80 dark:border-slate-800 shadow-md mt-12 relative overflow-hidden">
           {/* Subtle design element */}
           <div className="absolute right-0 bottom-0 h-32 w-32 bg-blue-500/5 rounded-full blur-2xl pointer-events-none" />
 
           <div className="flex items-center gap-4 relative z-10">
-            <div className="p-3 rounded-2xl bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/30 shrink-0">
+            <div className="p-3 rounded-2xl bg-emerald-100 dark:bg-[#10B981]/20 text-emerald-600 dark:text-[#10B981] border border-emerald-200 dark:border-[#10B981]/30 shrink-0">
               <Activity size={24} className="animate-pulse" />
             </div>
             <div>
               <h4 className="text-base font-bold uppercase tracking-tight">Automated CI/CD Quality Gates</h4>
-              <p className="text-[10px] font-mono text-slate-400 mt-1">Penetration Tested • SonarQube Audited • 99.98% SLA Guaranteed</p>
+              <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400 mt-1">Penetration Tested • SonarQube Audited • 99.98% SLA Guaranteed</p>
             </div>
           </div>
 
